@@ -1,8 +1,6 @@
-import { OPENAI_API_KEY } from '$env/static/private';
-import { createEntry, getEntries } from '$lib/db';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
+import { createEntry } from '$lib/server/db';
+import { openai } from '$lib/server/openai';
+import { redirect } from '@sveltejs/kit';
 
 export function load({ cookies }) {
 	let id = cookies.get('userid');
@@ -13,7 +11,7 @@ export function load({ cookies }) {
 	}
 
 	return {
-		entries: getEntries(id) || []
+		dataDescription: openai.dataDescription
 	};
 }
 
@@ -28,29 +26,18 @@ export const actions = {
 		}
 
 		const formData = await request.formData();
-		const prompt = formData.get('prompt');
-		const numberOfEntries = formData.get('numberOfEntries');
+		const prompt = formData.get('dataDescription');
 
 		if (prompt) {
-			const completion = await openai.chat.completions.create({
-				messages: [
-					{
-						role: 'system',
-						content: `You are a data generation assistant. You always reply in JSON format with an array where each entry has a "text" key and the output value. You return exactly ${numberOfEntries} results.`
-					},
-					{ role: 'system', content: prompt.toString() }
-				],
-				model: 'gpt-3.5-turbo-1106',
-				response_format: { type: 'json_object' }
-			});
+			const completion = await openai.getInitialSamples(3, prompt.toString());
 			try {
-				const entries = JSON.parse(completion.choices[0].message.content || '');
-				for (const entry of entries.results) {
+				for (const entry of completion) {
 					createEntry(id, entry.text);
 				}
-			} catch {
-				// ignore
+			} catch (e) {
+				console.error(e);
 			}
+			redirect(303, '/triage');
 		}
 	}
 };
