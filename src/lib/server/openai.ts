@@ -19,7 +19,6 @@ export class OpenAIWrapper {
 	}
 
 	async generate(messages: ChatCompletionMessageParam[]) {
-		console.log(messages);
 		const completion = await this.openai.chat.completions.create({
 			messages: messages,
 			model: 'gpt-3.5-turbo-1106',
