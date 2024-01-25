@@ -1,4 +1,4 @@
-import { createEntries } from '$lib/server/db';
+import { clearEntries, createEntries } from '$lib/server/db';
 
 export async function POST({ cookies, request }) {
 	const id = cookies.get('userid');
@@ -9,7 +9,10 @@ export async function POST({ cookies, request }) {
 		};
 	}
 
-	const entries = await request.json();
-	createEntries(id, entries.entries);
+	const requestData = await request.json();
+	if (requestData.clear) {
+		clearEntries(id);
+	}
+	createEntries(id, requestData.entries);
 	return new Response(null, { status: 204 });
 }

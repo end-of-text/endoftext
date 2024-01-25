@@ -49,3 +49,13 @@ export function deleteEntry(userId: string, entryId: string) {
 
 	entries.splice(index, 1);
 }
+
+export function clearEntries(userId: string) {
+	const entries = db.get(userId);
+
+	if (!entries) {
+		throw new Error('User not found');
+	}
+
+	entries.splice(0, entries.length);
+}
