@@ -24,6 +24,16 @@ export function createEntry(userId: string, text: string) {
 	} as Entry);
 }
 
+export function createEntries(userId: string, newEntries: string[]) {
+	const entries = db.get(userId);
+
+	if (!entries) {
+		throw new Error('User not found');
+	}
+
+	newEntries.forEach((ent) => entries?.push({ id: crypto.randomUUID(), text: ent } as Entry));
+}
+
 export function deleteEntry(userId: string, entryId: string) {
 	const entries = db.get(userId);
 
