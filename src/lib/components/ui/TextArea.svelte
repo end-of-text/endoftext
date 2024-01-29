@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { twMerge } from 'tailwind-merge';
+
 	let {
 		value,
 		numRows = 2,
@@ -20,7 +22,7 @@
 	}>();
 </script>
 
-<div class="flex flex-col items-start justify-center {classNames}">
+<div class={twMerge('flex flex-col items-start justify-center', classNames)}>
 	{#if label}
 		<p class="text-grey-dark">
 			{label}

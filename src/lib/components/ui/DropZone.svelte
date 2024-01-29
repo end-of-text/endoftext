@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { createEventDispatcher, type Snippet } from 'svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	let { children, classNames = '' } = $props<{ children: Snippet; classNames?: string }>();
 
@@ -26,7 +27,7 @@
 	}
 </script>
 
-<div class="group relative w-96 h-32 rounded {classNames}">
+<div class={twMerge('group relative w-96 h-32 rounded', classNames)}>
 	<div
 		class="absolute -inset-0.5 rounded-lg {dragOver
 			? 'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 group-hover:opacity-100'
@@ -45,7 +46,7 @@
 			HERE!
 		</div>
 	{:else}
-		<div class="relative rounded bg-white w-full h-full flex items-center justify-center">
+		<div class="relative rounded bg-white w-full h-full flex items-center justify-center p-4">
 			{@render children()}
 		</div>
 	{/if}

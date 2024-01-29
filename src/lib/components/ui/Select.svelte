@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	let {
 		value,
@@ -14,7 +15,7 @@
 	let dispatch = createEventDispatcher();
 </script>
 
-<div class="relative {classNames}">
+<div class={twMerge('relative', classNames)}>
 	<select
 		class="w-full appearance-none rounded border border-grey-light px-2 py-1.5 pe-8 outline-none transition ease-in-out"
 		bind:value

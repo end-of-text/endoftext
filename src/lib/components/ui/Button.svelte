@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { twMerge } from 'tailwind-merge';
 
 	let {
 		children,
@@ -8,7 +9,7 @@
 	} = $props<{ children: Snippet; disabled?: boolean; classNames?: string }>();
 </script>
 
-<div class="group relative {classNames}">
+<div class={twMerge('group relative', classNames)}>
 	<div
 		class="absolute -inset-0.5 rounded-lg {disabled
 			? 'bg-gray-500'

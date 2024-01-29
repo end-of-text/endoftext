@@ -39,6 +39,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"openai": "^4.25.0"
+		"arquero": "^5.4.0",
+		"openai": "^4.25.0",
+		"tailwind-merge": "^2.2.1"
 	}
 }
