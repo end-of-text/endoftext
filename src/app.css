@@ -9,4 +9,16 @@
 	h2 {
 		@apply font-black text-xl mb-2;
 	}
+	input {
+		@apply border py-1 px-2 border-slate-300 rounded;
+	}
+	input[type='submit'] {
+		@apply border py-1 px-2 border-slate-300 rounded hover:bg-slate-100 transition;
+	}
+	button {
+		@apply border py-1 px-2 border-slate-300 rounded hover:bg-slate-100 transition;
+	}
+	.btn {
+		@apply border py-1 px-2 border-slate-300 rounded hover:bg-slate-100 transition;
+	}
 }

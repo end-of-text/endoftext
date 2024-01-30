@@ -1,10 +1,20 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
 	import '../app.css';
 
-	let { children } = $props<{ children: Snippet }>();
+	let { data, children } = $props();
+
+	let session = $derived(data.session);
 </script>
 
-<div class="h-full w-full flex flex-col">
-	{@render children()}
-</div>
+<main class="p-5">
+	<div class="w-full flex-row-reverse">
+		<a class="btn" href="/explore">home</a>
+		{#if session}
+			<a class="btn" href="/account/preferences">account</a>
+		{/if}
+	</div>
+
+	<div class="h-full w-full flex flex-col items-center justify-center">
+		{@render children()}
+	</div>
+</main>

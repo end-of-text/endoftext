@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
 	import Button from '$lib/components/ui/Button.svelte';
 	import TextArea from '$lib/components/ui/TextArea.svelte';
 
 	let loading = $state(false);
 	let task = $state('');
 	let disabled = $derived(task === '');
+
+	$inspect($page.data.session);
 </script>
 
 <div class="h-full flex flex-col items-center justify-center">
