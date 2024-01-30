@@ -22,8 +22,6 @@ export const actions = {
 
 		const formData = await request.formData();
 		const task = formData.get('task');
-		console.log(formData);
-		console.log(task);
 
 		if (task) {
 			createProject(id, task.toString());

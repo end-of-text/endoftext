@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { selectedPrompt } from '$lib/stores';
+	import { selectedPrompt } from '$lib/state.svelte';
 	import type { Entry } from '$lib/types';
 
 	let { entry } = $props<{ entry: Entry }>();
 
 	async function getPrediction(): Promise<string | undefined> {
-		if ($selectedPrompt !== undefined) {
-			const res = await fetch(`/api/prompt/${$selectedPrompt.id}/answer/${entry.id}`, {
+		const prompt = selectedPrompt.prompt;
+		if (prompt !== undefined) {
+			const res = await fetch(`/api/prompt/${prompt.id}/answer/${entry.id}`, {
 				method: 'GET'
 			});
 			return await res.text();
@@ -32,7 +33,7 @@
 				</p>
 			</div>
 		{/if}
-		{#if $selectedPrompt !== undefined}
+		{#if selectedPrompt.prompt !== undefined}
 			<div class="mt-2 text-sm text-gray-400">output</div>
 			<div class="flex flex-row">
 				{#await getPrediction()}

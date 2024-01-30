@@ -14,7 +14,6 @@ export async function POST({ cookies, request }) {
 	if (requestData.clear) {
 		clearEntries(id);
 	}
-	console.log(requestData.entries);
 	const table = fromCSV(requestData.entries);
 	createEntries(id, table);
 	return new Response(null, { status: 204 });

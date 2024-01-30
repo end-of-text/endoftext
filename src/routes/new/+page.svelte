@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
-	import H1 from '$lib/components/ui/H1.svelte';
 	import TextArea from '$lib/components/ui/TextArea.svelte';
 
 	let loading = $state(false);
@@ -21,7 +20,7 @@
 			};
 		}}
 	>
-		<H1>Optimize your Prompt</H1>
+		<h1>Optimize your Prompt</h1>
 		<TextArea
 			placeholder="Describe the task of the desired AI agent."
 			bind:value={task}
