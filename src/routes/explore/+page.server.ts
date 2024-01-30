@@ -1,4 +1,4 @@
-import { createEntry, getEntries } from '$lib/server/db';
+import { createEntry, getEntries, getPrompts } from '$lib/server/db';
 import { openai } from '$lib/server/openai.js';
 
 export function load({ cookies }) {
@@ -10,7 +10,8 @@ export function load({ cookies }) {
 	}
 
 	return {
-		entries: getEntries(id) || []
+		entries: getEntries(id) || [],
+		prompts: getPrompts(id) || []
 	};
 }
 
