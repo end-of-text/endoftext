@@ -1,18 +1,18 @@
-import { LLMMap } from './models/llmMap';
 import {
 	HyperparameterType,
+	type Entry,
 	type HyperparameterRange,
 	type HyperparameterValue,
 	type SearchResult
-} from './types';
+} from '$lib/types';
+import { LLMMap } from './models/llmMap';
 
 export class HyperparameterSearch {
 	public modelConfigurations: HyperparameterValue[][] = [];
 
 	constructor(
 		private readonly prompt: string,
-		private readonly inputs: string[],
-		private readonly labels: string[],
+		private readonly inputs: Entry[],
 		private readonly lossFunction: (output: string, input: string) => number,
 		readonly hyperparameterRanges: HyperparameterRange[]
 	) {}
@@ -34,6 +34,16 @@ export class HyperparameterSearch {
 		return cartesianProduct;
 	}
 
+	createPrompt(originalPrompt: string, promptAdditions: HyperparameterValue[]) {
+		let prompt = originalPrompt;
+		promptAdditions
+			.filter((c) => c.type === HyperparameterType.PROMPT)
+			.forEach((addition) => {
+				prompt += '\n\n' + addition.value;
+			});
+		return prompt;
+	}
+
 	createHyperparameterCombinations(): HyperparameterValue[][] {
 		const hyperparameterValues: HyperparameterValue[][] = [];
 		this.hyperparameterRanges.forEach((range) => {
@@ -44,14 +54,6 @@ export class HyperparameterSearch {
 
 		const hyperparameterCombinations = this.cartesianProduct(hyperparameterValues);
 		return hyperparameterCombinations.map((combination) => combination);
-	}
-
-	createPrompt(originalPrompt: string, promptAdditions: HyperparameterValue[]) {
-		let prompt = originalPrompt;
-		promptAdditions.forEach((addition) => {
-			prompt += '\n\n' + addition.value;
-		});
-		return prompt;
 	}
 
 	async search(): Promise<SearchResult[]> {
@@ -73,21 +75,20 @@ export class HyperparameterSearch {
 			const llm = LLMMap[llmName.value as string];
 			llm.config = new Map(configuration.map((parameter) => [parameter.name, parameter]));
 
-			const prompt = this.createPrompt(
-				this.prompt,
-				configuration.filter((c) => c.type === HyperparameterType.PROMPT)
-			);
+			const prompt = this.createPrompt(this.prompt, configuration);
 
-			const outputs: string[] = [];
+			const outputs: Record<string, { text: string; metric: number }> = {};
 			const metrics: number[] = [];
 			for (let i = 0; i < this.inputs.length; i++) {
-				const input = this.inputs[i];
-				const output = await llm.completion(prompt, input);
-				outputs.push(output);
-				metrics.push(this.lossFunction(output, this.labels[i]));
+				const output = await llm.completion(prompt, this.inputs[i].question);
+				outputs[this.inputs[i].id] = {
+					text: output,
+					metric: this.lossFunction(output, this.inputs[i].answer)
+				};
+				metrics.push(outputs[this.inputs[i].id].metric);
 			}
 			const averageMetric = metrics.reduce((a, b) => a + b, 0) / metrics.length;
-			results.push({ modelConfiguration: configuration, averageMetric, outputs, metrics });
+			results.push({ modelConfiguration: configuration, averageMetric, outputs, prompt });
 		}
 		return results.sort((a, b) => a.averageMetric - b.averageMetric);
 	}

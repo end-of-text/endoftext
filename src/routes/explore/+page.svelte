@@ -6,6 +6,6 @@
 </script>
 
 <div class="flex relative h-full">
-	<Sidebar prompts={data.prompts} />
+	<Sidebar searchResults={data.searchResults} />
 	<Table entries={data.entries} />
 </div>

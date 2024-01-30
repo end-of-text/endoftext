@@ -1,4 +1,4 @@
-import type { HyperparameterValue } from '../types';
+import type { HyperparameterValue } from '$lib/types';
 
 export abstract class LLM {
 	public config: Map<string, HyperparameterValue> = new Map();

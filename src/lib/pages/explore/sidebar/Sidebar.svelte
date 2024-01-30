@@ -1,17 +1,15 @@
 <script lang="ts">
 	import PromptView from '$lib/components/prompts/PromptView.svelte';
-	import type { Prompt } from '$lib/types';
+	import type { SearchResult } from '$lib/types';
 
-	let { prompts } = $props<{ prompts: Prompt[] }>();
+	let { searchResults } = $props<{ searchResults: SearchResult[] }>();
 </script>
 
 <div class="flex flex-col w-96 shrink-0 shadow-lg p-4">
-	<div class="flex gap-10 mb-5 items-center">
-		<p class="text-xl">Prompts</p>
-	</div>
+	<h2>Prompts</h2>
 	<div class="flex gap-2 flex-col">
-		{#each prompts as prompt}
-			<PromptView {prompt} />
+		{#each searchResults as searchResult}
+			<PromptView {searchResult} />
 		{/each}
 	</div>
 </div>

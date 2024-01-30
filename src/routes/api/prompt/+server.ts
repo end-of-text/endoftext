@@ -1,4 +1,4 @@
-import { createPrompt, getProject } from '$lib/server/db.js';
+import { getProject } from '$lib/server/db.js';
 import { openai } from '$lib/server/openai.js';
 import { assembleQuestionAnswerExamples } from '$lib/server/util/prompts.js';
 
@@ -44,7 +44,6 @@ export async function POST({ cookies }) {
 			body: 'Forbidden'
 		};
 	}
-	createPrompt(id, prompt);
 
-	return new Response(null, { status: 204 });
+	return new Response(prompt, { status: 200 });
 }

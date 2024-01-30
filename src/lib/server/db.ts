@@ -1,4 +1,4 @@
-import type { Entry, Project } from '$lib/types';
+import type { Entry, Project, SearchResult } from '$lib/types';
 import type Table from 'arquero/dist/types/table/table';
 
 // TODO: use real database
@@ -12,69 +12,27 @@ export function createProject(userId: string, taskDescription: string) {
 	db.set(userId, {
 		taskDescription,
 		dataEntries: [],
-		prompts: []
+		searchResults: []
 	} as Project);
 }
 
-export function getPrompts(userId: string) {
+export function getSearchResults(userId: string): SearchResult[] {
 	const project = getProject(userId);
 	if (!project) {
 		return [];
 	}
 
-	return project.prompts;
+	return project.searchResults;
 }
 
-export function createPrompt(userId: string, text: string) {
+export function createSearchResults(userId: string, results: SearchResult[]) {
 	const project = getProject(userId);
 	if (!project) {
 		throw new Error('Project not found');
 	}
 
-	project.prompts.push({
-		id: crypto.randomUUID(),
-		text,
-		predictions: []
-	});
-}
-
-export function createPrediction(
-	userId: string,
-	promptId: string,
-	entryId: string,
-	prediction: string
-) {
-	deletePrediction(userId, promptId, entryId);
-	const project = getProject(userId);
-	if (!project) {
-		throw new Error('Project not found');
-	}
-
-	const prompt = project.prompts.find((prompt) => prompt.id === promptId);
-	if (!prompt) {
-		throw new Error('Prompt not found');
-	}
-
-	prompt.predictions.push({
-		entryID: entryId,
-		prediction
-	});
-}
-
-export function deletePrediction(userId: string, promptId: string, entryId: string) {
-	const project = getProject(userId);
-	if (!project) {
-		throw new Error('Project not found');
-	}
-
-	const prompt = project.prompts.find((prompt) => prompt.id === promptId);
-	if (!prompt) {
-		throw new Error('Prompt not found');
-	}
-
-	const index = prompt.predictions.findIndex((prediction) => prediction.entryID === entryId);
-	if (index !== -1) {
-		prompt.predictions.splice(index, 1);
+	for (const result of results) {
+		project.searchResults.push(result);
 	}
 }
 
