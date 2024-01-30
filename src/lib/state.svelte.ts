@@ -1,13 +1,13 @@
-import type { Prompt } from './types';
+import type { SearchResult } from '$lib/types';
 
 function createSelectedPrompt() {
-	let prompt = $state<Prompt | undefined>(undefined);
+	let prompt = $state<SearchResult | undefined>(undefined);
 
 	return {
 		get prompt() {
 			return prompt;
 		},
-		set: (p: Prompt) => (prompt = p)
+		set: (p: SearchResult) => (prompt = p)
 	};
 }
 export const selectedPrompt = createSelectedPrompt();

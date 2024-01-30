@@ -2,7 +2,10 @@
 	import { goto } from '$app/navigation';
 	import DropZone from '$lib/components/ui/DropZone.svelte';
 
+	let loadingState = $state<string | undefined>(undefined);
+
 	async function uploadFile(event: CustomEvent<DragEvent>) {
+		loadingState = 'Processing uploaded file...';
 		const dropEvent = event.detail;
 		dropEvent.preventDefault();
 		const file = dropEvent.dataTransfer.files[0];
@@ -14,9 +17,15 @@
 					method: 'POST',
 					body: JSON.stringify({ entries: text, clear: true })
 				});
-				await fetch('/api/prompt', {
+				const prompt = await fetch('/api/prompt', {
 					method: 'POST'
 				});
+				const promptText = await prompt.text();
+				loadingState = 'Optimizing Prompt...';
+				await fetch(`/api/prompt/optimize/${promptText}`, {
+					method: 'POST'
+				});
+				loadingState = undefined;
 				goto('/explore');
 			};
 			reader.readAsText(file);
@@ -27,9 +36,13 @@
 <div class="h-full flex flex-col items-center justify-center">
 	<div class="flex flex-col items-start">
 		<h1>Specify Test Data</h1>
-		<p class="mb-4">To evaluate your prompt, we'll need some test data.</p>
-		<DropZone on:drop={uploadFile}
-			>Drag here to upload csv. Needs a "question" and an "answer" column.</DropZone
-		>
+		{#if loadingState !== undefined}
+			<p>{loadingState}</p>
+		{:else}
+			<p class="mb-4">To evaluate your prompt, we'll need some test data.</p>
+			<DropZone on:drop={uploadFile}
+				>Drag here to upload csv. Needs a "question" and an "answer" column.</DropZone
+			>
+		{/if}
 	</div>
 </div>

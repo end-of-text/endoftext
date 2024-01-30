@@ -1,13 +1,16 @@
+import { HyperparameterType } from '$lib/types';
 import { describe, expect, test } from 'vitest';
 import { exactMatchMetric } from './metric';
 import { HyperparameterSearch } from './search';
-import { HyperparameterType } from './types';
 
 describe('hyperparameter search', () => {
 	const search = new HyperparameterSearch(
 		'Classify sentiment of this movie using a 0 for negative and 1 for positive. Only return the number.',
-		['I hated this movie', 'I loved this movie', 'I thought this movie was pretty meh'],
-		['0', '1', '0'],
+		[
+			{ id: '0', question: 'I hated this movie', answer: '0' },
+			{ id: '1', question: 'I loved this movie', answer: '1' },
+			{ id: '2', question: 'I thought this movie was pretty meh', answer: '0' }
+		],
 		exactMatchMetric,
 		[
 			{

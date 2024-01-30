@@ -7,6 +7,6 @@
 		@apply bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 text-3xl font-black mb-4;
 	}
 	h2 {
-		@apply font-black text-xl my-10;
+		@apply font-black text-xl mb-2;
 	}
 }

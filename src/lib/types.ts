@@ -1,7 +1,7 @@
 export interface Project {
 	taskDescription: string;
 	dataEntries: Entry[];
-	prompts: Prompt[];
+	searchResults: SearchResult[];
 }
 
 export interface Entry {
@@ -10,18 +10,38 @@ export interface Entry {
 	answer: string;
 }
 
-export enum GenerationTypes {
-	PROMPT = 'prompt',
-	SIMILAR = 'similar'
+export enum HyperparameterType {
+	/**
+	 * Type of hyperparameter.
+	 *
+	 * LLM: llm to run inference with.
+	 * SYSTEM: model-specific hyperparameter, e.g. temperature.
+	 * PROMPT: textual prompt addition, e.g. chain-of-thought instructions.
+	 * ENHANCEMENT: re-write prompt to change order, structure, up-scale.
+	 * COMPRESSION: re-write prompt to shorten, simplify, and make cheaper to run.
+	 */
+	LLM,
+	SYSTEM,
+	PROMPT,
+	ENHANCEMENT,
+	COMPRESSION
 }
 
-export interface Prompt {
-	id: string;
-	text: string;
-	predictions: Prediction[];
-}
+export type HyperparameterValue = {
+	name: string;
+	type: HyperparameterType;
+	value: number | string;
+};
 
-export interface Prediction {
-	entryID: string;
-	prediction: string;
-}
+export type HyperparameterRange = {
+	name: string;
+	type: HyperparameterType;
+	values: number[] | string[];
+};
+
+export type SearchResult = {
+	modelConfiguration: HyperparameterValue[];
+	averageMetric: number;
+	outputs: Record<string, { text: string; metric: number }>;
+	prompt: string;
+};

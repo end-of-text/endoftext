@@ -1,16 +1,14 @@
 <script lang="ts">
+	import InstanceView from '$lib/components/Instances/InstanceView.svelte';
 	import type { Entry } from '$lib/types';
-	import InstanceView from '../../components/Instances/InstanceView.svelte';
 
 	let { entries } = $props<{ entries: Entry[] }>();
 	let count = $derived(entries.length);
 </script>
 
 <div class="flex flex-col grow p-4">
-	<div class="flex gap-10 mb-5 items-center">
-		<p class="text-xl">{count} entries</p>
-	</div>
-	<div class="flex gap-2 flex-col">
+	<h2>{count} entries</h2>
+	<div class="flex gap-2 flex-col overflow-y-auto">
 		{#each entries as entry}
 			<InstanceView {entry} />
 		{/each}

@@ -4,19 +4,10 @@
 
 	let { entry } = $props<{ entry: Entry }>();
 
-	async function getPrediction(): Promise<string | undefined> {
-		const prompt = selectedPrompt.prompt;
-		if (prompt !== undefined) {
-			const res = await fetch(`/api/prompt/${prompt.id}/answer/${entry.id}`, {
-				method: 'GET'
-			});
-			return await res.text();
-		}
-		return undefined;
-	}
+	let output = $derived(selectedPrompt.prompt?.outputs[entry.id] ?? undefined);
 </script>
 
-<div class="cursor-default overflow-x-auto break-words rounded border" tabindex="0" role="button">
+<div class="break-words rounded border relative">
 	<div class="p-4">
 		{#if entry.question !== undefined}
 			<div class="flex flex-row">
@@ -33,19 +24,18 @@
 				</p>
 			</div>
 		{/if}
-		{#if selectedPrompt.prompt !== undefined}
+		{#if output !== undefined}
 			<div class="mt-2 text-sm text-gray-400">output</div>
 			<div class="flex flex-row">
-				{#await getPrediction()}
-					loading..
-				{:then prediction}
-					{#if prediction !== undefined}
-						<p class="whitespace-pre-wrap text-grey">
-							{prediction}
-						</p>
-					{/if}
-				{/await}
+				<p class="whitespace-pre-wrap text-grey">
+					{output.text}
+				</p>
 			</div>
 		{/if}
 	</div>
+	{#if output}
+		<div class="absolute top-4 right-4 text-sm bg-white rounded bg-opacity-90 p-1 border">
+			score: {output?.metric}
+		</div>
+	{/if}
 </div>
