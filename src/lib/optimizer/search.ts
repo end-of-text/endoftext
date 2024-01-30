@@ -1,142 +1,94 @@
-/**
- * This file contains classes and methods for hyperparameter search and model configuration.
- */
+import { LLMMap } from './models/llmMap';
+import {
+	HyperparameterType,
+	type HyperparameterRange,
+	type HyperparameterValue,
+	type SearchResult
+} from './types';
 
-import type { CausalModel } from './models/model';
-
-/**
- * A specific hyperparameter value
- */
-class Hyperparameter {
-	name: string;
-	value: number | string;
-
-	constructor(name: string, value: number | string) {
-		this.name = name;
-		this.value = value;
-	}
-}
-
-/**
- * A range of values for a hyperparameter
- */
-class HyperparameterRange {
-	name: string;
-	values: number[] | string[];
-
-	constructor(name: string, values: number[] | string[]) {
-		this.name = name;
-		this.values = values;
-	}
-}
-
-/**
- * Configuration of a specific model instance.
- */
-export class ModelConfiguration {
-	parameters: Hyperparameter[];
-
-	constructor(parameters: Hyperparameter[]) {
-		this.parameters = parameters;
-	}
-}
-
-class SearchResult {
-	modelConfiguration: ModelConfiguration;
-	averageMetric: number = -1;
-	outputs: string[];
-	metrics: number[];
-
-	constructor(modelConfiguration: ModelConfiguration) {
-		this.modelConfiguration = modelConfiguration;
-		this.outputs = [];
-		this.metrics = [];
-	}
-}
-
-/**
- * Base class for running hyperparameter search.
- */
 export class HyperparameterSearch {
-	// TODO: treat the model as another hyperparameter.
-	// check to make sure at least one hyperparameter is a CausalModel
-	// rename causal model.
-	private _model: CausalModel;
-	private _inputs: string[];
-	private _hyperparameterRanges: HyperparameterRange[] = [];
-	private _lossFunction: (output: string, input: string) => number;
-	private _modelConfigurations: ModelConfiguration[] = [];
+	public modelConfigurations: HyperparameterValue[][] = [];
 
 	constructor(
-		model: CausalModel,
-		inputs: string[],
-		lossFunction: (output: string, input: string) => number
-	) {
-		// TODO: what is the original prompt?
-		this._model = model;
-		this._inputs = inputs;
-		this._lossFunction = lossFunction;
-	}
-
-	get hyperparameters() {
-		return this._hyperparameterRanges;
-	}
-
-	get modelConfigurations() {
-		return this._modelConfigurations;
-	}
-
-	addHyperparameter(name: string, values: number[] | string[]) {
-		this._hyperparameterRanges.push(new HyperparameterRange(name, values));
-	}
+		private readonly prompt: string,
+		private readonly inputs: string[],
+		private readonly labels: string[],
+		private readonly lossFunction: (output: string, input: string) => number,
+		readonly hyperparameterRanges: HyperparameterRange[]
+	) {}
 
 	cartesianProduct<T>(arrays: T[][]): T[][] {
-		return arrays.reduce(
-			(a, b) => a.map((x) => b.map((y) => x.concat(y))).reduce((a, b) => a.concat(b), []),
-			[[]]
-		);
-	}
-
-	createHyperparameterCombinations(): ModelConfiguration[] {
-		// create all combinations of hyperparameters
-		const hyperparameterCombinations: ModelConfiguration[] = [];
-		const hyperparameterNames = this.hyperparameters.map((parameter) => parameter.name);
-		const hyperparameterValues = this.hyperparameters.map((parameter) => parameter.values);
-		const hyperparameterValueCombinations = this.cartesianProduct(hyperparameterValues);
-		for (const combination of hyperparameterValueCombinations) {
-			const parameters: Hyperparameter[] = [];
-			for (let i = 0; i < hyperparameterNames.length; i++) {
-				parameters.push(new Hyperparameter(hyperparameterNames[i], combination[i]));
+		const cartesianProduct: T[][] = [];
+		const helper = (index: number, current: T[]) => {
+			if (index === arrays.length) {
+				cartesianProduct.push(current.slice());
+				return;
 			}
-			hyperparameterCombinations.push(new ModelConfiguration(parameters));
-		}
-		return hyperparameterCombinations;
+			for (let i = 0; i < arrays[index].length; i++) {
+				current.push(arrays[index][i]);
+				helper(index + 1, current);
+				current.pop();
+			}
+		};
+		helper(0, []);
+		return cartesianProduct;
 	}
 
-	search(): SearchResult[] {
-		this._modelConfigurations = this.createHyperparameterCombinations();
-		// run inference and calculate loss for each model configuration
-		const results: SearchResult[] = [];
-		this._modelConfigurations.forEach((configuration) => {
-			const model = this._model.copy();
-			model.config = configuration;
-
-			// generate a prompt for the model using the config
-			// pass the prompt and the config to the model
-
-			const searchResult = new SearchResult(configuration);
-
-			this._inputs.forEach((input) => {
-				searchResult.outputs.push(model.completion(input));
-				searchResult.metrics.push(
-					this._lossFunction(searchResult.outputs[searchResult.outputs.length - 1], input)
-				);
-			});
-			searchResult.averageMetric =
-				searchResult.metrics.reduce((a, b) => a + b, 0) / searchResult.metrics.length;
-			results.push(searchResult);
+	createHyperparameterCombinations(): HyperparameterValue[][] {
+		const hyperparameterValues: HyperparameterValue[][] = [];
+		this.hyperparameterRanges.forEach((range) => {
+			hyperparameterValues.push(
+				range.values.map((value) => ({ name: range.name, type: range.type, value: value }))
+			);
 		});
 
+		const hyperparameterCombinations = this.cartesianProduct(hyperparameterValues);
+		return hyperparameterCombinations.map((combination) => combination);
+	}
+
+	createPrompt(originalPrompt: string, promptAdditions: HyperparameterValue[]) {
+		let prompt = originalPrompt;
+		promptAdditions.forEach((addition) => {
+			prompt += '\n\n' + addition.value;
+		});
+		return prompt;
+	}
+
+	async search(): Promise<SearchResult[]> {
+		const llms = this.hyperparameterRanges.filter((range) => range.type === HyperparameterType.LLM);
+		if (llms.length === 0) {
+			throw new Error('No LLM hyperparameter found');
+		} else if (llms.length > 1) {
+			throw new Error('More than one LLM hyperparameter found');
+		}
+
+		this.modelConfigurations = this.createHyperparameterCombinations();
+
+		const results: SearchResult[] = [];
+		for (const configuration of this.modelConfigurations) {
+			const llmName = configuration.find((parameter) => parameter.type === HyperparameterType.LLM);
+			if (!llmName) {
+				throw new Error('No LLM hyperparameter found');
+			}
+			const llm = LLMMap[llmName.value as string];
+			llm.config = new Map(configuration.map((parameter) => [parameter.name, parameter]));
+
+			const prompt = this.createPrompt(
+				this.prompt,
+				configuration.filter((c) => c.type === HyperparameterType.PROMPT)
+			);
+
+			const outputs: string[] = [];
+			const metrics: number[] = [];
+			for (let i = 0; i < this.inputs.length; i++) {
+				const input = this.inputs[i];
+				const output = await llm.completion(prompt, input);
+				outputs.push(output);
+				metrics.push(this.lossFunction(output, this.labels[i]));
+			}
+			const averageMetric = metrics.reduce((a, b) => a + b, 0) / metrics.length;
+			results.push({ modelConfiguration: configuration, averageMetric, outputs, metrics });
+		}
 		return results.sort((a, b) => a.averageMetric - b.averageMetric);
 	}
 }

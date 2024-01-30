@@ -6,7 +6,8 @@ function createNgrams(s: string, n: number): Map<string, number> {
 	}
 	return ngrams;
 }
-export function chrf_metric(
+
+export function chrfMetric(
 	reference: string,
 	hypothesis: string,
 	n: number = 6,
@@ -45,14 +46,16 @@ export function chrf_metric(
 	const avgRecall = recallSum / n;
 
 	const fScore =
-		(1 + beta ** 2) * ((avgPrecision * avgRecall) / (beta ** 2 * avgPrecision + avgRecall));
+		precisionSum === 0 && recallSum === 0
+			? 0
+			: (1 + beta ** 2) * ((avgPrecision * avgRecall) / (beta ** 2 * avgPrecision + avgRecall));
 	return !isFinite(fScore) ? 0 : fScore;
 }
 
-export function exact_match_metric(hyp: string, ref: string): number {
+export function exactMatchMetric(hyp: string, ref: string): number {
 	return hyp === ref ? 1 : 0;
 }
 
-export function fuzzy_match_metric(hyp: string, ref: string): number {
+export function fuzzyMatchMetric(hyp: string, ref: string): number {
 	return ref.includes(hyp) ? 1 : 0;
 }
