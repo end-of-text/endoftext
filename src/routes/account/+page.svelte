@@ -1,6 +1,7 @@
 <!-- src/routes/+page.svelte -->
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { twMerge } from 'tailwind-merge';
 
 	const { form } = $props();
 
@@ -16,10 +17,11 @@
 <div class="w-40 h-1/2">
 	<div class="flex w-full mb-2">
 		<button
-			class="w-1/2 text-center py-2 bg-slate-50 hover:bg-slate-100 border-r cursor-default {formType ===
-			'login'
-				? 'bg-slate-200 hover:bg-slate-300'
-				: ''}"
+			class={twMerge(
+				`w-1/2 text-center py-2 bg-slate-50 hover:bg-slate-100 border-r cursor-default ${
+					formType === 'login' ? 'bg-slate-200 hover:bg-slate-300' : ''
+				}`
+			)}
 			on:click={() => (formType = 'login')}
 			on:keydown={(event) => {
 				if (event.key === 'Enter') formType = 'login';
@@ -28,10 +30,11 @@
 			Sign in
 		</button>
 		<button
-			class="w-1/2 text-center py-2 bg-slate-50 hover:bg-slate-100 cursor-default {formType ===
-			'signup'
-				? 'bg-slate-200 hover:bg-slate-300'
-				: ''}"
+			class={twMerge(
+				`w-1/2 text-center py-2 bg-slate-50 hover:bg-slate-100 cursor-default ${
+					formType === 'signup' ? 'bg-slate-200 hover:bg-slate-300' : ''
+				}`
+			)}
 			on:click={() => (formType = 'signup')}
 		>
 			Sign up
@@ -52,5 +55,7 @@
 	{/if}
 	{#if form?.success}
 		<p>check email for confirmation.</p>
+	{:else if form?.error}
+		<p>{form?.error}</p>
 	{/if}
 </div>
