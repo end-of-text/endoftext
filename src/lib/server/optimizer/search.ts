@@ -39,7 +39,9 @@ export class HyperparameterSearch {
 		promptAdditions
 			.filter((c) => c.type === HyperparameterType.PROMPT)
 			.forEach((addition) => {
-				prompt += '\n\n' + addition.value;
+				if (addition.value !== '') {
+					prompt += '\n\n' + addition.value;
+				}
 			});
 		return prompt;
 	}
