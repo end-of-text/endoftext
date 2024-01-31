@@ -1,4 +1,4 @@
-import { OPENAI_API_KEY } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import { OpenAI } from 'openai';
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 
@@ -23,4 +23,4 @@ export class OpenAIWrapper {
 	}
 }
 
-export const openai = new OpenAIWrapper(OPENAI_API_KEY);
+export const openai = new OpenAIWrapper(env.OPENAI_API_KEY || '');
