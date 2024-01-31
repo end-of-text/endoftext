@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
 	import type { SubmitFunction } from '@sveltejs/kit';
+
+	const { data } = $props();
 
 	let loading = $state(false);
 
@@ -15,7 +16,7 @@
 </script>
 
 <div class="form-widget">
-	<p>Hello {$page.data.session?.user.email}</p>
+	<p>Hello {data.session?.user.email}</p>
 	<br />
 	<form method="post" action="?/signout" use:enhance={handleSignOut}>
 		<button class="btn" disabled={loading}>Sign Out</button>
