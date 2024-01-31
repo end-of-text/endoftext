@@ -4,10 +4,7 @@ import { fromCSV } from 'arquero';
 export async function POST({ cookies, request }) {
 	const id = cookies.get('userid');
 	if (!id) {
-		return {
-			status: 403,
-			body: 'Forbidden'
-		};
+		return new Response('Forbidden', { status: 403 });
 	}
 
 	const requestData = await request.json();
