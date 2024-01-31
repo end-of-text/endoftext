@@ -24,7 +24,6 @@ export async function load({ locals: { supabase, getSession } }) {
 
 export const actions = {
 	delete: async ({ request, locals: { supabase, getSession } }) => {
-		console.log('del');
 		const session = await getSession();
 
 		if (!session) {

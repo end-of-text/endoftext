@@ -15,8 +15,7 @@ export const actions = {
 		const prompt = formData.get('prompt');
 
 		if (prompt) {
-			const res = await supabase.from('prompts').insert({ project_id: params.id, prompt: prompt });
-			console.log(res);
+			await supabase.from('prompts').insert({ project_id: params.id, prompt: prompt });
 		}
 
 		redirect(303, '/project/' + params.id + '/new/data');

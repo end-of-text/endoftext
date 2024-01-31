@@ -44,7 +44,7 @@ export const actions = {
 				error: 'Server error. Please try again later.'
 			});
 		}
-		// signup for existing user returns an obfuscated/fake user object without identities https://supabase.com/docs/reference/javascript/auth-signup
+
 		if (!error && !!data.user && !data.user.identities?.length) {
 			return fail(409, {
 				error: 'User already exists',
@@ -55,7 +55,6 @@ export const actions = {
 		}
 
 		const res = await supabase.from('users').insert([{ id: data.user?.id, email: email }]);
-		console.log(res);
 
 		if (res.error) {
 			return fail(500, {

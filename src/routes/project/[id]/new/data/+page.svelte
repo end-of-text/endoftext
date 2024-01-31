@@ -9,7 +9,6 @@
 	$effect(() => {
 		if (instances === undefined) {
 			const localInstances = localStorage.getItem('instances' + $page.params.id);
-			console.log('server?');
 			if (localInstances !== null) {
 				instances = JSON.parse(localInstances);
 			} else {
