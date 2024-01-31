@@ -1,11 +1,16 @@
 <script>
-	import Table from '$lib/pages/explore/Table.svelte';
-	import Sidebar from '$lib/pages/explore/sidebar/Sidebar.svelte';
-
 	let { data } = $props();
 </script>
 
-<div class="relative flex h-full">
-	<Sidebar searchResults={data.searchResults} />
-	<Table entries={data.entries} />
+<div class="relative h-full">
+	<h2>prompt</h2>
+	{#if data.prompts}
+		<p>{data.prompts[0].prompt}</p>
+	{/if}
+	<h2>instances</h2>
+	{#if data.instances}
+		{#each data.instances as instance}
+			<p>{instance.input}</p>
+		{/each}
+	{/if}
 </div>
