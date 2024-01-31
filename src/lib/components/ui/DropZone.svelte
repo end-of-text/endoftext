@@ -27,11 +27,11 @@
 	}
 </script>
 
-<div class={twMerge('group relative w-96 h-32 rounded', classNames)}>
+<div class={twMerge('group relative h-32 w-96 rounded', classNames)}>
 	<div
 		class="absolute -inset-0.5 rounded-lg {dragOver
 			? 'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 group-hover:opacity-100'
-			: 'bg-gray-500'}  opacity-75 blur transition duration-500 w-100"
+			: 'bg-gray-500'}  w-100 opacity-75 blur transition duration-500"
 	></div>
 	{#if dragOver}
 		<div
@@ -40,13 +40,13 @@
 				e.preventDefault();
 			}}
 			ondrop={dropFunction}
-			class="relative rounded bg-white w-full h-full flex items-center justify-center"
+			class="relative flex h-full w-full items-center justify-center rounded bg-white"
 			role="button"
 		>
 			HERE!
 		</div>
 	{:else}
-		<div class="relative rounded bg-white w-full h-full flex items-center justify-center p-4">
+		<div class="relative flex h-full w-full items-center justify-center rounded bg-white p-4">
 			{@render children()}
 		</div>
 	{/if}

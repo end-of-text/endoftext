@@ -4,9 +4,18 @@
 
 @layer base {
 	h1 {
-		@apply bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 text-3xl font-black mb-4;
+		@apply mb-4 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-3xl font-black text-transparent;
 	}
 	h2 {
-		@apply font-black text-xl mb-2;
+		@apply mb-2 text-xl font-black;
+	}
+	input {
+		@apply rounded border border-slate-300 px-2 py-1;
+	}
+	input[type='submit'] {
+		@apply rounded border border-slate-300 px-2 py-1 transition hover:bg-slate-100;
+	}
+	.btn {
+		@apply rounded border border-slate-300 px-2 py-1 transition hover:bg-slate-100;
 	}
 }

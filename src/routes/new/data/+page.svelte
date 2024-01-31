@@ -39,7 +39,7 @@
 	}
 </script>
 
-<div class="h-full flex flex-col items-center justify-center">
+<div class="flex h-full flex-col items-center justify-center">
 	<div class="flex flex-col items-start">
 		<h1>Specify Test Data</h1>
 		{#if loadingState !== undefined}

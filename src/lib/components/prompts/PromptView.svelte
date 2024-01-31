@@ -9,16 +9,16 @@
 	);
 </script>
 
-<button class="border p-2 rounded flex flex-col" onclick={() => selectedPrompt.set(searchResult)}>
+<button class="btn" onclick={() => selectedPrompt.set(searchResult)}>
 	<p class="text-start">{searchResult.prompt}</p>
-	<div class="flex gap-2 w-full text-sm pt-2">
+	<div class="flex w-full gap-2 pt-2 text-sm">
 		<div class="flex gap-2">
 			{#each configTags as config}
-				<div class="border rounded p-1">
+				<div class="rounded border p-1">
 					{config.name}: {config.value}
 				</div>
 			{/each}
 		</div>
-		<div class="shrink-0 p-1 ml-auto">score: {searchResult.averageMetric}</div>
+		<div class="ml-auto shrink-0 p-1">score: {searchResult.averageMetric}</div>
 	</div>
 </button>
