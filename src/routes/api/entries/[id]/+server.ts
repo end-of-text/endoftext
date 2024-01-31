@@ -3,10 +3,7 @@ import { deleteEntry } from '$lib/server/db.js';
 export async function DELETE({ params, cookies }) {
 	const id = cookies.get('userid');
 	if (!id) {
-		return {
-			status: 403,
-			body: 'Forbidden'
-		};
+		return new Response('Forbidden', { status: 403 });
 	}
 
 	const entryID = params.id;

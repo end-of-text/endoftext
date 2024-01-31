@@ -1,3 +1,4 @@
+import type { EmailOtpType } from '@supabase/supabase-js';
 import { redirect } from '@sveltejs/kit';
 
 export const GET = async (event) => {
@@ -10,7 +11,7 @@ export const GET = async (event) => {
 	const next = url.searchParams.get('next') ?? '/';
 
 	if (token_hash && type) {
-		const { error } = await supabase.auth.verifyOtp({ token_hash, type });
+		const { error } = await supabase.auth.verifyOtp({ token_hash, type: type as EmailOtpType });
 		if (!error) {
 			redirect(303, `/${next.slice(1)}`);
 		}

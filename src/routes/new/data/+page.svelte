@@ -8,10 +8,16 @@
 		loadingState = 'Processing uploaded file...';
 		const dropEvent = event.detail;
 		dropEvent.preventDefault();
+		if (!dropEvent.dataTransfer) {
+			return;
+		}
 		const file = dropEvent.dataTransfer.files[0];
 		if (file.type === 'text/csv') {
 			const reader = new FileReader();
 			reader.onload = async (loadEvent) => {
+				if (!loadEvent.target) {
+					return;
+				}
 				const text = loadEvent.target.result as string;
 				await fetch(`/api/entries/`, {
 					method: 'POST',
@@ -33,7 +39,7 @@
 	}
 </script>
 
-<div class="h-full flex flex-col items-center justify-center">
+<div class="flex h-full flex-col items-center justify-center">
 	<div class="flex flex-col items-start">
 		<h1>Specify Test Data</h1>
 		{#if loadingState !== undefined}

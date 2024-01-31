@@ -14,7 +14,7 @@
 		{/if}
 	</div>
 
-	<div class="h-full w-full flex flex-col items-center justify-center">
+	<div class="flex h-full w-full flex-col items-center justify-center">
 		{@render children()}
 	</div>
 </main>
