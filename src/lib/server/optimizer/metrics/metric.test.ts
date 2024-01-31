@@ -48,7 +48,7 @@ describe('Metric tests', () => {
 		it('handles different n-gram sizes correctly', () => {
 			const reference = 'hello world';
 			const hypothesis = 'world hello';
-			const score = chrfMetric(reference, hypothesis, 2); // Using bigrams
+			const score = chrfMetric(reference, hypothesis);
 			expect(score).toBeGreaterThan(0);
 			expect(score).toBeLessThan(1);
 		});
