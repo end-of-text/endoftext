@@ -5,9 +5,9 @@
 	let { searchResults } = $props<{ searchResults: SearchResult[] }>();
 </script>
 
-<div class="flex flex-col w-96 shrink-0 shadow-lg p-4">
+<div class="flex w-96 shrink-0 flex-col p-4 shadow-lg">
 	<h2>Prompts</h2>
-	<div class="flex gap-2 flex-col">
+	<div class="flex flex-col gap-2">
 		{#each searchResults as searchResult}
 			<PromptView {searchResult} />
 		{/each}

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import Button from '$lib/components/ui/Button.svelte';
 	import TextArea from '$lib/components/ui/TextArea.svelte';
 
 	let loading = $state(false);
@@ -8,7 +7,7 @@
 	let disabled = $derived(task === '');
 </script>
 
-<div class="h-full flex flex-col items-center justify-center">
+<div class="flex h-full flex-col items-center justify-center">
 	<form
 		class="flex flex-col items-start"
 		method="POST"
@@ -31,7 +30,7 @@
 		{#if loading}
 			<p>loading...</p>
 		{:else}
-			<Button {disabled}>Optimize</Button>
+			<button class="btn" {disabled}>Optimize</button>
 		{/if}
 	</form>
 </div>

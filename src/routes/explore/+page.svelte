@@ -5,7 +5,7 @@
 	let { data } = $props();
 </script>
 
-<div class="flex relative h-full">
+<div class="relative flex h-full">
 	<Sidebar searchResults={data.searchResults} />
 	<Table entries={data.entries} />
 </div>

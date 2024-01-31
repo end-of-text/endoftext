@@ -1,7 +1,5 @@
-<!-- src/routes/+page.svelte -->
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { twMerge } from 'tailwind-merge';
 
 	const { form } = $props();
 
@@ -14,14 +12,12 @@
 
 <h1>log in or sign up</h1>
 
-<div class="w-40 h-1/2">
-	<div class="flex w-full mb-2">
+<div class="h-1/2 w-40">
+	<div class="mb-2 flex w-full">
 		<button
-			class={twMerge(
-				`w-1/2 text-center py-2 bg-slate-50 hover:bg-slate-100 border-r cursor-default ${
-					formType === 'login' ? 'bg-slate-200 hover:bg-slate-300' : ''
-				}`
-			)}
+			class="w-1/2 cursor-default border border-r py-2 text-center {formType === 'login'
+				? 'bg-slate-200 hover:bg-slate-300'
+				: 'bg-slate-50 hover:bg-slate-100'}"
 			on:click={() => (formType = 'login')}
 			on:keydown={(event) => {
 				if (event.key === 'Enter') formType = 'login';
@@ -30,11 +26,9 @@
 			Sign in
 		</button>
 		<button
-			class={twMerge(
-				`w-1/2 text-center py-2 bg-slate-50 hover:bg-slate-100 cursor-default ${
-					formType === 'signup' ? 'bg-slate-200 hover:bg-slate-300' : ''
-				}`
-			)}
+			class="w-1/2 cursor-default border py-2 text-center {formType === 'signup'
+				? 'bg-slate-200 hover:bg-slate-300'
+				: 'bg-slate-50 hover:bg-slate-100'}"
 			on:click={() => (formType = 'signup')}
 		>
 			Sign up
@@ -44,13 +38,13 @@
 		<form class="flex flex-col gap-2" method="post" action="?/login" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
 			<input type="password" name="password" placeholder="password" />
-			<button>Sign in</button>
+			<button class="btn">Sign in</button>
 		</form>
 	{:else}
 		<form class="flex flex-col gap-2" method="post" action="?/signup" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
 			<input type="password" name="password" placeholder="password" />
-			<button>Sign up</button>
+			<button class="btn">Sign up</button>
 		</form>
 	{/if}
 	{#if form?.success}

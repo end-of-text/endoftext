@@ -19,7 +19,7 @@ export const handle = async ({ event, resolve }) => {
 			data: { session }
 		} = await event.locals.supabase.auth.getSession();
 
-		const { data: getUserData, error: err } = await event.locals.supabase.auth.getUser();
+		const { data: getUserData } = await event.locals.supabase.auth.getUser();
 		if (getUserData.user == null) {
 			session = null;
 		}

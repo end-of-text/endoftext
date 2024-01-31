@@ -30,9 +30,9 @@
 	{/if}
 	<textarea
 		rows={numRows}
-		class="block p-2.5 {width} text-sm text-gray-900 bg-white {plain
+		class="block p-2.5 {width} bg-white text-sm text-gray-900 {plain
 			? ''
-			: 'rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500'} resize-none"
+			: 'rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-blue-500'} resize-none"
 		{placeholder}
 		bind:value
 		{name}
