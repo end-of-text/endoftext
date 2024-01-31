@@ -1,6 +1,6 @@
 import { HyperparameterType } from '$lib/types';
 import { describe, expect, test } from 'vitest';
-import { exactMatchMetric } from './metric';
+import { exactMatchMetric } from './metrics/metric';
 import { HyperparameterSearch } from './search';
 
 describe('hyperparameter search', () => {

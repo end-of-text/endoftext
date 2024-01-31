@@ -1,5 +1,5 @@
 import { createSearchResults, getProject } from '$lib/server/db.js';
-import { chrfMetric } from '$lib/server/optimizer/metric.js';
+import { chrfMetric } from '$lib/server/optimizer/metrics/metric.js';
 import { HyperparameterSearch } from '$lib/server/optimizer/search.js';
 import { HyperparameterType } from '$lib/types';
 
