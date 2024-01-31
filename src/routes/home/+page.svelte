@@ -42,7 +42,7 @@
 	</table>
 </form>
 
-<form method="post" use:enhance action="?/create">
+<form class="mt-2" method="post" use:enhance action="?/create">
 	<input name="name" placeholder="name" />
-	<button>new project</button>
+	<button class="btn">new project</button>
 </form>
