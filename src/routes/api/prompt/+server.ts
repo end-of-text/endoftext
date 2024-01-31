@@ -5,18 +5,12 @@ import { assembleQuestionAnswerExamples } from '$lib/server/util/prompts.js';
 export async function POST({ cookies }) {
 	const id = cookies.get('userid');
 	if (!id) {
-		return {
-			status: 403,
-			body: 'Forbidden'
-		};
+		return new Response('Forbidden', { status: 403 });
 	}
 
 	const project = getProject(id);
 	if (!project) {
-		return {
-			status: 403,
-			body: 'Forbidden'
-		};
+		return new Response('Forbidden', { status: 403 });
 	}
 
 	const prompt = await openai.generate([
@@ -39,10 +33,7 @@ export async function POST({ cookies }) {
 		}
 	]);
 	if (!prompt) {
-		return {
-			status: 403,
-			body: 'Forbidden'
-		};
+		return new Response('Forbidden', { status: 403 });
 	}
 
 	return new Response(prompt, { status: 200 });

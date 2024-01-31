@@ -1,26 +1,20 @@
 import { createSearchResults, getProject } from '$lib/server/db.js';
-import { exactMatchMetric } from '$lib/server/optimizer/metric.js';
+import { chrfMetric } from '$lib/server/optimizer/metric.js';
 import { HyperparameterSearch } from '$lib/server/optimizer/search.js';
 import { HyperparameterType } from '$lib/types';
 
 export async function POST({ params, cookies }) {
 	const id = cookies.get('userid');
 	if (!id) {
-		return {
-			status: 403,
-			body: 'Forbidden'
-		};
+		return new Response('Forbidden', { status: 403 });
 	}
 
 	const project = getProject(id);
 	if (!project) {
-		return {
-			status: 403,
-			body: 'Forbidden'
-		};
+		return new Response('Forbidden', { status: 403 });
 	}
 
-	const search = new HyperparameterSearch(params.prompt, project.dataEntries, exactMatchMetric, [
+	const search = new HyperparameterSearch(params.prompt, project.dataEntries, chrfMetric, [
 		{
 			name: 'llm',
 			type: HyperparameterType.LLM,

@@ -14,10 +14,7 @@ export const actions = {
 	default: async ({ request, cookies }) => {
 		const id = cookies.get('userid');
 		if (!id) {
-			return {
-				status: 403,
-				body: 'Forbidden'
-			};
+			return new Response('Forbidden', { status: 403 });
 		}
 
 		const formData = await request.formData();
