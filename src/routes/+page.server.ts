@@ -5,7 +5,7 @@ export const load: PageServerLoad = async ({ locals: { getSession } }) => {
 	const session = await getSession();
 
 	if (session) {
-		redirect(303, '/new');
+		redirect(303, '/home');
 	} else {
 		redirect(303, '/account');
 	}

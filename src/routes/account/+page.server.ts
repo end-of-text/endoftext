@@ -16,7 +16,7 @@ export const actions = {
 		if (error) {
 			return fail(500, { message: 'Server error. Try again later.', success: false, email });
 		} else {
-			redirect(303, '/new');
+			redirect(303, '/home');
 		}
 	},
 
@@ -52,6 +52,15 @@ export const actions = {
 				email: email,
 				invalid: true,
 				message: 'User already exists'
+			});
+		}
+
+		const res = await supabase.from('users').insert([{ id: data.user?.id, email: email }]);
+		console.log(res);
+
+		if (res.error) {
+			return fail(500, {
+				error: 'Server error. Please try again later.'
 			});
 		}
 
