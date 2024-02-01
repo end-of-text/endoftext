@@ -7,24 +7,13 @@ export const actions = {
 		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
 
-		const { data, error } = await supabase.auth.signInWithPassword({
+		const { error } = await supabase.auth.signInWithPassword({
 			email,
 			password
 		});
 		if (error) {
 			return fail(500, { message: 'Server error. Try again later.', success: false, email });
 		}
-
-		const user = await supabase.from('users').select('id, email').eq('id', data?.user?.id);
-		if (user.data?.length === 0) {
-			const res = await supabase.from('users').insert([{ id: data.user?.id, email: email }]);
-			if (res.error) {
-				return fail(500, {
-					error: 'Server error. Please try again later.'
-				});
-			}
-		}
-
 		redirect(303, '/home');
 	},
 
