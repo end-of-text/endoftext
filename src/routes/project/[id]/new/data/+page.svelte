@@ -2,20 +2,21 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import DropZone from '$lib/components/ui/DropZone.svelte';
+	import { get } from 'svelte/store';
 
 	let instances = $state<string[]>();
 	let loadingState = $state<string | undefined>(undefined);
 
 	$effect(() => {
 		if (instances === undefined) {
-			const localInstances = localStorage.getItem('instances' + $page.params.id);
+			const localInstances = localStorage.getItem('instances' + get(page).params.id);
 			if (localInstances !== null) {
 				instances = JSON.parse(localInstances);
 			} else {
 				instances = ['example 1', 'example 2', 'example 3'];
 			}
 		} else {
-			localStorage.setItem('instances' + $page.params.id, JSON.stringify(instances));
+			localStorage.setItem('instances' + get(page).params.id, JSON.stringify(instances));
 		}
 	});
 
