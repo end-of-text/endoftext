@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/ui/Button.svelte';
 	import TextArea from '$lib/components/ui/TextArea.svelte';
 
 	let loading = $state(false);
@@ -30,7 +31,7 @@
 		{#if loading}
 			<p>loading...</p>
 		{:else}
-			<button class="btn" {disabled}>Optimize</button>
+			<Button {disabled}>Optimize</Button>
 		{/if}
 	</form>
 </div>
