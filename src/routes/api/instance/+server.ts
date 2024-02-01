@@ -15,8 +15,7 @@ export async function PUT({ locals: { supabase, getSession }, request }) {
 	const res = await supabase
 		.from('instances')
 		.update({ input: instance.input, label: instance.label })
-		.eq('id', instance.id)
-		.select();
+		.eq('id', instance.id);
 
 	if (res.error) {
 		return new Response(res.error.message, { status: 500 });
