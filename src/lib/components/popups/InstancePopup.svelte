@@ -1,21 +1,20 @@
 <script lang="ts">
 	import { updateInstance } from '$lib/api';
 	import type { Instance } from '$lib/types';
-	import type { EventHandler } from 'svelte/elements';
 	import InstanceView from '../Instances/InstanceView.svelte';
 	import Button from '../ui/Button.svelte';
 	import Popup from './Popup.svelte';
 
-	let { instance, onclose } = $props<{ instance: Instance; onclose: EventHandler<any> }>();
+	let { instance, onclose } = $props<{ instance: Instance; onclose: () => void }>();
 
 	let bindableInstance = $state(instance);
 
 	function submit(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
-			onclose(e);
+			onclose();
 		}
 		if (e.key === 'Enter') {
-			onclose(e);
+			onclose();
 		}
 	}
 </script>
@@ -29,7 +28,7 @@
 		</div>
 		<Button
 			classNames="m-2 self-end"
-			onclick={(e) => updateInstance(bindableInstance).then(() => onclose(e))}
+			onclick={() => updateInstance(bindableInstance).then(() => onclose())}
 		>
 			Update
 		</Button>
