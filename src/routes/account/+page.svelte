@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/ui/Button.svelte';
 
 	const { form } = $props();
 
@@ -38,13 +39,13 @@
 		<form class="flex flex-col gap-2" method="post" action="?/login" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
 			<input type="password" name="password" placeholder="password" />
-			<button class="btn">Sign in</button>
+			<Button fancy>Sign in</Button>
 		</form>
 	{:else}
 		<form class="flex flex-col gap-2" method="post" action="?/signup" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
 			<input type="password" name="password" placeholder="password" />
-			<button class="btn">Sign up</button>
+			<Button fancy>Sign up</Button>
 		</form>
 	{/if}
 	{#if form?.success}
