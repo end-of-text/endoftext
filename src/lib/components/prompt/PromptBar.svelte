@@ -6,7 +6,7 @@
 	let editPrompt = $state(false);
 </script>
 
-<div class="w-96 p-2 shadow">
+<div class="w-96 shrink-0 p-2 shadow">
 	<h1 class="mb-5">Prompt</h1>
 	{#if selectedPrompt.prompt}
 		<form method="POST" action="?/copyPrompt" use:enhance>
