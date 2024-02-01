@@ -9,7 +9,7 @@
 <main class="p-5">
 	<div class="w-full flex-row-reverse">
 		{#if session}
-			<a class="btn" href="/explore">home</a>
+			<a class="btn" href="/home">home</a>
 			<a class="btn" href="/account/preferences">account</a>
 		{/if}
 	</div>

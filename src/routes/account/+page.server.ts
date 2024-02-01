@@ -11,12 +11,10 @@ export const actions = {
 			email,
 			password
 		});
-
 		if (error) {
 			return fail(500, { message: 'Server error. Try again later.', success: false, email });
-		} else {
-			redirect(303, '/new');
 		}
+		redirect(303, '/home');
 	},
 
 	signup: async ({ request, url, locals: { supabase } }) => {
@@ -44,13 +42,21 @@ export const actions = {
 				error: 'Server error. Please try again later.'
 			});
 		}
-		// signup for existing user returns an obfuscated/fake user object without identities https://supabase.com/docs/reference/javascript/auth-signup
+
 		if (!error && !!data.user && !data.user.identities?.length) {
 			return fail(409, {
 				error: 'User already exists',
 				email: email,
 				invalid: true,
 				message: 'User already exists'
+			});
+		}
+
+		const res = await supabase.from('users').insert([{ id: data.user?.id, email: email }]);
+
+		if (res.error) {
+			return fail(500, {
+				error: 'Server error. Please try again later.'
 			});
 		}
 
