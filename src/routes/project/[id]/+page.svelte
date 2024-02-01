@@ -47,9 +47,20 @@
 		{/if}
 		<h2>instances</h2>
 		{#if data.instances}
-			{#each data.instances as instance}
-				<p>{instance.input}</p>
-			{/each}
+			<table class="w-full table-auto">
+				<thead>
+					<tr class="border-b-2">
+						<th>Instance Input</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each data.instances as instance}
+						<tr class="border-b-2">
+							<td class="py-2">{instance.input}</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
 		{/if}
 	</div>
 	<div class="w-1/3 p-5"><h1 class="mb-5">Prompts</h1></div>
