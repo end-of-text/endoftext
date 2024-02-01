@@ -1,9 +1,17 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { createEventDispatcher, type Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 	import { twMerge } from 'tailwind-merge';
 
-	let { children, classNames = '' } = $props<{ children: Snippet; classNames?: string }>();
+	let {
+		children,
+		classNames = '',
+		ondrop
+	} = $props<{
+		children: Snippet;
+		classNames?: string;
+		ondrop: (event: DragEvent) => Promise<void>;
+	}>();
 
 	let dragOver = $state(false);
 
@@ -17,14 +25,6 @@
 			});
 		}
 	});
-
-	const dispatch = createEventDispatcher<{
-		drop: DragEvent;
-	}>();
-
-	async function dropFunction(event: DragEvent) {
-		dispatch('drop', event);
-	}
 </script>
 
 <div class={twMerge('group relative h-32 w-96 rounded', classNames)}>
@@ -39,7 +39,7 @@
 			ondragover={(e) => {
 				e.preventDefault();
 			}}
-			ondrop={dropFunction}
+			{ondrop}
 			class="relative flex h-full w-full items-center justify-center rounded bg-white"
 			role="button"
 		>

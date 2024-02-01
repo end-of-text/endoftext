@@ -14,7 +14,7 @@
 </script>
 
 {#if editInstance}
-	<InstancePopup {instance} on:close={() => (editInstance = false)} />
+	<InstancePopup {instance} onclose={() => (editInstance = false)} />
 {/if}
 
 <tr class="border-b-2">
@@ -35,6 +35,6 @@
 		{/await}</td
 	>
 	<td>
-		<Button on:click={() => (editInstance = true)}>edit</Button>
+		<Button onclick={() => (editInstance = true)}>edit</Button>
 	</td>
 </tr>
