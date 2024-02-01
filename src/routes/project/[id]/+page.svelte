@@ -1,4 +1,5 @@
 <script lang="ts">
+	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
 	import PromptTree from '$lib/components/prompt/PromptTree.svelte';
 
@@ -11,20 +12,7 @@
 		<PromptTree prompts={data.prompts} />
 		<h2 class="mt-4">instances</h2>
 		{#if data.instances}
-			<table class="w-full table-auto">
-				<thead>
-					<tr class="border-b-2">
-						<th>Instance Input</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each data.instances as instance}
-						<tr class="border-b-2">
-							<td class="py-2">{instance.input}</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
+			<InstanceTable instances={data.instances} />
 		{/if}
 	</div>
 	<PromptBar />

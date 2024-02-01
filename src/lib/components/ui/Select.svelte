@@ -1,25 +1,25 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import type { ChangeEventHandler } from 'svelte/elements';
 	import { twMerge } from 'tailwind-merge';
 
 	let {
+		onchange,
 		value,
 		options,
 		classNames = ''
 	} = $props<{
+		onchange: ChangeEventHandler<HTMLSelectElement>;
 		value: unknown;
 		options: { value: unknown; label: string | number }[];
 		classNames?: string;
 	}>();
-
-	let dispatch = createEventDispatcher();
 </script>
 
 <div class={twMerge('relative', classNames)}>
 	<select
 		class="border-grey-light w-full appearance-none rounded border px-2 py-1.5 pe-8 outline-none transition ease-in-out"
 		bind:value
-		on:change={() => dispatch('change')}
+		{onchange}
 	>
 		{#each options as option}
 			<option value={option.value}>{option.label}</option>
