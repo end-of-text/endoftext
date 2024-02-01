@@ -1,13 +1,21 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { MouseEventHandler } from 'svelte/elements';
 	import { twMerge } from 'tailwind-merge';
 
 	let {
 		children,
+		onclick = () => {},
 		disabled = false,
 		fancy = false,
 		classNames = ''
-	} = $props<{ children: Snippet; fancy?: boolean; disabled?: boolean; classNames?: string }>();
+	} = $props<{
+		children: Snippet;
+		onclick?: MouseEventHandler<HTMLButtonElement>;
+		fancy?: boolean;
+		disabled?: boolean;
+		classNames?: string;
+	}>();
 </script>
 
 {#if fancy}
@@ -19,7 +27,7 @@
 		></div>
 		<button
 			class="animate relative rounded-lg bg-white px-4 py-2 hover:bg-slate-50 disabled:text-gray-500"
-			on:click
+			{onclick}
 			{disabled}
 		>
 			{@render children()}
@@ -28,8 +36,8 @@
 {:else}
 	<button
 		class={twMerge('rounded border px-4 py-2 transition-all hover:bg-slate-300', classNames)}
-		on:click
 		{disabled}
+		{onclick}
 	>
 		{@render children()}
 	</button>

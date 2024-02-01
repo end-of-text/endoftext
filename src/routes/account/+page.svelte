@@ -19,8 +19,8 @@
 			class="w-1/2 cursor-default border border-r py-2 text-center {formType === 'login'
 				? 'bg-slate-200 hover:bg-slate-300'
 				: 'bg-slate-50 hover:bg-slate-100'}"
-			on:click={() => (formType = 'login')}
-			on:keydown={(event) => {
+			onclick={() => (formType = 'login')}
+			onkeydown={(event) => {
 				if (event.key === 'Enter') formType = 'login';
 			}}
 		>
@@ -30,7 +30,7 @@
 			class="w-1/2 cursor-default border py-2 text-center {formType === 'signup'
 				? 'bg-slate-200 hover:bg-slate-300'
 				: 'bg-slate-50 hover:bg-slate-100'}"
-			on:click={() => (formType = 'signup')}
+			onclick={() => (formType = 'signup')}
 		>
 			Sign up
 		</button>
