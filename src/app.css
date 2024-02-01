@@ -9,6 +9,9 @@
 	h2 {
 		@apply mb-2 text-xl font-black;
 	}
+	p {
+		@apply text-lg text-slate-600;
+	}
 	input {
 		@apply rounded border border-slate-300 px-2 py-1;
 	}
