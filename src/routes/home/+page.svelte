@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/ui/Button.svelte';
 
 	const { data } = $props();
 </script>
@@ -44,7 +45,7 @@
 	</form>
 {/if}
 
-<form class="mt-2" method="post" use:enhance action="?/create">
+<form class="mt-4 flex" method="post" use:enhance action="?/create">
 	<input name="name" placeholder="name" />
-	<button class="btn">new project</button>
+	<Button fancy classNames="ml-2">new project</Button>
 </form>

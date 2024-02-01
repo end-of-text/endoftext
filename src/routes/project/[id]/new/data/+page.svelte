@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
+	import Button from '$lib/components/ui/Button.svelte';
 	import DropZone from '$lib/components/ui/DropZone.svelte';
 	import { get } from 'svelte/store';
 
@@ -50,16 +51,15 @@
 		<div class="mb-5 flex w-full items-center justify-between">
 			<h1>Specify Test Data</h1>
 			<div class="flex gap-2">
-				<button
-					class="btn"
-					onclick={(e) => {
+				<Button
+					on:click={(e) => {
 						e.preventDefault();
 						instances = [];
 					}}
 				>
 					clear
-				</button>
-				<button class="btn">next</button>
+				</Button>
+				<Button>next</Button>
 			</div>
 		</div>
 		<p class="mb-4">
@@ -77,15 +77,15 @@
 					/>
 				{/each}
 			</div>
-			<button
-				class="btn my-2 w-full"
-				onclick={(e) => {
+			<Button
+				classNames="my-2 w-full"
+				on:click={(e) => {
 					e.preventDefault();
 					instances?.push('');
 				}}
 			>
 				Add More
-			</button>
+			</Button>
 		{/if}
 		{#if loadingState !== undefined}
 			<p>{loadingState}</p>

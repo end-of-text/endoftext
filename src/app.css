@@ -4,7 +4,7 @@
 
 @layer base {
 	h1 {
-		@apply bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-3xl font-black text-transparent;
+		@apply mb-2 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-3xl font-black text-transparent;
 	}
 	h2 {
 		@apply mb-2 text-xl font-black;
@@ -19,9 +19,6 @@
 		@apply rounded border border-slate-300 px-2 py-1;
 	}
 	input[type='submit'] {
-		@apply rounded border border-slate-300 px-2 py-1 transition hover:bg-slate-100;
-	}
-	.btn {
 		@apply rounded border border-slate-300 px-2 py-1 transition hover:bg-slate-100;
 	}
 }

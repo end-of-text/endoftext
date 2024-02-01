@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Header from '$lib/components/ui/Header.svelte';
 	import '../app.css';
 
 	let { data, children } = $props();
@@ -6,14 +7,8 @@
 	let session = $derived(data.session);
 </script>
 
-<main class="p-5">
-	<div class="w-full flex-row-reverse">
-		{#if session}
-			<a class="btn" href="/home">home</a>
-			<a class="btn" href="/account/preferences">account</a>
-		{/if}
-	</div>
-
+<main class="h-full w-full">
+	<Header {session} />
 	<div class="flex h-full w-full flex-col items-center justify-center">
 		{@render children()}
 	</div>

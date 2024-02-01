@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/ui/Button.svelte';
 	import type { SubmitFunction } from '@sveltejs/kit';
 
 	const { data } = $props();
@@ -19,6 +20,6 @@
 	<p>Hello {data.session?.user.email}</p>
 	<br />
 	<form method="post" action="?/signout" use:enhance={handleSignOut}>
-		<button class="btn" disabled={loading}>Sign Out</button>
+		<Button disabled={loading}>Sign Out</Button>
 	</form>
 </div>
