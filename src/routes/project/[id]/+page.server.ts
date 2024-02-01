@@ -10,12 +10,17 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		};
 	}
 
-	const promptsReq = supabase.from('prompts').select('id, prompt').eq('project_id', params.id);
+	const promptsReq = supabase
+		.from('prompts')
+		.select('id, prompt, created_at')
+		.eq('project_id', params.id)
+		.order('created_at', { ascending: false });
 
 	const instancesReq = supabase
 		.from('instances')
 		.select('id, input, label')
-		.eq('project_id', params.id);
+		.eq('project_id', params.id)
+		.order('created_at', { ascending: false });
 
 	const [promptsRes, instancesRes] = await Promise.all([promptsReq, instancesReq]);
 
@@ -37,3 +42,55 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		};
 	}
 }
+
+export const actions = {
+	copyPrompt: async ({ params, request, locals: { supabase, getSession } }) => {
+		const session = await getSession();
+
+		if (!session) {
+			return {
+				status: 401,
+				body: 'Forbidden'
+			};
+		}
+
+		const formData = await request.formData();
+		const prompt = formData.get('prompt');
+
+		if (prompt) {
+			await supabase.from('prompts').insert({ prompt, project_id: params.id });
+		}
+	},
+	editPrompt: async ({ request, locals: { supabase, getSession } }) => {
+		const session = await getSession();
+
+		if (!session) {
+			return {
+				status: 401,
+				body: 'Forbidden'
+			};
+		}
+
+		const formData = await request.formData();
+		const newPrompt = formData.get('newPrompt');
+		const promptId = formData.get('promptId');
+
+		if (newPrompt) {
+			await supabase.from('prompts').update({ prompt: newPrompt }).eq('id', promptId);
+		}
+	},
+	deletePrompt: async ({ request, locals: { supabase, getSession } }) => {
+		const session = await getSession();
+
+		if (!session) {
+			return {
+				status: 401,
+				body: 'Forbidden'
+			};
+		}
+
+		const formData = await request.formData();
+		const promptId = formData.get('promptId');
+		await supabase.from('prompts').delete().eq('id', promptId);
+	}
+};
