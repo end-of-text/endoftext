@@ -25,7 +25,7 @@
 			bind:value={task}
 			classNames="mb-4"
 			numRows={5}
-			name="task"
+			name="prompt"
 		/>
 		{#if loading}
 			<p>loading...</p>
