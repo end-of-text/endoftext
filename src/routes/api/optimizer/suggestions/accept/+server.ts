@@ -15,9 +15,15 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	if (!selectedPrompt) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
-	const suggestion = requestData.suggestion as Tables<'suggestions'>;
-	const projectID = requestData.projectID;
-	const optimizer = getOptimizer(suggestion.type, new OpenAILLM(env.OPENAI_API_KEY));
+	const suggestion = requestData.suggestion as Tables<'suggestions'> | undefined;
+	if (!suggestion) {
+		return new Response('Could not instantiate optimizer.', { status: 500 });
+	}
+	const projectID = requestData.projectID as string | undefined;
+	if (!projectID) {
+		return new Response('Internal Server Error', { status: 500 });
+	}
+	const optimizer = getOptimizer(suggestion.type, new OpenAILLM(env.OPENAI_API_KEY || ''));
 	if (!optimizer) {
 		return new Response('Could not instantiate optimizer.', { status: 500 });
 	}

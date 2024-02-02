@@ -29,7 +29,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	for (const optimizerType of optimizerTypes) {
-		const optimizer = getOptimizer(optimizerType, new OpenAILLM(env.OPENAI_API_KEY));
+		const optimizer = getOptimizer(optimizerType, new OpenAILLM(env.OPENAI_API_KEY || ''));
 		if (!optimizer) {
 			continue;
 		}
