@@ -27,19 +27,23 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		return new Response(JSON.stringify(suggestions), { status: 200 });
 	}
 
-	for (const optimizer of optimizers) {
-		const applicable = await optimizer.filter(
-			selectedPrompt.prompt,
-			new OpenAILLM(env.OPENAI_API_KEY || '')
-		);
-		if (applicable) {
+	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
+	const results = await Promise.all(
+		optimizers.map(async (o) => {
+			const applicable = await o.filter(selectedPrompt.prompt, llm);
+			return { applicable, optimizer: o };
+		})
+	);
+
+	for (const result of results) {
+		if (result.applicable) {
 			const insertRes = await supabase
 				.from('suggestions')
 				.insert({
 					prompt_id: selectedPrompt.id,
-					name: optimizer.name,
-					description: optimizer.description,
-					type: optimizer.type
+					name: result.optimizer.name,
+					description: result.optimizer.description,
+					type: result.optimizer.type
 				})
 				.select();
 			if (insertRes.data && insertRes.data.length > 0) {
