@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { getPrediction } from '$lib/api';
 	import { selectedPrompt } from '$lib/state.svelte';
-	import type { Instance } from '$lib/types';
+	import type { Tables } from '$lib/supabase';
 
-	let { instance, edit = false } = $props<{ instance: Instance; edit?: boolean }>();
+	let { instance, edit = false } = $props<{ instance: Tables<'instances'>; edit?: boolean }>();
 </script>
 
 <div class="relative break-words rounded border text-left">
@@ -44,7 +44,7 @@
 					{#await getPrediction(selectedPrompt.prompt, instance)}
 						Loading...
 					{:then prediction}
-						{prediction}
+						{prediction?.prediction}
 					{/await}
 				</p>
 			</div>

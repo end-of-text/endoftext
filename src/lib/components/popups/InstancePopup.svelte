@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { updateInstance } from '$lib/api';
-	import type { Instance } from '$lib/types';
+	import type { Tables } from '$lib/supabase';
 	import InstanceView from '../Instances/InstanceView.svelte';
 	import Button from '../ui/Button.svelte';
 	import Popup from './Popup.svelte';
 
-	let { instance, onclose } = $props<{ instance: Instance; onclose: () => void }>();
+	let { instance, onclose } = $props<{ instance: Tables<'instances'>; onclose: () => void }>();
 
 	let bindableInstance = $state(instance);
 

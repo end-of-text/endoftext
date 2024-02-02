@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { Instance } from '$lib/types';
+	import type { Tables } from '$lib/supabase';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
-	let { instances } = $props<{ instances: Instance[] }>();
+	let { instances } = $props<{ instances: Tables<'instances'>[] }>();
 </script>
 
 <table class="w-full table-auto">

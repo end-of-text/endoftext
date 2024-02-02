@@ -1,4 +1,4 @@
-import type { Instance, Prompt } from '$lib/types.js';
+import type { Tables } from '$lib/supabase.js';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ locals: { supabase, getSession }, params }) {
@@ -38,8 +38,8 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		redirect(303, '/project/' + params.id + '/new/data');
 	} else {
 		return {
-			prompts: promptsRes.data as Prompt[],
-			instances: instancesRes.data as Instance[]
+			prompts: promptsRes.data as Tables<'prompts'>[],
+			instances: instancesRes.data as Tables<'instances'>[]
 		};
 	}
 }

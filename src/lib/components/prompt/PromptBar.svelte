@@ -14,7 +14,6 @@
 			<input type="hidden" name="prompt" value={selectedPrompt.prompt.prompt} />
 			<Button><Copy /> Copy</Button>
 		</form>
-		<h2>current prompt</h2>
 		{#if editPrompt}
 			<form method="POST" class="flex flex-col" action="?/editPrompt" use:enhance>
 				<input type="hidden" name="promptId" value={selectedPrompt.prompt?.id} />

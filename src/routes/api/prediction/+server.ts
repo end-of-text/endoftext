@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { OpenAILLM } from '$lib/server/llms/openai';
-import type { Instance, Prompt } from '$lib/types.js';
+import type { Tables } from '$lib/supabase.js';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
@@ -9,12 +9,12 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	const requestData = await request.json();
-	const selectedPrompt = requestData.selectedPrompt as Prompt;
+	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
 	if (!selectedPrompt) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
 
-	const instance = requestData.instance as Instance;
+	const instance = requestData.instance as Tables<'instances'> | undefined;
 	if (!instance) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
