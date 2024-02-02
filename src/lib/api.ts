@@ -1,9 +1,9 @@
-import type { Instance, Metric, Prediction, Prompt } from '$lib/types';
+import type { Tables } from './supabase';
 
 export async function getPrediction(
-	selectedPrompt: Prompt | undefined,
-	instance: Instance
-): Promise<Prediction | undefined> {
+	selectedPrompt: Tables<'prompts'> | undefined,
+	instance: Tables<'instances'>
+): Promise<Tables<'predictions'> | undefined> {
 	if (selectedPrompt === undefined) {
 		return;
 	}
@@ -16,10 +16,10 @@ export async function getPrediction(
 		body: JSON.stringify({ selectedPrompt: selectedPrompt, instance: instance })
 	});
 	const jsonResponse = await response.json();
-	return jsonResponse as Prediction;
+	return jsonResponse as Tables<'predictions'>;
 }
 
-export async function updateInstance(instance: Instance) {
+export async function updateInstance(instance: Tables<'instances'>) {
 	await fetch(`/api/instance`, {
 		method: 'PUT',
 		headers: {
@@ -30,9 +30,9 @@ export async function updateInstance(instance: Instance) {
 }
 
 export async function getMetric(
-	instance: Instance,
-	predictionPromise: Promise<Prediction | undefined>
-): Promise<Metric | undefined> {
+	instance: Tables<'instances'>,
+	predictionPromise: Promise<Tables<'predictions'> | undefined>
+): Promise<Tables<'metrics'> | undefined> {
 	const prediction = await predictionPromise;
 	if (instance.label === undefined || prediction === undefined) {
 		return;
@@ -49,5 +49,5 @@ export async function getMetric(
 		})
 	});
 	const jsonResponse = await response.json();
-	return jsonResponse as Metric;
+	return jsonResponse as Tables<'metrics'>;
 }

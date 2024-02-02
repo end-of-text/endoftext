@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { getMetric, getPrediction } from '$lib/api';
 	import { selectedPrompt } from '$lib/state.svelte';
-	import type { Instance } from '$lib/types';
+	import type { Tables } from '$lib/supabase';
 	import { Pencil } from 'lucide-svelte';
 	import InstancePopup from '../popups/InstancePopup.svelte';
 	import Button from '../ui/Button.svelte';
 
-	let { instance } = $props<{ instance: Instance }>();
+	let { instance } = $props<{ instance: Tables<'instances'> }>();
 
 	let editInstance = $state(false);
 

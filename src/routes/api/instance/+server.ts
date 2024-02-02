@@ -1,4 +1,4 @@
-import type { Instance } from '$lib/types.js';
+import type { Tables } from '$lib/supabase.js';
 
 export async function PUT({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
@@ -7,7 +7,7 @@ export async function PUT({ locals: { supabase, getSession }, request }) {
 	}
 
 	const requestData = await request.json();
-	const instance = requestData.instance as Instance;
+	const instance = requestData.instance as Tables<'instances'> | undefined;
 	if (!instance) {
 		return new Response('Internal Server Error', { status: 500 });
 	}

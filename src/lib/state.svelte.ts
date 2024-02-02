@@ -1,13 +1,13 @@
-import type { Prompt } from '$lib/types';
+import type { Tables } from './supabase';
 
 function createSelectedPrompt() {
-	let prompt = $state<Prompt | undefined>(undefined);
+	let prompt = $state<Tables<'prompts'> | undefined>(undefined);
 
 	return {
 		get prompt() {
 			return prompt;
 		},
-		set: (p: Prompt) => (prompt = p)
+		set: (p: Tables<'prompts'> | undefined) => (prompt = p)
 	};
 }
 export const selectedPrompt = createSelectedPrompt();

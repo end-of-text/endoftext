@@ -1,5 +1,5 @@
 import { chrfMetric } from '$lib/server/metrics/index.js';
-import type { Instance, Prediction } from '$lib/types.js';
+import type { Tables } from '$lib/supabase.js';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
@@ -8,12 +8,12 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	const requestData = await request.json();
-	const instance = requestData.instance as Instance;
+	const instance = requestData.instance as Tables<'instances'> | undefined;
 	if (!instance) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
 
-	const prediction = requestData.prediction as Prediction;
+	const prediction = requestData.prediction as Tables<'predictions'> | undefined;
 	if (!prediction) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
