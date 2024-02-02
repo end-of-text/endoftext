@@ -2,6 +2,7 @@
 	import { getMetric, getPrediction } from '$lib/api';
 	import { selectedPrompt } from '$lib/state.svelte';
 	import type { Instance } from '$lib/types';
+	import { Pencil } from 'lucide-svelte';
 	import InstancePopup from '../popups/InstancePopup.svelte';
 	import Button from '../ui/Button.svelte';
 
@@ -35,6 +36,6 @@
 		{/await}</td
 	>
 	<td>
-		<Button onclick={() => (editInstance = true)}>edit</Button>
+		<Button onclick={() => (editInstance = true)}><Pencil /></Button>
 	</td>
 </tr>

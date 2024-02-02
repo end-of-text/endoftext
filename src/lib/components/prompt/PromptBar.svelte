@@ -1,6 +1,7 @@
 <script>
 	import { enhance } from '$app/forms';
 	import { selectedPrompt } from '$lib/state.svelte';
+	import { Copy, Pencil, Save, Trash } from 'lucide-svelte';
 	import Button from '../ui/Button.svelte';
 
 	let editPrompt = $state(false);
@@ -11,7 +12,7 @@
 	{#if selectedPrompt.prompt}
 		<form method="POST" action="?/copyPrompt" use:enhance>
 			<input type="hidden" name="prompt" value={selectedPrompt.prompt.prompt} />
-			<Button>copy prompt</Button>
+			<Button><Copy /> Copy</Button>
 		</form>
 		<h2>current prompt</h2>
 		{#if editPrompt}
@@ -23,15 +24,15 @@
 					value={selectedPrompt.prompt.prompt}
 					name="newPrompt"
 				/>
-				<Button>save</Button>
+				<Button><Save /> Save</Button>
 			</form>
 		{:else}
 			<p>{selectedPrompt.prompt.prompt}</p>
 			<form method="POST" action="?/deletePrompt" use:enhance>
 				<input type="hidden" name="promptId" value={selectedPrompt.prompt?.id} />
-				<Button classNames="my-4">delete prompt</Button>
+				<Button classNames="my-4"><Trash /> Delete</Button>
 			</form>
-			<Button onclick={() => (editPrompt = true)}>edit prompt</Button>
+			<Button onclick={() => (editPrompt = true)}><Pencil /> Edit</Button>
 		{/if}
 	{/if}
 </div>
