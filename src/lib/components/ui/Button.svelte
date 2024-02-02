@@ -35,7 +35,10 @@
 	</div>
 {:else}
 	<button
-		class={twMerge('rounded border px-4 py-2 transition-all hover:bg-slate-300', classNames)}
+		class={twMerge(
+			'flex gap-2 rounded border px-4 py-2 transition-all hover:bg-slate-300',
+			classNames
+		)}
 		{disabled}
 		{onclick}
 	>

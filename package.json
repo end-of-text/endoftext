@@ -44,6 +44,7 @@
 		"@supabase/ssr": "^0.0.10",
 		"@supabase/supabase-js": "^2.39.3",
 		"arquero": "^5.4.0",
+		"lucide-svelte": "^0.321.0",
 		"openai": "^4.25.0",
 		"tailwind-merge": "^2.2.1"
 	}
