@@ -1,8 +1,11 @@
-<script>
+<script lang="ts">
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/ui/Button.svelte';
 	import { selectedPrompt } from '$lib/state.svelte';
 	import { Copy, Pencil, Save, Trash } from 'lucide-svelte';
-	import Button from '../ui/Button.svelte';
+	import Suggestions from './Suggestions.svelte';
+
+	let { projectId } = $props<{ projectId: string }>();
 
 	let editPrompt = $state(false);
 </script>
@@ -11,7 +14,7 @@
 	<h1 class="mb-5">Prompt</h1>
 	{#if selectedPrompt.prompt}
 		<form method="POST" action="?/copyPrompt" use:enhance>
-			<input type="hidden" name="prompt" value={selectedPrompt.prompt.prompt} />
+			<input type="hidden" name="prompt" value={JSON.stringify(selectedPrompt.prompt)} />
 			<Button><Copy /> Copy</Button>
 		</form>
 		{#if editPrompt}
@@ -33,5 +36,6 @@
 			</form>
 			<Button onclick={() => (editPrompt = true)}><Pencil /> Edit</Button>
 		{/if}
+		<Suggestions {projectId} />
 	{/if}
 </div>

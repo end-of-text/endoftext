@@ -38,6 +38,7 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		redirect(303, '/project/' + params.id + '/new/data');
 	} else {
 		return {
+			projectId: params.id,
 			prompts: promptsRes.data as Tables<'prompts'>[],
 			instances: instancesRes.data as Tables<'instances'>[]
 		};
@@ -56,10 +57,12 @@ export const actions = {
 		}
 
 		const formData = await request.formData();
-		const prompt = formData.get('prompt');
+		const prompt = JSON.parse(formData.get('prompt') as string) as Tables<'prompts'> | undefined;
 
 		if (prompt) {
-			await supabase.from('prompts').insert({ prompt, project_id: params.id });
+			await supabase
+				.from('prompts')
+				.insert({ prompt: prompt.prompt, project_id: params.id, parent_prompt_id: prompt.id });
 		}
 	},
 	editPrompt: async ({ request, locals: { supabase, getSession } }) => {
