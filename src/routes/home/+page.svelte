@@ -14,7 +14,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.projects as project}
+				{#each data.projects as project (project.id)}
 					<tr class="bg-gray-100">
 						<td class="border px-4 py-2">
 							<a href="/project/{project.id}">{project.name}</a>

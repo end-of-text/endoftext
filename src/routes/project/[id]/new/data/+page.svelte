@@ -21,14 +21,13 @@
 		}
 	});
 
-	async function uploadFile(event: CustomEvent<DragEvent>) {
+	async function uploadFile(event: DragEvent) {
 		loadingState = 'Processing uploaded file...';
-		const dropEvent = event.detail;
-		dropEvent.preventDefault();
-		if (!dropEvent.dataTransfer) {
+		event.preventDefault();
+		if (!event.dataTransfer) {
 			return;
 		}
-		const file = dropEvent.dataTransfer.files[0];
+		const file = event.dataTransfer.files[0];
 		if (file.type === 'text/plain') {
 			const reader = new FileReader();
 			reader.onload = async (loadEvent) => {
@@ -52,7 +51,7 @@
 			<h1>Specify Test Data</h1>
 			<div class="flex gap-2">
 				<Button
-					on:click={(e) => {
+					onclick={(e) => {
 						e.preventDefault();
 						instances = [];
 					}}
@@ -79,7 +78,7 @@
 			</div>
 			<Button
 				classNames="my-2 w-full"
-				on:click={(e) => {
+				onclick={(e) => {
 					e.preventDefault();
 					instances?.push('');
 				}}
@@ -90,7 +89,7 @@
 		{#if loadingState !== undefined}
 			<p>{loadingState}</p>
 		{:else}
-			<DropZone classNames="mt-2 m-auto" on:drop={uploadFile}>
+			<DropZone classNames="mt-2 m-auto" ondrop={uploadFile}>
 				Drag here to upload csv. Needs a "question" and an "answer" column.
 			</DropZone>
 		{/if}
