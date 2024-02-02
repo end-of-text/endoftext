@@ -1,4 +1,5 @@
-import { openai } from '$lib/server/openai.js';
+import { env } from '$env/dynamic/private';
+import { OpenAILLM } from '$lib/server/llms/openai';
 import type { Instance, Prompt } from '$lib/types.js';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
@@ -27,6 +28,8 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	if (fetchRes.data && fetchRes.data.length > 0) {
 		return new Response(JSON.stringify(fetchRes.data[0]), { status: 200 });
 	}
+
+	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
 
 	const prediction = await openai.generate([
 		{ role: 'system', content: selectedPrompt.prompt },
