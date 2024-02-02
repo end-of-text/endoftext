@@ -49,7 +49,9 @@ export class NoNegationOptimizer extends Optimizer {
 			},
 			{
 				role: 'user',
-				content: 'Rewrite the prompt to remove any sentenecs any negation.\n\nprompt: ' + prompt
+				content:
+					'Rewrite the prompt to remove any sentences that tell the model to not do something.\n\nprompt: ' +
+					prompt
 			}
 		]);
 
