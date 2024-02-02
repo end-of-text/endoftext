@@ -142,18 +142,21 @@ export interface Database {
 				Row: {
 					created_at: string;
 					id: number;
+					parent_prompt_id: number | null;
 					project_id: string;
 					prompt: string;
 				};
 				Insert: {
 					created_at?: string;
 					id?: number;
+					parent_prompt_id?: number | null;
 					project_id: string;
 					prompt: string;
 				};
 				Update: {
 					created_at?: string;
 					id?: number;
+					parent_prompt_id?: number | null;
 					project_id?: string;
 					prompt?: string;
 				};
@@ -163,6 +166,41 @@ export interface Database {
 						columns: ['project_id'];
 						isOneToOne: false;
 						referencedRelation: 'projects';
+						referencedColumns: ['id'];
+					}
+				];
+			};
+			suggestions: {
+				Row: {
+					created_at: string;
+					description: string;
+					id: number;
+					name: string;
+					prompt_id: number;
+					type: string;
+				};
+				Insert: {
+					created_at?: string;
+					description: string;
+					id?: number;
+					name: string;
+					prompt_id: number;
+					type: string;
+				};
+				Update: {
+					created_at?: string;
+					description?: string;
+					id?: number;
+					name?: string;
+					prompt_id?: number;
+					type?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'suggestions_prompt_id_fkey';
+						columns: ['prompt_id'];
+						isOneToOne: false;
+						referencedRelation: 'prompts';
 						referencedColumns: ['id'];
 					}
 				];

@@ -3,11 +3,13 @@ import type { LLM } from '../llms/llm';
 export abstract class Optimizer {
 	/** Create a new optimizer.
 	 *
+	 * @param type the type of the optimizer
 	 * @param name human-readable name of the optimizer
 	 * @param description description of the optimizer
 	 * @param llm the language model to be used
 	 */
 	constructor(
+		public readonly type: string,
 		public readonly name: string,
 		public readonly description: string,
 		protected llm: LLM

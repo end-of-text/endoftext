@@ -15,5 +15,7 @@
 			<InstanceTable instances={data.instances} />
 		{/if}
 	</div>
-	<PromptBar />
+	{#if data.projectId}
+		<PromptBar projectId={data.projectId} />
+	{/if}
 </div>

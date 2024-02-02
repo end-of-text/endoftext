@@ -1,9 +1,14 @@
-import type { LLM } from '../llms/llm';
-import { Optimizer } from './optimizer';
+import type { LLM } from '$lib/server/llms/llm';
+import { Optimizer } from '$lib/server/optimizers/optimizer';
 
 export class ChainOfThoughtOptimizer extends Optimizer {
 	constructor(llm: LLM) {
-		super('Chain of Thought Format', 'Ensure the prompt uses chain-of-thought reasoning.', llm);
+		super(
+			'ChainOfThought',
+			'Chain of Thought Format',
+			'Ensure the prompt uses chain-of-thought reasoning.',
+			llm
+		);
 	}
 
 	async filter(prompt: string): Promise<boolean> {
@@ -30,7 +35,7 @@ export class ChainOfThoughtOptimizer extends Optimizer {
 
 		try {
 			const resJSON = JSON.parse(res);
-			return resJSON.output;
+			return !resJSON.output;
 		} catch (e) {
 			return false;
 		}

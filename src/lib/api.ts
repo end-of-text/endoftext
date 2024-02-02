@@ -51,3 +51,43 @@ export async function getMetric(
 	const jsonResponse = await response.json();
 	return jsonResponse as Tables<'metrics'>;
 }
+
+export async function getSuggestions(
+	selectedPrompt: Tables<'prompts'> | undefined
+): Promise<Tables<'suggestions'>[] | undefined> {
+	if (selectedPrompt === undefined) {
+		return;
+	}
+
+	const response = await fetch(`/api/optimizer/suggestions`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ selectedPrompt: selectedPrompt })
+	});
+	const jsonResponse = await response.json();
+	return jsonResponse as Tables<'suggestions'>[];
+}
+
+export async function acceptSuggestion(
+	selectedPrompt: Tables<'prompts'> | undefined,
+	suggestion: Tables<'suggestions'>,
+	projectID: string
+) {
+	if (selectedPrompt === undefined) {
+		return;
+	}
+
+	await fetch(`/api/optimizer/suggestions/accept`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			selectedPrompt: selectedPrompt,
+			suggestion: suggestion,
+			projectID: projectID
+		})
+	});
+}

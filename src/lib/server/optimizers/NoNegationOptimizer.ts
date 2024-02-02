@@ -1,9 +1,10 @@
-import type { LLM } from '../llms/llm';
-import { Optimizer } from './optimizer';
+import type { LLM } from '$lib/server/llms/llm';
+import { Optimizer } from '$lib/server/optimizers/optimizer';
 
 export class NoNegationOptimizer extends Optimizer {
 	constructor(llm: LLM) {
 		super(
+			'NoNegation',
 			'No Negation Format',
 			'Ensure the prompts do not tell models what they *should not* do.',
 			llm
@@ -21,7 +22,7 @@ export class NoNegationOptimizer extends Optimizer {
 				{
 					role: 'user',
 					content:
-						'Prompts should not tell the model to not do certain behavior. Does this prompt tell the model to not behave in a certain way?\n\nprompt: ' +
+						'Prompts should not instruct the model about undesirable behavior. Does this prompt tell the model to not behave in a certain way?\n\nprompt: ' +
 						prompt
 				}
 			],
