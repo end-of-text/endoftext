@@ -1,18 +1,17 @@
-import type { LLM } from '$lib/server/llms/llm';
 import { Optimizer } from '$lib/server/optimizers/optimizer';
+import type { LLM } from '../llms/llm';
 
 export class ChainOfThoughtOptimizer extends Optimizer {
-	constructor(llm: LLM) {
+	constructor() {
 		super(
 			'ChainOfThought',
 			'Chain of Thought Format',
-			'Ensure the prompt uses chain-of-thought reasoning.',
-			llm
+			'Ensure the prompt uses chain-of-thought reasoning.'
 		);
 	}
 
-	async filter(prompt: string): Promise<boolean> {
-		const res = await this.llm.generate(
+	async filter(prompt: string, llm: LLM): Promise<boolean> {
+		const res = await llm.generate(
 			[
 				{
 					role: 'system',
@@ -41,8 +40,8 @@ export class ChainOfThoughtOptimizer extends Optimizer {
 		}
 	}
 
-	async apply(prompt: string): Promise<string> {
-		const res = await this.llm.generate([
+	async apply(prompt: string, llm: LLM): Promise<string> {
+		const res = await llm.generate([
 			{
 				role: 'system',
 				content:

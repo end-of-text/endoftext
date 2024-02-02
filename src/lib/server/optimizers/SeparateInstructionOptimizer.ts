@@ -1,12 +1,12 @@
 import type { LLM } from '$lib/server/llms/llm';
 import { Optimizer } from '$lib/server/optimizers/optimizer';
 
-export class NoNegationOptimizer extends Optimizer {
+export class SeparateInstructionOptimizer extends Optimizer {
 	constructor() {
 		super(
-			'NoNegation',
-			'No Negation Format',
-			'Ensure the prompts do not tell models what they *should not* do.'
+			'SeparateInstruction',
+			'Separate Instructions',
+			'Separate the prompt instructions from the rest of the prompt.'
 		);
 	}
 
@@ -21,7 +21,7 @@ export class NoNegationOptimizer extends Optimizer {
 				{
 					role: 'user',
 					content:
-						'Prompts should not instruct the model about undesirable behavior. Does this prompt tell the model to not behave in a certain way?\n\nprompt: ' +
+						'The instruction of what the task is that the model has to solve should be separated clearly from the rest of the prompt. Is the task instruction in this prompt well separated from other information in the prompt?\n\nprompt: ' +
 						prompt
 				}
 			],
@@ -50,7 +50,7 @@ export class NoNegationOptimizer extends Optimizer {
 			{
 				role: 'user',
 				content:
-					'Rewrite the prompt to remove any sentences that tell the model to not do something.\n\nprompt: ' +
+					"Rewrite the prompt so that the description of the model's task is clearly separated from the remaining instructions and information in the prompt. For example, you could rewrite it according to this format:\n### Instruction ###\n{instruction}\n\n{other information}\n\nprompt: " +
 					prompt
 			}
 		]);

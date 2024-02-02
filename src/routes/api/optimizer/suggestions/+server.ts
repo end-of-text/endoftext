@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
-import { getOptimizer } from '$lib/server/optimizers/optimizers.js';
+import { optimizers } from '$lib/server/optimizers/optimizers.js';
 import type { Tables } from '$lib/supabase.js';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
@@ -15,7 +15,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
 
-	const optimizerTypes = ['ChainOfThought', 'NoNegation'];
 	const suggestions: Tables<'suggestions'>[] = [];
 
 	const fetchRes = await supabase
@@ -28,12 +27,11 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		return new Response(JSON.stringify(suggestions), { status: 200 });
 	}
 
-	for (const optimizerType of optimizerTypes) {
-		const optimizer = getOptimizer(optimizerType, new OpenAILLM(env.OPENAI_API_KEY || ''));
-		if (!optimizer) {
-			continue;
-		}
-		const applicable = await optimizer.filter(selectedPrompt.prompt);
+	for (const optimizer of optimizers) {
+		const applicable = await optimizer.filter(
+			selectedPrompt.prompt,
+			new OpenAILLM(env.OPENAI_API_KEY || '')
+		);
 		if (applicable) {
 			const insertRes = await supabase
 				.from('suggestions')
@@ -41,7 +39,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 					prompt_id: selectedPrompt.id,
 					name: optimizer.name,
 					description: optimizer.description,
-					type: optimizerType
+					type: optimizer.type
 				})
 				.select();
 			if (insertRes.data && insertRes.data.length > 0) {

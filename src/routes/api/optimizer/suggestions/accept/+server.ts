@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
-import { getOptimizer } from '$lib/server/optimizers/optimizers.js';
+import { optimizers } from '$lib/server/optimizers/optimizers.js';
 import type { Tables } from '$lib/supabase.js';
 
 export async function POST({ request, locals: { supabase, getSession } }) {
@@ -23,11 +23,14 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	if (!projectID) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
-	const optimizer = getOptimizer(suggestion.type, new OpenAILLM(env.OPENAI_API_KEY || ''));
+	const optimizer = optimizers.find((o) => o.type === suggestion.type);
 	if (!optimizer) {
 		return new Response('Could not instantiate optimizer.', { status: 500 });
 	}
-	const prompt = await optimizer.apply(selectedPrompt.prompt);
+	const prompt = await optimizer.apply(
+		selectedPrompt.prompt,
+		new OpenAILLM(env.OPENAI_API_KEY || '')
+	);
 	await supabase
 		.from('prompts')
 		.insert({ prompt, project_id: projectID, parent_prompt_id: selectedPrompt.id });

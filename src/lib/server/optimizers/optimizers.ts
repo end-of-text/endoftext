@@ -1,13 +1,9 @@
-import type { LLM } from '../llms/llm';
 import { ChainOfThoughtOptimizer } from './ChainOfThoughtOptimizer';
 import { NoNegationOptimizer } from './NoNegationOptimizer';
-import type { Optimizer } from './optimizer';
+import { SeparateInstructionOptimizer } from './SeparateInstructionOptimizer';
 
-export function getOptimizer(type: string, llm: LLM): Optimizer | undefined {
-	switch (type) {
-		case 'ChainOfThought':
-			return new ChainOfThoughtOptimizer(llm);
-		case 'NoNegation':
-			return new NoNegationOptimizer(llm);
-	}
-}
+export const optimizers = [
+	new ChainOfThoughtOptimizer(),
+	new NoNegationOptimizer(),
+	new SeparateInstructionOptimizer()
+];
