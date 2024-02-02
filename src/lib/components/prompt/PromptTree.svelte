@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { selectedPrompt } from '$lib/state.svelte';
+	import type { Tables } from '$lib/supabase';
 
 	let { prompts } = $props<{ prompts?: Tables<'prompts'>[] }>();
 </script>
