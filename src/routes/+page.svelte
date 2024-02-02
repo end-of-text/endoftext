@@ -1,10 +1,12 @@
-<div class="flex flex-col items-center gap-2 [&_p]:text-slate-600">
+<div class="flex h-full w-full flex-col items-center gap-2 pt-20 [&_p]:text-slate-600">
 	<h1>Prompt Optimizer</h1>
 
 	<a
-		class="w-fit rounded border bg-slate-200 px-4 py-2 transition hover:bg-slate-300"
-		href="/account">Get Started</a
+		class="w-fit rounded border bg-orange-100 px-4 py-2 transition hover:brightness-105"
+		href="/auth"
 	>
+		Get Started
+	</a>
 
 	<div class="max-w-3xl rounded border p-5">
 		<p>
@@ -31,13 +33,13 @@
 		</div>
 		<div class="w-1/3 rounded border p-5">
 			<h2>Data Management</h2>
-			<p>Create rich evaluation datasets for selecting the best prompts.</p>
+			<p>Create rich evaluation data for selecting prompts.</p>
 		</div>
 	</div>
 	<div class="w-full max-w-3xl rounded border p-5">
-		<h3 class="text-center text-2xl font-medium text-violet-600">
+		<h2 class="text-center text-4xl font-light text-emerald-700">
 			<span class="font-bold">50%</span> more accurate prompts in
 			<span class="font-bold">10 minutes</span>.
-		</h3>
+		</h2>
 	</div>
 </div>

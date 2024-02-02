@@ -3,11 +3,51 @@
 @tailwind utilities;
 
 @layer base {
+	@font-face {
+		font-family: 'Cormorant Garamond';
+		src: local('Cormorant Garamond'), local('Cormorant-Garamond'), local('cormorant garamond'),
+			local('cormorant-garamond'), url('/fonts/CormorantGaramond-Regular.ttf');
+		font-weight: normal;
+		font-display: swap;
+	}
+	@font-face {
+		font-family: 'Cormorant Garamond';
+		src: local('Cormorant Garamond Bold Italic'), local('Cormorant-Garamond-Bold-Italic'),
+			local('cormorant garamond bold italic'), local('cormorant-garamond-bold-italic'),
+			url('/fonts/CormorantGaramond-BoldItalic.ttf');
+		font-weight: 700;
+		font-style: italic;
+	}
+	@font-face {
+		font-family: 'Cormorant Garamond';
+		src: local('Cormorant Garamond Bold'), local('Cormorant-Garamond-Bold'),
+			local('cormorant garamond bold'), local('cormorant-garamond-bold'),
+			url('/fonts/CormorantGaramond-Bold.ttf');
+		font-weight: 700;
+		font-display: swap;
+	}
+	@font-face {
+		font-family: 'Josefin Sans';
+		src: local('Josefin Sans'), local('Josefin-Sans'),
+			url('/fonts/JosefinSans-VariableFont_wght.ttf');
+		font-display: swap;
+	}
+	* {
+		font-family: 'Cormorant Garamond', sans-serif;
+	}
 	h1 {
-		@apply mb-2 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-3xl font-black text-transparent;
+		font-family: 'Josefin Sans', sans-serif;
+		letter-spacing: -2px;
+		@apply text-5xl font-bold italic text-slate-800;
 	}
 	h2 {
-		@apply mb-2 text-xl font-black;
+		font-family: 'Josefin Sans', sans-serif;
+		letter-spacing: -2px;
+		@apply text-2xl text-slate-800;
+	}
+	p {
+		font-family: 'Cormorant Garamond', sans-serif;
+		@apply text-lg;
 	}
 	input {
 		@apply rounded border border-slate-300 px-2 py-1;

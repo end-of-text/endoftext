@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex h-full w-full">
-	<div class="flex grow flex-col p-2">
+	<div class="flex grow flex-col p-7">
 		<h1>Data</h1>
 		<PromptTree prompts={data.prompts} />
 		<h2 class="mt-4">instances</h2>

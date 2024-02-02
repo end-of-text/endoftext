@@ -11,9 +11,11 @@ export const actions = {
 			email,
 			password
 		});
+
 		if (error) {
 			return fail(500, { message: 'Server error. Try again later.', success: false, email });
 		}
+
 		redirect(303, '/home');
 	},
 
