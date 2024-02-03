@@ -8,6 +8,10 @@
 	let instances = $state(data.instances);
 	let prompt = $state(data.prompt);
 	let editedPrompt = $state(data.prompt.prompt);
+
+	function editPrompt(suggestion: string) {
+		editedPrompt = suggestion;
+	}
 </script>
 
 <div class="flex h-full w-full">
@@ -16,7 +20,7 @@
 			<h1>Prompt</h1>
 			<CurrentPrompt bind:prompt bind:editedPrompt />
 			{#if data.projectId}
-				<PromptSuggestions projectId={data.projectId} {prompt} bind:editedPrompt />
+				<PromptSuggestions projectId={data.projectId} {prompt} {editPrompt} />
 			{/if}
 		{/if}
 	</div>

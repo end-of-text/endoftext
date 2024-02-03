@@ -2,7 +2,6 @@
 	import { getPrediction, updateInstance } from '$lib/api';
 	import type { Tables } from '$lib/supabase';
 	import { Trash2 } from 'lucide-svelte';
-	import InstancePopup from '../popups/InstancePopup.svelte';
 
 	let { instance, prompt, removeInstance } = $props<{
 		instance: Tables<'instances'>;
@@ -10,15 +9,10 @@
 		removeInstance: (id: number) => void;
 	}>();
 
-	let editInstance = $state(false);
 	let localInstanceInput = $state(instance.input);
 
 	let prediction = $derived(getPrediction(prompt, instance));
 </script>
-
-{#if editInstance}
-	<InstancePopup {instance} onclose={() => (editInstance = false)} />
-{/if}
 
 <tr class="border-b-2">
 	<td

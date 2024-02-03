@@ -3,7 +3,7 @@ import { OpenAILLM } from '$lib/server/llms/openai.js';
 import { optimizers } from '$lib/server/optimizers/optimizers.js';
 import type { Tables } from '$lib/supabase.js';
 
-export async function POST({ request, locals: { supabase, getSession } }) {
+export async function POST({ request, locals: { getSession } }) {
 	const session = await getSession();
 
 	if (!session) {

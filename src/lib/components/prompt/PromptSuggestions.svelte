@@ -4,10 +4,10 @@
 	import Button from '../ui/Button.svelte';
 	import Spinner from '../ui/Spinner.svelte';
 
-	let { projectId, prompt, editedPrompt } = $props<{
+	let { projectId, prompt, editPrompt } = $props<{
 		projectId: string;
 		prompt: Tables<'prompts'>;
-		editedPrompt: string;
+		editPrompt: (suggestion: string) => void;
 	}>();
 
 	let applyingSuggestion = $state(false);
@@ -15,7 +15,7 @@
 
 	async function accept(prompt: Tables<'prompts'>, suggestion: Tables<'suggestions'>) {
 		applyingSuggestion = true;
-		editedPrompt = await acceptSuggestion(prompt.prompt, suggestion, projectId);
+		editPrompt(await acceptSuggestion(prompt.prompt, suggestion, projectId));
 		applyingSuggestion = false;
 	}
 </script>
