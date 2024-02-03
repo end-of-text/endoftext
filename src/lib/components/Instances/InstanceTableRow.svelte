@@ -1,17 +1,19 @@
 <script lang="ts">
-	import { getMetric, getPrediction } from '$lib/api';
-	import { selectedPrompt } from '$lib/state.svelte';
+	import { getPrediction, updateInstance } from '$lib/api';
 	import type { Tables } from '$lib/supabase';
-	import { Pencil } from 'lucide-svelte';
+	import { Trash2 } from 'lucide-svelte';
 	import InstancePopup from '../popups/InstancePopup.svelte';
-	import Button from '../ui/Button.svelte';
 
-	let { instance } = $props<{ instance: Tables<'instances'> }>();
+	let { instance, prompt, removeInstance } = $props<{
+		instance: Tables<'instances'>;
+		prompt: Tables<'prompts'>;
+		removeInstance: (id: number) => void;
+	}>();
 
 	let editInstance = $state(false);
+	let localInstanceInput = $state(instance.input);
 
-	let prediction = $derived(getPrediction(selectedPrompt.prompt, instance));
-	let metric = $derived(getMetric(instance, prediction));
+	let prediction = $derived(getPrediction(prompt, instance));
 </script>
 
 {#if editInstance}
@@ -19,23 +21,32 @@
 {/if}
 
 <tr class="border-b-2">
-	<td class="py-2">{instance.input}</td>
-	<td class="py-2">{instance.label}</td>
-	<td class="py-2">
+	<td
+		class="box-border px-2 py-2"
+		contenteditable="plaintext-only"
+		bind:innerText={localInstanceInput}
+		onblur={() => {
+			updateInstance({ ...instance, input: localInstanceInput });
+			instance.input = localInstanceInput;
+		}}
+		on:keydown={(event) => {
+			if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
+				event.currentTarget.blur();
+			}
+		}}
+	>
+		{instance.input}
+	</td>
+	<td class="px-2 py-2">
 		{#await prediction}
 			Loading...
-		{:then prediction}
-			{prediction?.prediction || ''}
+		{:then pred}
+			{pred}
 		{/await}
 	</td>
-	<td class="py-2">
-		{#await metric}
-			Loading...
-		{:then metric}
-			{metric?.metric || ''}
-		{/await}</td
-	>
 	<td>
-		<Button onclick={() => (editInstance = true)}><Pencil /></Button>
+		<button onclick={() => removeInstance(instance.id)}>
+			<Trash2 class="cursor-pointer transition hover:text-red-600" />
+		</button>
 	</td>
 </tr>

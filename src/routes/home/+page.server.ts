@@ -1,3 +1,5 @@
+import { redirect } from '@sveltejs/kit';
+
 export async function load({ locals: { supabase, getSession } }) {
 	const session = getSession();
 
@@ -53,13 +55,16 @@ export const actions = {
 
 		const res = await supabase
 			.from('projects')
-			.insert({ user_id: session.user.id, name: formData.get('name') });
+			.insert({ user_id: session.user.id, name: formData.get('name') })
+			.select();
 
-		if (res.error) {
+		if (res.error || (res.data && res.data.length === 0)) {
 			return {
 				status: 500,
-				body: 'Internal Server Error'
+				body: "Couldn't create project"
 			};
+		} else {
+			redirect(303, '/project/' + res.data[0].id);
 		}
 	}
 };

@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { getPrediction } from '$lib/api';
-	import { selectedPrompt } from '$lib/state.svelte';
 	import type { Tables } from '$lib/supabase';
 
-	let { instance, edit = false } = $props<{ instance: Tables<'instances'>; edit?: boolean }>();
+	let {
+		instance,
+		prompt,
+		edit = false
+	} = $props<{
+		instance: Tables<'instances'>;
+		prompt: Tables<'prompts'>;
+		edit?: boolean;
+	}>();
 </script>
 
 <div class="relative break-words rounded border text-left">
@@ -37,11 +44,11 @@
 				</p>
 			{/if}
 		</div>
-		{#if selectedPrompt.prompt !== undefined}
+		{#if prompt !== undefined}
 			<div class="mt-2 text-sm text-gray-400">output</div>
 			<div class="flex flex-row">
 				<p class="text-grey whitespace-pre-wrap">
-					{#await getPrediction(selectedPrompt.prompt, instance)}
+					{#await getPrediction(prompt, instance)}
 						Loading...
 					{:then prediction}
 						{prediction?.prediction}

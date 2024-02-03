@@ -35,6 +35,27 @@ export interface Database {
 					}
 				];
 			};
+			llm_cache: {
+				Row: {
+					id: number;
+					input: string | null;
+					output: string | null;
+					prompt: string | null;
+				};
+				Insert: {
+					id?: number;
+					input?: string | null;
+					output?: string | null;
+					prompt?: string | null;
+				};
+				Update: {
+					id?: number;
+					input?: string | null;
+					output?: string | null;
+					prompt?: string | null;
+				};
+				Relationships: [];
+			};
 			metrics: {
 				Row: {
 					created_at: string;

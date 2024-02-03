@@ -1,21 +1,29 @@
 <script lang="ts">
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
-	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
-	import PromptTree from '$lib/components/prompt/PromptTree.svelte';
+	import CurrentPrompt from '$lib/components/prompt/PromptEditor.svelte';
+	import PromptSuggestions from '$lib/components/prompt/PromptSuggestions.svelte';
 
 	let { data } = $props();
+
+	let instances = $state(data.instances);
+	let prompt = $state(data.prompt);
+	let editedPrompt = $state(data.prompt.prompt);
 </script>
 
 <div class="flex h-full w-full">
-	<div class="flex grow flex-col p-2">
-		<h1>Data</h1>
-		<PromptTree prompts={data.prompts} />
-		<h2 class="mt-4">instances</h2>
-		{#if data.instances}
-			<InstanceTable instances={data.instances} />
+	<div class="w-1/3 p-5">
+		{#if data.prompt}
+			<h1>Prompt</h1>
+			<CurrentPrompt bind:prompt bind:editedPrompt />
+			{#if data.projectId}
+				<PromptSuggestions projectId={data.projectId} {prompt} bind:editedPrompt />
+			{/if}
 		{/if}
 	</div>
-	{#if data.projectId}
-		<PromptBar projectId={data.projectId} />
-	{/if}
+	<div class="flex w-2/3 grow flex-col p-5">
+		<h1>Data</h1>
+		{#if data.instances}
+			<InstanceTable bind:instances {prompt} />
+		{/if}
+	</div>
 </div>

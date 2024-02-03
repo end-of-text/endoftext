@@ -10,23 +10,21 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 
 	const requestData = await request.json();
 	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
-	if (!selectedPrompt) {
-		return new Response('Internal Server Error', { status: 500 });
-	}
-
 	const instance = requestData.instance as Tables<'instances'> | undefined;
-	if (!instance) {
+	if (!selectedPrompt || !instance) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
 
-	const fetchRes = await supabase
-		.from('predictions')
-		.select('id, prediction, instance_id, prompt_id')
-		.eq('instance_id', instance.id)
-		.eq('prompt_id', selectedPrompt.id);
+	const cacheRes = await supabase
+		.from('llm_cache')
+		.select('output')
+		.eq('prompt', selectedPrompt.prompt)
+		.eq('input', instance.input);
 
-	if (fetchRes.data && fetchRes.data.length > 0) {
-		return new Response(JSON.stringify(fetchRes.data[0]), { status: 200 });
+	if (cacheRes.error) {
+		return new Response('Internal Server Error', { status: 500 });
+	} else if (cacheRes.data && cacheRes.data.length > 0) {
+		return new Response(JSON.stringify({ output: cacheRes.data[0].output }), { status: 200 });
 	}
 
 	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
@@ -35,17 +33,16 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		{ role: 'system', content: selectedPrompt.prompt },
 		{ role: 'user', content: instance.input }
 	]);
-	const insertRes = await supabase
-		.from('predictions')
-		.insert({
-			prediction: prediction,
-			instance_id: instance.id,
-			prompt_id: selectedPrompt.id
-		})
-		.select();
-	if (insertRes.data && insertRes.data.length > 0) {
-		return new Response(JSON.stringify(insertRes.data[0]), { status: 200 });
+
+	const { error } = await supabase.from('llm_cache').insert({
+		prompt: selectedPrompt.prompt,
+		input: instance.input,
+		output: prediction
+	});
+
+	if (error) {
+		return new Response('Internal Server Error', { status: 500 });
 	}
 
-	return new Response('Internal Server Error', { status: 500 });
+	return new Response(JSON.stringify({ output: prediction }), { status: 200 });
 }

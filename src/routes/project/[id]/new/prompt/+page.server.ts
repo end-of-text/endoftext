@@ -15,7 +15,25 @@ export const actions = {
 		const prompt = formData.get('prompt');
 
 		if (prompt) {
-			await supabase.from('prompts').insert({ project_id: params.id, prompt: prompt });
+			const { error, data: prompts } = await supabase
+				.from('prompts')
+				.select('id')
+				.eq('project_id', params.id);
+
+			if (error) {
+				return {
+					status: 500,
+					body: 'Internal Server Error'
+				};
+			}
+
+			if (prompts.length === 0) {
+				await supabase.from('prompts').insert({ project_id: params.id, prompt: prompt });
+			} else {
+				await supabase
+					.from('prompts')
+					.upsert({ id: prompts[0].id, project_id: params.id, prompt: prompt });
+			}
 		}
 
 		redirect(303, '/project/' + params.id + '/new/data');

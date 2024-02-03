@@ -1,48 +1,40 @@
 import type { Tables } from '$lib/supabase.js';
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 export async function load({ locals: { supabase, getSession }, params }) {
 	const session = getSession();
 
 	if (!session) {
-		return {
-			status: 401,
-			body: 'Forbidden'
-		};
+		error(401, { message: 'Forbidden' });
 	}
 
 	const promptsReq = supabase
 		.from('prompts')
 		.select('id, prompt, created_at')
 		.eq('project_id', params.id)
-		.order('created_at', { ascending: false });
+		.order('created_at', { ascending: true });
 
 	const instancesReq = supabase
 		.from('instances')
 		.select('id, input, label')
 		.eq('project_id', params.id)
-		.order('created_at', { ascending: false });
+		.order('id', { ascending: true });
 
 	const [promptsRes, instancesRes] = await Promise.all([promptsReq, instancesReq]);
 
 	if (promptsRes.error || instancesRes.error) {
-		return {
-			status: 500,
-			body: 'Internal Server Error'
-		};
+		error(505, { message: 'Failed to get prompts and instances' });
 	}
 
 	if (promptsRes.data.length === 0) {
 		redirect(303, '/project/' + params.id + '/new/prompt');
-	} else if (instancesRes.data.length === 0) {
-		redirect(303, '/project/' + params.id + '/new/data');
-	} else {
-		return {
-			projectId: params.id,
-			prompts: promptsRes.data as Tables<'prompts'>[],
-			instances: instancesRes.data as Tables<'instances'>[]
-		};
 	}
+
+	return {
+		projectId: params.id,
+		prompt: promptsRes.data[0] as Tables<'prompts'>,
+		instances: instancesRes.data as Tables<'instances'>[]
+	};
 }
 
 export const actions = {

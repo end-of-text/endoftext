@@ -11,7 +11,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	}
 
 	const requestData = await request.json();
-	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
+	const selectedPrompt = requestData.selectedPrompt as string | undefined;
 	if (!selectedPrompt) {
 		return new Response('Internal Server Error', { status: 500 });
 	}
@@ -27,12 +27,6 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	if (!optimizer) {
 		return new Response('Could not instantiate optimizer.', { status: 500 });
 	}
-	const prompt = await optimizer.apply(
-		selectedPrompt.prompt,
-		new OpenAILLM(env.OPENAI_API_KEY || '')
-	);
-	await supabase
-		.from('prompts')
-		.insert({ prompt, project_id: projectID, parent_prompt_id: selectedPrompt.id });
-	return new Response(null, { status: 200 });
+	const prompt = await optimizer.apply(selectedPrompt, new OpenAILLM(env.OPENAI_API_KEY || ''));
+	return new Response(JSON.stringify({ prompt }), { status: 200 });
 }

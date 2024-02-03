@@ -23,7 +23,6 @@ export class OpenAILLM extends LLM {
 		try {
 			return completion.choices[0].message.content;
 		} catch (e) {
-			console.error(e);
 			return null;
 		}
 	}
