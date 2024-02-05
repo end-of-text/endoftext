@@ -50,9 +50,7 @@ export class NoNegationEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content:
-					'Rewrite the prompt to remove any sentences that tell the model to not do something.\n\nprompt: ' +
-					prompt
+				content: `Rewrite the prompt to remove any sentences that tell the model to not do something.\n\nprompt:\n${prompt}`
 			}
 		]);
 

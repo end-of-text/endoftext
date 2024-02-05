@@ -4,7 +4,7 @@ import { OpenAILLM } from '$lib/server/llms/openai.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
 
-export async function POST({ request, locals: { getSession } }) {
+export async function POST({ request, locals: { supabase, getSession } }) {
 	const session = await getSession();
 
 	if (!session) {
@@ -12,7 +12,7 @@ export async function POST({ request, locals: { getSession } }) {
 	}
 
 	const requestData = await request.json();
-	const selectedPrompt = requestData.selectedPrompt as string | undefined;
+	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
 	if (!selectedPrompt) {
 		error(500, 'Invalid prompt data');
 	}
@@ -29,6 +29,18 @@ export async function POST({ request, locals: { getSession } }) {
 		error(500, 'Could not find editor');
 	}
 
-	const prompt = await editor.apply(selectedPrompt, new OpenAILLM(env.OPENAI_API_KEY || ''));
+	const instanceRes = await supabase
+		.from('instances')
+		.select('id, input, label, predictions!inner(prediction)')
+		.eq('project_id', selectedPrompt.project_id)
+		.eq('predictions.prompt_id', selectedPrompt.id)
+		.neq('label', '')
+		.order('id', { ascending: true });
+	if (instanceRes.data === null) {
+		return json({ prompt: selectedPrompt });
+	}
+
+	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
+	const prompt = await editor.apply(selectedPrompt.prompt, llm, instanceRes.data);
 	return json({ prompt });
 }

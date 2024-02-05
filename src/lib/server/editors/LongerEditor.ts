@@ -46,9 +46,7 @@ export class LongerEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content:
-					'Rewrite the prompt so that the answers produced by the model are longer.\n\nprompt:' +
-					prompt
+				content: `Rewrite the prompt so that the answers produced by the model are longer.\n\nprompt:\n${prompt}`
 			}
 		]);
 

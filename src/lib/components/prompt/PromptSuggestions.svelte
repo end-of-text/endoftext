@@ -34,7 +34,7 @@
 
 	async function accept(prompt: Tables<'prompts'>, suggestion: Tables<'suggestions'>) {
 		applyingSuggestion = suggestion.id;
-		editPrompt(await acceptSuggestion(prompt.prompt, suggestion, projectId));
+		editPrompt(await acceptSuggestion(prompt, suggestion, projectId));
 		applyingSuggestion = -1;
 	}
 </script>

@@ -50,9 +50,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content:
-					'Rewrite the prompt to include a sentence near the end that tells the model to do chain-of-thought reasoning with something like "think step by step".\n\nprompt: ' +
-					prompt
+				content: `Rewrite the prompt to include a sentence near the end that tells the model to do chain-of-thought reasoning with something like "think step by step".\n\nprompt:\n${prompt}`
 			}
 		]);
 
