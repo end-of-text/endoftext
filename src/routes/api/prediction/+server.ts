@@ -30,10 +30,15 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
-	const prediction = await openai.generate([
-		{ role: 'system', content: prompt.prompt },
-		{ role: 'user', content: input }
-	]);
+	const prediction = await openai.generate(
+		[
+			{ role: 'system', content: prompt.prompt },
+			{ role: 'user', content: input }
+		],
+		prompt.model,
+		prompt.temperature,
+		prompt.responseFormat === 'json'
+	);
 
 	const res = await supabase.from('predictions').insert({
 		instance_id: instanceId,
