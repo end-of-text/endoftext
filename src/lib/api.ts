@@ -125,3 +125,15 @@ export async function acceptSuggestion(
 	const json = await res.json();
 	return json.prompt as string;
 }
+
+export async function generateInstances(prompt: string, count: number): Promise<string> {
+	const res = await fetch(`/api/instances/generate`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ prompt, count })
+	});
+	const json = await res.json();
+	return json as string;
+}

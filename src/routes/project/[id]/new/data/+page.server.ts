@@ -1,4 +1,31 @@
+import { generateInstances } from '$lib/server/instances/generateInstances';
 import { redirect } from '@sveltejs/kit';
+
+export async function load({ parent, locals: { getSession } }) {
+	const session = getSession();
+
+	if (!session) {
+		return {
+			status: 401,
+			body: 'Forbidden'
+		};
+	}
+
+	const { prompt } = await parent();
+
+	if (!prompt) {
+		return {
+			status: 500,
+			body: 'Internal Server Error'
+		};
+	}
+
+	const generatedInstances = generateInstances(prompt?.prompt, 5);
+
+	return {
+		generatedInstances
+	};
+}
 
 export const actions = {
 	default: async ({ params, request, locals: { supabase, getSession } }) => {
