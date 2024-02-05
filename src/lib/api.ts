@@ -91,7 +91,7 @@ export async function getSuggestions(
 		return;
 	}
 
-	const response = await fetch(`/api/optimizer/suggestions`, {
+	const response = await fetch(`/api/editor/suggestions`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ export async function acceptSuggestion(
 		return '';
 	}
 
-	const res = await fetch(`/api/optimizer/suggestions/accept`, {
+	const res = await fetch(`/api/editor/suggestions/accept`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { Save, Undo2 } from 'lucide-svelte';
+	import { ChevronDown, ChevronUp, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PromptOptions from '../options/PromptOptions.svelte';
 
@@ -11,16 +11,17 @@
 		setPrompt: () => void;
 	}>();
 
+	let showOptions = $state(false);
+
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
 </script>
 
 <div class="flex flex-col">
-	<PromptOptions bind:prompt={editedPrompt} />
 	<div
 		contenteditable="plaintext-only"
-		class="mt-2 h-auto overflow-hidden rounded border bg-white bg-opacity-90 p-2 text-sm"
+		class="mt-2 min-h-24 overflow-hidden rounded border bg-white bg-opacity-90 p-2 text-sm"
 		role="textbox"
 		aria-multiline="true"
 		tabindex="0"
@@ -31,7 +32,15 @@
 			}
 		}}
 	/>
-	<div class="ml-auto mt-2 flex items-center gap-2">
+	<div class="mt-2 flex items-center justify-between gap-2">
+		<Button onclick={() => (showOptions = !showOptions)}>
+			Model Options
+			{#if showOptions}
+				<ChevronUp />
+			{:else}
+				<ChevronDown />
+			{/if}
+		</Button>
 		{#if promptWasEdited}
 			<div class="flex items-center gap-3" transition:fade>
 				<p class="text-stone-500">unsaved changes</p>
@@ -53,4 +62,7 @@
 			Save and Run
 		</Button>
 	</div>
+	{#if showOptions}
+		<PromptOptions bind:prompt={editedPrompt} />
+	{/if}
 </div>

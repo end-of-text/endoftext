@@ -1,9 +1,9 @@
+import { EditorType, PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
-import { Optimizer } from '$lib/server/optimizers/optimizer';
 
-export class ShortenOptimizer extends Optimizer {
+export class ShortenEditor extends PromptEditor {
 	constructor() {
-		super('Shorten', 'Shorten', 'Make the predictions of the model shorter.');
+		super('Shorten', 'Shorten', 'Make the predictions of the model shorter.', EditorType.ERROR);
 	}
 
 	async filter(

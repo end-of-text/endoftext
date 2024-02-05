@@ -3,7 +3,13 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { RefreshCw } from 'lucide-svelte';
+	import { Lightbulb, RefreshCw, ShieldPlus, ShieldX } from 'lucide-svelte';
+
+	const borderMap: { [key: string]: string } = {
+		ERROR: 'border-l-red-600',
+		ENHANCEMENT: 'border-l-green-600',
+		OPTIMIZATION: 'border-l-blue-600'
+	};
 
 	let { projectId, prompt, editPrompt } = $props<{
 		projectId: string;
@@ -23,10 +29,10 @@
 </script>
 
 <div class="mt-4 flex flex-col gap-2">
-	<div class="flex">
+	<div class="my-2 flex">
 		<h2 class="mb-0">Suggestions</h2>
 		<button class="pl-4" onclick={() => (instanceUpdated = Date.now())}>
-			<RefreshCw class="cursor-pointer transition hover:text-red-600" />
+			<RefreshCw class="cursor-pointer transition hover:text-green-600" />
 		</button>
 	</div>
 	{#await suggestionsRequest}
@@ -36,11 +42,24 @@
 			No suggestions
 		{:else}
 			{#each suggestions as suggestion}
-				<div class="flex items-start justify-between rounded border p-2">
+				<div
+					class="flex items-center justify-between rounded border border-l-4 p-2 {borderMap[
+						suggestion.type
+					]}"
+				>
 					<div class="mr-4 flex flex-col">
-						<p class="font-bold">
-							{suggestion.name}
-						</p>
+						<div class="mb-2 flex items-center gap-2">
+							{#if suggestion.type === 'ERROR'}
+								<ShieldX class="text-red-600" />
+							{:else if suggestion.type === 'ENHANCEMENT'}
+								<Lightbulb class="text-green-600" />
+							{:else if suggestion.type === 'OPTIMIZATION'}
+								<ShieldPlus class="text-blue-600" />
+							{/if}
+							<p class="font-bold">
+								{suggestion.name}
+							</p>
+						</div>
 						<p>
 							{suggestion.description}
 						</p>

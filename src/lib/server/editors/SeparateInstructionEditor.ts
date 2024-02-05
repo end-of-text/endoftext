@@ -1,12 +1,13 @@
+import { EditorType, PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
-import { Optimizer } from '$lib/server/optimizers/optimizer';
 
-export class SeparateInstructionOptimizer extends Optimizer {
+export class SeparateInstructionEditor extends PromptEditor {
 	constructor() {
 		super(
 			'SeparateInstruction',
 			'Separate Instructions',
-			'Separate the prompt instructions from the rest of the prompt.'
+			'Separate the prompt instructions from the rest of the prompt.',
+			EditorType.ENHANCEMENT
 		);
 	}
 

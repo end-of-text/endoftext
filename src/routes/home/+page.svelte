@@ -11,8 +11,10 @@
 		<h1>Projects</h1>
 		{#each data.projects as project (project.id)}
 			<div class="flex items-center gap-2 border-b">
-				<a class="px-4 py-2 hover:bg-stone-50" href="/project/{project.id}">{project.name}</a>
-				<button class="transition hover:text-red-600" name="delete" value={project.id}>
+				<a class="w-full px-4 py-2 transition hover:bg-slate-100" href="/project/{project.id}">
+					{project.name}
+				</a>
+				<button class="ml-auto transition hover:text-red-600" name="delete" value={project.id}>
 					<Trash2 />
 				</button>
 			</div>
@@ -20,7 +22,7 @@
 	</form>
 {/if}
 
-<form class="mt-4 flex" method="post" use:enhance action="?/create">
+<form class="mt-10 flex" method="post" use:enhance action="?/create">
 	<input name="name" placeholder="name" />
 	<Button fancy classNames="ml-2">new project</Button>
 </form>

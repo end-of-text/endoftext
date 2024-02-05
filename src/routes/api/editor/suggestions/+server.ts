@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
+import { editors } from '$lib/server/editors/editors.js';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
-import { optimizers } from '$lib/server/optimizers/optimizers.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
 
@@ -23,7 +23,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	if (instanceUpdated === undefined) {
 		const fetchRes = await supabase
 			.from('suggestions')
-			.select('id, prompt_id, name, description, type, created_at')
+			.select('*')
 			.eq('prompt_id', selectedPrompt.id);
 
 		if (fetchRes.data && fetchRes.data.length > 0) {
@@ -47,9 +47,9 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	const results = await Promise.all(
-		optimizers.map(async (o) => {
-			const applicable = await o.filter(selectedPrompt.prompt, llm, instanceRes.data);
-			return { applicable, optimizer: o };
+		editors.map(async (e) => {
+			const applicable = await e.filter(selectedPrompt.prompt, llm, instanceRes.data);
+			return { applicable, editor: e };
 		})
 	);
 
@@ -59,9 +59,10 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 				.from('suggestions')
 				.insert({
 					prompt_id: selectedPrompt.id,
-					name: result.optimizer.name,
-					description: result.optimizer.description,
-					type: result.optimizer.type
+					name: result.editor.name,
+					description: result.editor.description,
+					identifier: result.editor.id,
+					type: result.editor.type
 				})
 				.select();
 			if (insertRes.data && insertRes.data.length > 0) {

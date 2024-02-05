@@ -184,6 +184,7 @@ export interface Database {
 					created_at: string;
 					description: string;
 					id: number;
+					identifier: string;
 					name: string;
 					prompt_id: number;
 					type: string;
@@ -192,6 +193,7 @@ export interface Database {
 					created_at?: string;
 					description: string;
 					id?: number;
+					identifier: string;
 					name: string;
 					prompt_id: number;
 					type: string;
@@ -200,6 +202,7 @@ export interface Database {
 					created_at?: string;
 					description?: string;
 					id?: number;
+					identifier?: string;
 					name?: string;
 					prompt_id?: number;
 					type?: string;
