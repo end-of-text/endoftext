@@ -1,5 +1,5 @@
+import type { LLM } from '$lib/server/llms/llm';
 import { Optimizer } from '$lib/server/optimizers/optimizer';
-import type { LLM } from '../llms/llm';
 
 export class ChainOfThoughtOptimizer extends Optimizer {
 	constructor() {

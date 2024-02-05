@@ -1,10 +1,6 @@
 /** @type { import("eslint").Linter.Config } */
 module.exports = {
 	root: true,
-	rules: {
-		// blocked by https://github.com/sveltejs/eslint-plugin-svelte/issues/652
-		'svelte/valid-compile': 'off'
-	},
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',

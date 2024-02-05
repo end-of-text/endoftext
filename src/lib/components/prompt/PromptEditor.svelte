@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { updatePrompt } from '$lib/api';
+	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
-	import Button from '../ui/Button.svelte';
 
 	let { prompt, editedPrompt } = $props<{
 		prompt: Tables<'prompts'>;

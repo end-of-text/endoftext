@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { acceptSuggestion, getSuggestions } from '$lib/api';
+	import Button from '$lib/components/ui/Button.svelte';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import Button from '../ui/Button.svelte';
-	import Spinner from '../ui/Spinner.svelte';
 
 	let { projectId, prompt, editPrompt } = $props<{
 		projectId: string;

@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { createInstance, deleteInstance } from '$lib/api';
+	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
-	import Button from '../ui/Button.svelte';
+	import { get } from 'svelte/store';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
 	let { instances, prompt } = $props<{
@@ -36,7 +37,7 @@
 <Button
 	classNames="mt-4 w-fit"
 	onclick={() => {
-		createInstance($page.params.id).then((d) => instances.push(d));
+		createInstance(get(page).params.id).then((d) => instances.push(d));
 	}}
 >
 	Add Instance
