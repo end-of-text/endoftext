@@ -29,22 +29,20 @@
 			No suggestions
 		{:else}
 			{#each suggestions as suggestion}
-				<div class="flex flex-col rounded border p-2">
-					<div class="flex flex-row items-center justify-between">
-						<div>
-							<p class="font-bold">
-								{suggestion.name}
-							</p>
-							<p>
-								{suggestion.description}
-							</p>
-						</div>
-						{#if applyingSuggestion}
-							<Spinner />
-						{:else}
-							<Button onclick={() => accept(prompt, suggestion)}>Apply</Button>
-						{/if}
+				<div class="flex items-start justify-between rounded border p-2">
+					<div class="mr-4 flex flex-col">
+						<p class="font-bold">
+							{suggestion.name}
+						</p>
+						<p>
+							{suggestion.description}
+						</p>
 					</div>
+					{#if applyingSuggestion}
+						<Spinner />
+					{:else}
+						<Button onclick={() => accept(prompt, suggestion)}>Apply</Button>
+					{/if}
 				</div>
 			{/each}
 		{/if}

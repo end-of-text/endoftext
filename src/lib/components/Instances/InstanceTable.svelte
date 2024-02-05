@@ -20,22 +20,24 @@
 	}
 </script>
 
-<table class="w-full table-auto">
-	<thead class="text-left">
-		<tr class="border-b-2">
-			<th class="px-2">Input</th>
-			<th class="px-2">Prediction</th>
-			<th class="px-2"></th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each instances as instance (instance.id)}
-			<InstanceTableRow bind:instance {prompt} {removeInstance} />
-		{/each}
-	</tbody>
-</table>
+<div class="w-full grow overflow-auto">
+	<table class="w-full">
+		<thead class="sticky top-0 z-10 bg-slate-200 text-left">
+			<tr class="border-b-2">
+				<th class="w-1/4 px-2">Input</th>
+				<th class="w-3/4 px-2">Prediction</th>
+				<th class="min-w-16 whitespace-nowrap px-2"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each instances as instance (instance.id)}
+				<InstanceTableRow bind:instance {prompt} {removeInstance} />
+			{/each}
+		</tbody>
+	</table>
+</div>
 <Button
-	classNames="mt-4 w-fit"
+	classNames="mt-4 self-end"
 	onclick={() => {
 		createInstance(get(page).params.id).then((d) => instances.push(d));
 	}}

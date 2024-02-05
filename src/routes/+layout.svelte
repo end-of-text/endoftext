@@ -9,7 +9,7 @@
 
 <main class="flex h-full w-full flex-col">
 	<Header {session} />
-	<div class="flex w-full grow flex-col items-center justify-center">
+	<div class="flex min-h-0 w-full grow flex-col items-center justify-center">
 		{@render children()}
 	</div>
 </main>

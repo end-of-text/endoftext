@@ -16,9 +16,9 @@
 
 <tr class="border-b-2">
 	<td
-		class="box-border px-2 py-2"
 		contenteditable="plaintext-only"
-		bind:innerHTML={localInstanceInput}
+		class="box-border px-2 py-2 align-top"
+		bind:innerText={localInstanceInput}
 		onblur={() => {
 			updateInstance({ ...instance, input: localInstanceInput }).then(() => {
 				instance.input = localInstanceInput;
@@ -29,9 +29,7 @@
 				event.currentTarget.blur();
 			}
 		}}
-	>
-		{instance.input}
-	</td>
+	/>
 	<td class="px-2 py-2">
 		{#await prediction}
 			Loading...
@@ -39,7 +37,7 @@
 			{pred}
 		{/await}
 	</td>
-	<td>
+	<td class="flex justify-end p-2">
 		<button onclick={() => removeInstance(instance.id)}>
 			<Trash2 class="cursor-pointer transition hover:text-red-600" />
 		</button>
