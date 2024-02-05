@@ -17,14 +17,36 @@ export abstract class Optimizer {
 	/** Determine if the prompt matches the criteria for this optimizer.
 	 *
 	 * @param prompt the prompt to be checked
+	 * @param llm the language model to be used
+	 * @param instancePredictions instances and predictions associated with the prompt
 	 * @returns true if matches the criteria, false otherwise
 	 */
-	abstract filter(prompt: string, llm: LLM): Promise<boolean>;
+	abstract filter(
+		prompt: string,
+		llm: LLM,
+		instancePredictions: {
+			id: number;
+			input: string;
+			label: string;
+			predictions: { prediction: string }[];
+		}[]
+	): Promise<boolean>;
 
 	/** Modify the prompt to match the criteria for this optimizer.
 	 *
 	 * @param prompt the prompt to be modified
+	 * @param llm the language model to be used
+	 * @param instancePredictions instances and predictions associated with the prompt
 	 * @returns the modified prompt
 	 */
-	abstract apply(prompt: string, llm: LLM): Promise<string>;
+	abstract apply(
+		prompt: string,
+		llm: LLM,
+		instancePredictions: {
+			id: number;
+			input: string;
+			label: string;
+			predictions: { prediction: string }[];
+		}[]
+	): Promise<string>;
 }

@@ -24,8 +24,9 @@
 	<table class="w-full">
 		<thead class="sticky top-0 z-10 bg-slate-200 text-left">
 			<tr class="border-b-2">
-				<th class="w-1/4 px-2">Input</th>
-				<th class="w-3/4 px-2">Prediction</th>
+				<th class="w-1/3 px-2">Input</th>
+				<th class="w-1/3 px-2">Label</th>
+				<th class="w-1/3 px-2">Prediction</th>
 				<th class="min-w-16 whitespace-nowrap px-2"></th>
 			</tr>
 		</thead>
