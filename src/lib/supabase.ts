@@ -142,23 +142,32 @@ export interface Database {
 				Row: {
 					created_at: string;
 					id: number;
+					model: string;
 					parent_prompt_id: number | null;
 					project_id: string;
 					prompt: string;
+					responseFormat: string;
+					temperature: number;
 				};
 				Insert: {
 					created_at?: string;
 					id?: number;
+					model?: string;
 					parent_prompt_id?: number | null;
 					project_id: string;
 					prompt: string;
+					responseFormat?: string;
+					temperature?: number;
 				};
 				Update: {
 					created_at?: string;
 					id?: number;
+					model?: string;
 					parent_prompt_id?: number | null;
 					project_id?: string;
 					prompt?: string;
+					responseFormat?: string;
+					temperature?: number;
 				};
 				Relationships: [
 					{

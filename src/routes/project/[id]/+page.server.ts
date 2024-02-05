@@ -8,13 +8,11 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		error(401, { message: 'Forbidden' });
 	}
 
-	// get the latest prompt.
 	const promptsReq = supabase
 		.from('prompts')
-		.select('id, prompt, project_id, created_at')
+		.select('*')
 		.eq('project_id', params.id)
-		.order('created_at', { ascending: false })
-		.limit(1);
+		.order('created_at', { ascending: false });
 
 	const instancesReq = supabase
 		.from('instances')
