@@ -35,9 +35,11 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 			{ role: 'system', content: prompt.prompt },
 			{ role: 'user', content: input }
 		],
-		prompt.model,
-		prompt.temperature,
-		prompt.responseFormat === 'json'
+		{
+			model: prompt.model,
+			temperature: prompt.temperature,
+			json: prompt.responseFormat === 'json'
+		}
 	);
 
 	const res = await supabase.from('predictions').insert({

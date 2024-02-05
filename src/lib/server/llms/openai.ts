@@ -1,4 +1,5 @@
 import { OpenAI } from 'openai';
+import type { BadRequestError } from 'openai/error.mjs';
 import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
 import { LLM, type LLMOptions } from './llm';
 
@@ -17,16 +18,16 @@ export class OpenAILLM extends LLM {
 		messages: ChatCompletionMessageParam[],
 		options?: LLMOptions
 	): Promise<string | null> {
-		const completion = await this.openai.chat.completions.create({
-			messages: messages,
-			model: options?.model || this.model,
-			temperature: options?.temperature || this.temperature,
-			...(options?.json ? { response_format: { type: 'json_object' } } : {})
-		});
 		try {
+			const completion = await this.openai.chat.completions.create({
+				messages: messages,
+				model: options?.model || this.model,
+				temperature: options?.temperature || this.temperature,
+				...(options?.json ? { response_format: { type: 'json_object' } } : {})
+			});
 			return completion.choices[0].message.content;
 		} catch (e) {
-			throw new Error('Could not generate completion');
+			return (e as BadRequestError).message;
 		}
 	}
 }
