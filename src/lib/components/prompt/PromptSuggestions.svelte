@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { acceptSuggestion, getSuggestions } from '$lib/api';
+	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { RefreshCw } from 'lucide-svelte';
@@ -44,6 +45,11 @@
 							{suggestion.description}
 						</p>
 					</div>
+					{#if applyingSuggestion}
+						<Spinner />
+					{:else}
+						<Button onclick={() => accept(prompt, suggestion)}>Apply</Button>
+					{/if}
 				</div>
 			{/each}
 		{/if}
