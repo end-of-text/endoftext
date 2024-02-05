@@ -8,9 +8,12 @@
 	let prompt = $state(data.prompt);
 </script>
 
-<div class="flex h-full min-h-0 w-full overflow-hidden">
-	<PromptBar bind:prompt projectId={data.projectId} />
-	<div class="flex grow flex-col p-2">
+<div class="flex h-full min-h-0 w-full">
+	<div class="h-full w-[450px] shrink-0 border-r p-4">
+		<h1>Prompt</h1>
+		<PromptBar bind:prompt projectId={data.projectId} />
+	</div>
+	<div class="flex grow flex-col p-4">
 		<h1>Data</h1>
 		{#if data.instances}
 			<InstanceTable bind:instances {prompt} />

@@ -5,7 +5,6 @@ export async function getPrediction(
 	instanceId: number,
 	input: string
 ): Promise<string> {
-	console.log('ind');
 	if (input === '') {
 		return '';
 	}

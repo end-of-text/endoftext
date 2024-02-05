@@ -23,10 +23,7 @@
 	}
 </script>
 
-<div class="h-full w-[450px] shrink-0 p-2 shadow">
-	<h1>Prompt</h1>
-	<PromptEditor {prompt} {setPrompt} bind:editedPrompt />
-	{#if projectId}
-		<PromptSuggestions {projectId} {prompt} {editPrompt} />
-	{/if}
-</div>
+<PromptEditor {prompt} {setPrompt} bind:editedPrompt />
+{#if projectId}
+	<PromptSuggestions {projectId} {prompt} {editPrompt} />
+{/if}
