@@ -25,8 +25,8 @@
 		<thead class="sticky top-0 z-10 bg-slate-200 text-left">
 			<tr class="border-b-2">
 				<th class="w-1/3 px-2">Input</th>
-				<th class="w-1/3 px-2">Label</th>
 				<th class="w-1/3 px-2">Prediction</th>
+				<th class="w-1/3 px-2">Label</th>
 				<th class="min-w-16 whitespace-nowrap px-2"></th>
 			</tr>
 		</thead>
@@ -36,12 +36,12 @@
 			{/each}
 		</tbody>
 	</table>
+	<Button
+		classNames="mt-4 self-end"
+		onclick={() => {
+			createInstance(get(page).params.id).then((d) => instances.push(d));
+		}}
+	>
+		Add Instance
+	</Button>
 </div>
-<Button
-	classNames="mt-4 self-end"
-	onclick={() => {
-		createInstance(get(page).params.id).then((d) => instances.push(d));
-	}}
->
-	Add Instance
-</Button>

@@ -10,7 +10,7 @@ export async function load({ locals: { supabase, getSession }, params }) {
 
 	const promptsReq = supabase
 		.from('prompts')
-		.select('id, prompt, project_id, created_at')
+		.select('*')
 		.eq('project_id', params.id)
 		.order('created_at', { ascending: false });
 

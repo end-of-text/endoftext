@@ -31,6 +31,13 @@
 			}
 		}}
 	/>
+	<td class="px-2 py-2">
+		{#await prediction}
+			Loading...
+		{:then pred}
+			{pred}
+		{/await}
+	</td>
 	<td
 		contenteditable="plaintext-only"
 		class="box-border px-2 py-2 align-top"
@@ -46,13 +53,6 @@
 			}
 		}}
 	/>
-	<td class="px-2 py-2">
-		{#await prediction}
-			Loading...
-		{:then pred}
-			{pred}
-		{/await}
-	</td>
 	<td class="flex justify-end p-2">
 		<button onclick={() => removeInstance(instance.id)}>
 			<Trash2 class="cursor-pointer transition hover:text-red-600" />
