@@ -2,9 +2,11 @@ import type { Tables } from './supabase';
 
 export async function getPrediction(
 	prompt: Tables<'prompts'>,
-	instance: Tables<'instances'>
+	instanceId: number,
+	input: string
 ): Promise<string> {
-	if (instance.input === '') {
+	console.log('ind');
+	if (input === '') {
 		return '';
 	}
 
@@ -13,7 +15,7 @@ export async function getPrediction(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ prompt, instance })
+		body: JSON.stringify({ prompt, instanceId, input })
 	});
 	const res = await response.json();
 	return res.output as string;
@@ -84,7 +86,7 @@ export async function getMetric(
 
 export async function getSuggestions(
 	selectedPrompt: Tables<'prompts'> | undefined,
-	refreshTime: number | undefined
+	instanceUpdated: number | undefined
 ): Promise<Tables<'suggestions'>[] | undefined> {
 	if (selectedPrompt === undefined) {
 		return;
@@ -95,7 +97,7 @@ export async function getSuggestions(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ selectedPrompt: selectedPrompt, refreshTime: refreshTime })
+		body: JSON.stringify({ selectedPrompt: selectedPrompt, instanceUpdated: instanceUpdated })
 	});
 	const jsonResponse = await response.json();
 	return jsonResponse as Tables<'suggestions'>[];

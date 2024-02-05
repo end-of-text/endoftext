@@ -1,6 +1,5 @@
 import type { LLM } from '$lib/server/llms/llm';
 import { Optimizer } from '$lib/server/optimizers/optimizer';
-import type { Tables } from '$lib/supabase';
 
 export class NoNegationOptimizer extends Optimizer {
 	constructor() {
@@ -11,7 +10,7 @@ export class NoNegationOptimizer extends Optimizer {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+	async filter(prompt: string, llm: LLM): Promise<boolean> {
 		const res = await llm.generate(
 			[
 				{
@@ -23,7 +22,7 @@ export class NoNegationOptimizer extends Optimizer {
 					role: 'user',
 					content:
 						'Prompts should not instruct the model about undesirable behavior. Does this prompt tell the model to not behave in a certain way?\n\nprompt: ' +
-						prompt.prompt
+						prompt
 				}
 			],
 			true

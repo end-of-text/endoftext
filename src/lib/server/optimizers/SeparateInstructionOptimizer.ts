@@ -1,6 +1,5 @@
 import type { LLM } from '$lib/server/llms/llm';
 import { Optimizer } from '$lib/server/optimizers/optimizer';
-import type { Tables } from '$lib/supabase';
 
 export class SeparateInstructionOptimizer extends Optimizer {
 	constructor() {
@@ -11,7 +10,7 @@ export class SeparateInstructionOptimizer extends Optimizer {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+	async filter(prompt: string, llm: LLM): Promise<boolean> {
 		const res = await llm.generate(
 			[
 				{
@@ -23,7 +22,7 @@ export class SeparateInstructionOptimizer extends Optimizer {
 					role: 'user',
 					content:
 						'The instruction of what the task is that the model has to solve should be separated clearly from the rest of the prompt. Is the task instruction in this prompt well separated from other information in the prompt?\n\nprompt: ' +
-						prompt.prompt
+						prompt
 				}
 			],
 			true

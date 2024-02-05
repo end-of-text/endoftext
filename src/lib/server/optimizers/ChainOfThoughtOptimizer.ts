@@ -1,6 +1,5 @@
 import type { LLM } from '$lib/server/llms/llm';
 import { Optimizer } from '$lib/server/optimizers/optimizer';
-import type { Tables } from '$lib/supabase';
 
 export class ChainOfThoughtOptimizer extends Optimizer {
 	constructor() {
@@ -11,7 +10,7 @@ export class ChainOfThoughtOptimizer extends Optimizer {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+	async filter(prompt: string, llm: LLM): Promise<boolean> {
 		const res = await llm.generate(
 			[
 				{
@@ -23,7 +22,7 @@ export class ChainOfThoughtOptimizer extends Optimizer {
 					role: 'user',
 					content:
 						'Prompts should have a statement telling the model to use chain-of-thought reasoning, something like "think step by step". Does this prompt contain a statement telling it to think step-by-step?\n\nprompt: ' +
-						prompt.prompt
+						prompt
 				}
 			],
 			true

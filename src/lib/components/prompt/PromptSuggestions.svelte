@@ -12,8 +12,8 @@
 	}>();
 
 	let applyingSuggestion = $state(false);
-	let refreshTime = $state<number | undefined>(undefined);
-	let suggestionsRequest = $derived(getSuggestions(prompt, refreshTime));
+	let instanceUpdated = $state<number | undefined>(undefined);
+	let suggestionsRequest = $derived(getSuggestions(prompt, instanceUpdated));
 
 	async function accept(prompt: Tables<'prompts'>, suggestion: Tables<'suggestions'>) {
 		applyingSuggestion = true;
@@ -25,7 +25,7 @@
 <div class="mt-4 flex flex-col gap-2">
 	<div class="flex">
 		<h2 class="mb-0">Suggestions</h2>
-		<button class="pl-4" onclick={() => (refreshTime = Date.now())}>
+		<button class="pl-4" onclick={() => (instanceUpdated = Date.now())}>
 			<RefreshCw class="cursor-pointer transition hover:text-red-600" />
 		</button>
 	</div>

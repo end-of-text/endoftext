@@ -18,9 +18,9 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 
 	const suggestions: Tables<'suggestions'>[] = [];
 
-	const refreshTime = requestData.refreshTime as number | undefined;
+	const instanceUpdated = requestData.instanceUpdated as number | undefined;
 
-	if (refreshTime === undefined) {
+	if (instanceUpdated === undefined) {
 		const fetchRes = await supabase
 			.from('suggestions')
 			.select('id, prompt_id, name, description, type, created_at')
@@ -35,9 +35,20 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
+	const instanceRes = await supabase
+		.from('instances')
+		.select('id, input, label, predictions!inner(prediction)')
+		.eq('project_id', selectedPrompt.project_id)
+		.eq('predictions.prompt_id', selectedPrompt.id)
+		.neq('label', '')
+		.order('id', { ascending: true });
+	if (instanceRes.data === null) {
+		return json([]);
+	}
+
 	const results = await Promise.all(
 		optimizers.map(async (o) => {
-			const applicable = await o.filter(selectedPrompt, llm, supabase);
+			const applicable = await o.filter(selectedPrompt.prompt, llm, instanceRes.data);
 			return { applicable, optimizer: o };
 		})
 	);

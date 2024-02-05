@@ -12,7 +12,7 @@
 	let localInstanceInput = $state(instance.input);
 	let localInstanceLabel = $state(instance.label);
 
-	let prediction = $derived(getPrediction(prompt, instance));
+	let prediction = $derived(getPrediction(prompt, instance.id, instance.input));
 </script>
 
 <tr class="border-b-2">

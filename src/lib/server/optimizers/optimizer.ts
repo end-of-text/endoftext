@@ -1,6 +1,4 @@
 import type { LLM } from '$lib/server/llms/llm';
-import type { Tables } from '$lib/supabase';
-import type { SupabaseClient } from '@supabase/supabase-js';
 
 export abstract class Optimizer {
 	/** Create a new optimizer.
@@ -20,17 +18,35 @@ export abstract class Optimizer {
 	 *
 	 * @param prompt the prompt to be checked
 	 * @param llm the language model to be used
-	 * @param supabase the supabase client
+	 * @param instancePredictions instances and predictions associated with the prompt
 	 * @returns true if matches the criteria, false otherwise
 	 */
-	abstract filter(prompt: Tables<'prompts'>, llm: LLM, supabase: SupabaseClient): Promise<boolean>;
+	abstract filter(
+		prompt: string,
+		llm: LLM,
+		instancePredictions: {
+			id: number;
+			input: string;
+			label: string;
+			predictions: { prediction: string }[];
+		}[]
+	): Promise<boolean>;
 
 	/** Modify the prompt to match the criteria for this optimizer.
 	 *
 	 * @param prompt the prompt to be modified
 	 * @param llm the language model to be used
-	 * @param supabase the supabase client
+	 * @param instancePredictions instances and predictions associated with the prompt
 	 * @returns the modified prompt
 	 */
-	abstract apply(prompt: string, llm: LLM, supabase: SupabaseClient): Promise<string>;
+	abstract apply(
+		prompt: string,
+		llm: LLM,
+		instancePredictions: {
+			id: number;
+			input: string;
+			label: string;
+			predictions: { prediction: string }[];
+		}[]
+	): Promise<string>;
 }
