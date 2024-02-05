@@ -2,17 +2,18 @@ import { env } from '$env/dynamic/private';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import { optimizers } from '$lib/server/optimizers/optimizers.js';
 import type { Tables } from '$lib/supabase.js';
+import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
 	if (!session) {
-		return new Response('Forbidden', { status: 401 });
+		error(401, 'Forbidden');
 	}
 
 	const requestData = await request.json();
 	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
 	if (!selectedPrompt) {
-		return new Response('Internal Server Error', { status: 500 });
+		error(500, 'Invalid prompt data');
 	}
 
 	const suggestions: Tables<'suggestions'>[] = [];
@@ -24,7 +25,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 
 	if (fetchRes.data && fetchRes.data.length > 0) {
 		suggestions.push(...fetchRes.data);
-		return new Response(JSON.stringify(suggestions), { status: 200 });
+		return json(suggestions);
 	}
 
 	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
@@ -52,5 +53,5 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		}
 	}
 
-	return new Response(JSON.stringify(suggestions), { status: 200 });
+	return json(suggestions);
 }

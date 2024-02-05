@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Button from '$lib/components/ui/Button.svelte';
-	import DropZone from '$lib/components/ui/DropZone.svelte';
+	import { Trash2 } from 'lucide-svelte';
 	import { get } from 'svelte/store';
 
 	let instances = $state<string[]>();
-	let loadingState = $state<string | undefined>(undefined);
 
 	$effect(() => {
 		if (instances === undefined) {
@@ -20,60 +20,42 @@
 			localStorage.setItem('instances' + get(page).params.id, JSON.stringify(instances));
 		}
 	});
-
-	async function uploadFile(event: DragEvent) {
-		loadingState = 'Processing uploaded file...';
-		event.preventDefault();
-		if (!event.dataTransfer) {
-			return;
-		}
-		const file = event.dataTransfer.files[0];
-		if (file.type === 'text/plain') {
-			const reader = new FileReader();
-			reader.onload = async (loadEvent) => {
-				if (!loadEvent.target) {
-					return;
-				}
-				const text = loadEvent.target.result as string;
-				const entries = text.split('\n');
-				if (instances) {
-					instances = [...instances, ...entries];
-				}
-			};
-			reader.readAsText(file);
-		}
-	}
 </script>
 
 <div class="flex h-full flex-col items-center justify-center">
 	<form class="flex flex-col items-start" method="POST" use:enhance>
+		<p class="mb-2 text-slate-500">2 / 2</p>
 		<div class="mb-5 flex w-full items-center justify-between">
-			<h1>Specify Test Data</h1>
+			<h1>Example Inputs</h1>
 			<div class="flex gap-2">
 				<Button
 					onclick={(e) => {
 						e.preventDefault();
-						instances = [];
-					}}
+						goto('./prompt');
+					}}>back</Button
 				>
-					clear
-				</Button>
 				<Button>next</Button>
 			</div>
 		</div>
-		<p class="mb-4">
-			To evaluate your prompt, we'll need some test data. Manually type in instances here or drag in
-			a text file.
-		</p>
+		<div class="mb-4 flex flex-col gap-2">
+			<p>To improve your prompt we'll need some example inputs</p>
+			<p>These are the questions or statements you want your model to respond to.</p>
+		</div>
 		{#if instances}
 			<div class="flex w-full flex-col gap-2">
-				{#each instances as instance}
-					<textarea
-						name="instance"
-						class="w-full"
-						placeholder="Enter text here"
-						bind:value={instance}
-					/>
+				{#each instances as instance, i}
+					<div class="flex items-center gap-2">
+						<textarea
+							name="instance"
+							class="w-full"
+							placeholder="Enter text here"
+							bind:value={instance}
+						/>
+						<Trash2
+							class="cursor-pointer hover:text-red-600"
+							onclick={() => instances?.splice(i, 1)}
+						/>
+					</div>
 				{/each}
 			</div>
 			<Button
@@ -85,13 +67,6 @@
 			>
 				Add More
 			</Button>
-		{/if}
-		{#if loadingState !== undefined}
-			<p>{loadingState}</p>
-		{:else}
-			<DropZone classNames="mt-2 m-auto" ondrop={uploadFile}>
-				Drag here to upload csv. Needs a "question" and an "answer" column.
-			</DropZone>
 		{/if}
 	</form>
 </div>

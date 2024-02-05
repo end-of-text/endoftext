@@ -1,11 +1,11 @@
 import type { Tables } from './supabase';
 
 export async function getPrediction(
-	selectedPrompt: Tables<'prompts'> | undefined,
+	prompt: Tables<'prompts'>,
 	instance: Tables<'instances'>
-): Promise<Tables<'predictions'> | undefined> {
-	if (selectedPrompt === undefined) {
-		return;
+): Promise<string> {
+	if (instance.input === '') {
+		return '';
 	}
 
 	const response = await fetch(`/api/prediction`, {
@@ -13,20 +13,50 @@ export async function getPrediction(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ selectedPrompt: selectedPrompt, instance: instance })
+		body: JSON.stringify({ prompt, instance })
 	});
-	const jsonResponse = await response.json();
-	return jsonResponse as Tables<'predictions'>;
+	const res = await response.json();
+	return res.output as string;
 }
 
 export async function updateInstance(instance: Tables<'instances'>) {
 	await fetch(`/api/instance`, {
-		method: 'PUT',
+		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({ instance: instance })
 	});
+}
+
+export async function deleteInstance(instanceId: number) {
+	await fetch(`/api/instance/${instanceId}`, {
+		method: 'DELETE'
+	});
+}
+
+export async function createInstance(projectId: string) {
+	const res = await fetch(`/api/instance`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ projectId: projectId })
+	});
+	const json = await res.json();
+	return json as Tables<'instances'>;
+}
+
+export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'prompts'>> {
+	const res = await fetch(`/api/prompt`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ prompt })
+	});
+	const json = await res.json();
+	return json as Tables<'prompts'>;
 }
 
 export async function getMetric(
@@ -71,15 +101,15 @@ export async function getSuggestions(
 }
 
 export async function acceptSuggestion(
-	selectedPrompt: Tables<'prompts'> | undefined,
+	selectedPrompt: string | undefined,
 	suggestion: Tables<'suggestions'>,
 	projectID: string
-) {
+): Promise<string> {
 	if (selectedPrompt === undefined) {
-		return;
+		return '';
 	}
 
-	await fetch(`/api/optimizer/suggestions/accept`, {
+	const res = await fetch(`/api/optimizer/suggestions/accept`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -90,4 +120,6 @@ export async function acceptSuggestion(
 			projectID: projectID
 		})
 	});
+	const json = await res.json();
+	return json.prompt as string;
 }

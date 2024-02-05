@@ -1,34 +1,22 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
-	import { Trash } from 'lucide-svelte';
+	import { Trash2 } from 'lucide-svelte';
 
 	const { data } = $props();
 </script>
 
 {#if data.projects && data.projects.length > 0}
 	<form method="POST" use:enhance action="?/delete">
-		<table class="table-auto">
-			<thead class="bg-gray-200">
-				<tr>
-					<th class="px-4 py-2">Project Name</th>
-				</tr>
-			</thead>
-			<tbody>
-				{#each data.projects as project (project.id)}
-					<tr class="bg-gray-100">
-						<td class="border px-4 py-2">
-							<a href="/project/{project.id}">{project.name}</a>
-						</td>
-						<td class="border px-4 py-2 transition hover:text-slate-500">
-							<button name="delete" value={project.id}>
-								<Trash />
-							</button>
-						</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+		<h1>Projects</h1>
+		{#each data.projects as project (project.id)}
+			<div class="flex items-center gap-2 border-b">
+				<a class="px-4 py-2 hover:bg-stone-50" href="/project/{project.id}">{project.name}</a>
+				<button class="transition hover:text-red-600" name="delete" value={project.id}>
+					<Trash2 />
+				</button>
+			</div>
+		{/each}
 	</form>
 {/if}
 
