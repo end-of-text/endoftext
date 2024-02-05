@@ -3,6 +3,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
+	import { RefreshCw } from 'lucide-svelte';
 
 	let { projectId, prompt, editPrompt } = $props<{
 		projectId: string;
@@ -11,7 +12,8 @@
 	}>();
 
 	let applyingSuggestion = $state(false);
-	let suggestionsRequest = $derived(getSuggestions(prompt));
+	let refreshTime = $state<number | undefined>(undefined);
+	let suggestionsRequest = $derived(getSuggestions(prompt, refreshTime));
 
 	async function accept(prompt: Tables<'prompts'>, suggestion: Tables<'suggestions'>) {
 		applyingSuggestion = true;
@@ -21,9 +23,14 @@
 </script>
 
 <div class="mt-4 flex flex-col gap-2">
-	<h2>Suggestions</h2>
+	<div class="flex">
+		<h2 class="mb-0">Suggestions</h2>
+		<button class="pl-4" onclick={() => (refreshTime = Date.now())}>
+			<RefreshCw class="cursor-pointer transition hover:text-red-600" />
+		</button>
+	</div>
 	{#await suggestionsRequest}
-		Loading suggestions...
+		<Spinner />
 	{:then suggestions}
 		{#if suggestions === undefined || suggestions.length === 0}
 			No suggestions
