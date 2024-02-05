@@ -11,8 +11,9 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 
 	const requestData = await request.json();
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
-	const instance = requestData.instance as Tables<'instances'> | undefined;
-	if (!prompt || !instance) {
+	const instanceId = requestData.instanceId as number | undefined;
+	const input = requestData.input as string | undefined;
+	if (!prompt || !instanceId || !input) {
 		error(500, 'Invalid data');
 	}
 
@@ -20,7 +21,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		.from('predictions')
 		.select('prediction')
 		.eq('prompt_id', prompt.id)
-		.eq('instance_id', instance.id);
+		.eq('instance_id', instanceId);
 
 	if (cacheRes.error) {
 		error(500, cacheRes.error.message);
@@ -31,11 +32,11 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
 	const prediction = await openai.generate([
 		{ role: 'system', content: prompt.prompt },
-		{ role: 'user', content: instance.input }
+		{ role: 'user', content: input }
 	]);
 
 	const res = await supabase.from('predictions').insert({
-		instance_id: instance.id,
+		instance_id: instanceId,
 		prompt_id: prompt.id,
 		prediction: prediction
 	});
