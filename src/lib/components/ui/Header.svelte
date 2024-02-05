@@ -12,14 +12,18 @@
 			href="/home"
 			class="rounded-full px-1 py-2 transition hover:bg-slate-100 {$page.url.pathname === '/home'
 				? 'text-purple-600'
-				: ''}"><Home /></a
+				: ''}"
 		>
+			<Home />
+		</a>
 		<a
 			href="/account/preferences"
 			class="rounded-full px-1 py-2 transition hover:bg-slate-100 {$page.url.pathname ===
 			'/account/preferences'
 				? 'text-purple-600'
-				: ''}"><User2 /></a
+				: ''}"
 		>
+			<User2 />
+		</a>
 	{/if}
 </div>
