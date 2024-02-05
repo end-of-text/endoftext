@@ -9,7 +9,7 @@
 </script>
 
 <div class="flex h-full min-h-0 w-full">
-	<PromptBar {prompt} projectId={data.projectId} />
+	<PromptBar bind:prompt projectId={data.projectId} />
 	<div class="flex grow flex-col p-2">
 		<h1>Data</h1>
 		{#if data.instances}
