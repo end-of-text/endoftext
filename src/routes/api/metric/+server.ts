@@ -1,21 +1,22 @@
 import { chrfMetric } from '$lib/server/metrics/index.js';
 import type { Tables } from '$lib/supabase.js';
+import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
 	if (!session) {
-		return new Response('Forbidden', { status: 401 });
+		error(401, 'Forbidden');
 	}
 
 	const requestData = await request.json();
 	const instance = requestData.instance as Tables<'instances'> | undefined;
 	if (!instance) {
-		return new Response('Internal Server Error', { status: 500 });
+		error(500, 'Invalid instance data');
 	}
 
 	const prediction = requestData.prediction as Tables<'predictions'> | undefined;
 	if (!prediction) {
-		return new Response('Internal Server Error', { status: 500 });
+		error(500, 'Invalid prediction data');
 	}
 
 	const fetchRes = await supabase
@@ -24,7 +25,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		.eq('prediction_id', prediction.id);
 
 	if (fetchRes.data && fetchRes.data.length > 0) {
-		return new Response(JSON.stringify(fetchRes.data[0]), { status: 200 });
+		return json(fetchRes.data[0]);
 	}
 
 	const metric = chrfMetric(instance.label!, prediction.prediction);
@@ -36,9 +37,12 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 			metric: metric
 		})
 		.select();
-	if (insertRes.data && insertRes.data.length > 0) {
-		return new Response(JSON.stringify(insertRes.data[0]), { status: 200 });
-	}
 
-	return new Response('Internal Server Error', { status: 500 });
+	if (insertRes.error) {
+		error(500, insertRes.error.message);
+	} else if (insertRes.data && insertRes.data.length > 0) {
+		return json(insertRes.data[0]);
+	} else {
+		error(500, 'Failed to insert metric');
+	}
 }

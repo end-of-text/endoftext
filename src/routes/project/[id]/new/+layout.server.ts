@@ -23,7 +23,7 @@ export async function load({ params, locals: { getSession, supabase } }) {
 		};
 	}
 
-	if (data && data.length > 1) {
+	if (data && data.length > 0) {
 		redirect(303, '/project/' + params.id);
 	}
 

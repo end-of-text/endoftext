@@ -32,7 +32,8 @@ export const actions = {
 			} else {
 				await supabase
 					.from('prompts')
-					.upsert({ id: prompts[0].id, project_id: params.id, prompt: prompt });
+					.update({ id: prompts[0].id, project_id: params.id, prompt: prompt })
+					.eq('id', prompts[0].id);
 			}
 		}
 

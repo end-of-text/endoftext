@@ -23,8 +23,7 @@
 		tabindex="0"
 		onkeydown={(e) => {
 			if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-				updatePrompt(prompt.id, editedPrompt);
-				prompt = { ...prompt, prompt: editedPrompt };
+				updatePrompt({ ...prompt, prompt: editedPrompt }).then((r) => (prompt = r));
 			}
 		}}
 	/>
@@ -44,10 +43,10 @@
 			</div>
 		{/if}
 		<Button
-			onclick={() => {
-				updatePrompt(prompt.id, editedPrompt);
-				prompt = { ...prompt, prompt: editedPrompt };
-			}}
+			onclick={() =>
+				updatePrompt({ ...prompt, prompt: editedPrompt }).then((r) => {
+					prompt = r;
+				})}
 			classNames="w-fit {promptWasEdited
 				? 'border-emerald-600 bg-emerald-50 hover:bg-emerald-100'
 				: 'border'}"><Save /> Save and Run</Button

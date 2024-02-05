@@ -1,32 +1,44 @@
 import type { Tables } from '$lib/supabase.js';
+import { error, json } from '@sveltejs/kit';
 
 export async function PATCH({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
 	if (!session) {
-		return new Response('Forbidden', { status: 401 });
+		error(401, 'Forbidden');
 	}
 
 	const requestData = await request.json();
 	const instance = requestData.instance as Tables<'instances'> | undefined;
 	if (!instance) {
-		return new Response('Internal Server Error', { status: 500 });
+		error(500, 'Invalid instance data');
 	}
 
-	const res = await supabase
+	const instanceRes = await supabase
 		.from('instances')
 		.update({ input: instance.input, label: instance.label })
 		.eq('id', instance.id);
 
-	if (res.error) {
-		return new Response(res.error.message, { status: 500 });
+	if (instanceRes.error) {
+		error(500, instanceRes.error.message);
 	}
+
+	const predictionRes = await supabase
+		.from('predictions')
+		.delete()
+		.eq('instance_id', instance.id)
+		.select();
+
+	if (predictionRes.error) {
+		error(500, predictionRes.error.message);
+	}
+
 	return new Response(null, { status: 200 });
 }
 
 export async function PUT({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
 	if (!session) {
-		return new Response('Forbidden', { status: 401 });
+		error(401, 'Forbidden');
 	}
 
 	const requestData = await request.json();
@@ -43,8 +55,8 @@ export async function PUT({ locals: { supabase, getSession }, request }) {
 		.single();
 
 	if (res.error) {
-		return new Response(res.error.message, { status: 500 });
+		error(500, res.error.message);
 	} else {
-		return new Response(JSON.stringify(res.data), { status: 200 });
+		return json(res.data);
 	}
 }

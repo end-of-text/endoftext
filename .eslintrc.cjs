@@ -2,6 +2,7 @@
 module.exports = {
 	root: true,
 	rules: {
+		// blocked by https://github.com/sveltejs/eslint-plugin-svelte/issues/652
 		'svelte/valid-compile': 'off'
 	},
 	extends: [

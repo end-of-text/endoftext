@@ -18,12 +18,13 @@
 	<td
 		class="box-border px-2 py-2"
 		contenteditable="plaintext-only"
-		bind:innerText={localInstanceInput}
+		bind:innerHTML={localInstanceInput}
 		onblur={() => {
-			updateInstance({ ...instance, input: localInstanceInput });
-			instance.input = localInstanceInput;
+			updateInstance({ ...instance, input: localInstanceInput }).then(() => {
+				instance.input = localInstanceInput;
+			});
 		}}
-		on:keydown={(event) => {
+		onkeydown={(event) => {
 			if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
 				event.currentTarget.blur();
 			}

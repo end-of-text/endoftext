@@ -1,26 +1,26 @@
+import type { Tables } from '$lib/supabase';
+import { error, json } from '@sveltejs/kit';
+
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = getSession();
 	if (!session) {
-		return new Response('Forbidden', { status: 401 });
+		error(401, 'Forbidden');
 	}
 
 	const requestData = await request.json();
-	const prompt = requestData.prompt as string | undefined;
-	const id = requestData.id as number | undefined;
-	if (!prompt || !id) {
-		return new Response('Internal Server Error', { status: 500 });
+	const prompt = requestData.prompt as Tables<'prompts'>;
+	if (!prompt) {
+		error(500, 'Invalid prompt data');
 	}
 
 	const res = await supabase
 		.from('prompts')
-		.update({
-			prompt: prompt
-		})
-		.eq('id', id);
+		.insert({ prompt: prompt.prompt, project_id: prompt.project_id, parent_prompt_id: prompt.id })
+		.select();
 
 	if (res.error) {
-		return new Response('Internal Server Error', { status: 500 });
-	} else {
-		return new Response(null, { status: 200 });
+		error(500, res.error.message);
 	}
+
+	return json(res.data[0]);
 }

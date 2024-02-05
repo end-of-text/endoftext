@@ -2,31 +2,33 @@ import { env } from '$env/dynamic/private';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import { optimizers } from '$lib/server/optimizers/optimizers.js';
 import type { Tables } from '$lib/supabase.js';
+import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request, locals: { getSession } }) {
 	const session = await getSession();
 
 	if (!session) {
-		return new Response('Forbidden', { status: 401 });
+		error(401, 'Forbidden');
 	}
 
 	const requestData = await request.json();
 	const selectedPrompt = requestData.selectedPrompt as string | undefined;
 	if (!selectedPrompt) {
-		return new Response('Internal Server Error', { status: 500 });
+		error(500, 'Invalid prompt data');
 	}
 	const suggestion = requestData.suggestion as Tables<'suggestions'> | undefined;
 	if (!suggestion) {
-		return new Response('Could not instantiate optimizer.', { status: 500 });
+		error(500, 'Invalid suggestion data');
 	}
 	const projectID = requestData.projectID as string | undefined;
 	if (!projectID) {
-		return new Response('Internal Server Error', { status: 500 });
+		error(500, 'Invalid project ID');
 	}
 	const optimizer = optimizers.find((o) => o.type === suggestion.type);
 	if (!optimizer) {
-		return new Response('Could not instantiate optimizer.', { status: 500 });
+		error(500, 'Could not find optimizer');
 	}
+
 	const prompt = await optimizer.apply(selectedPrompt, new OpenAILLM(env.OPENAI_API_KEY || ''));
-	return new Response(JSON.stringify({ prompt }), { status: 200 });
+	return json({ prompt });
 }
