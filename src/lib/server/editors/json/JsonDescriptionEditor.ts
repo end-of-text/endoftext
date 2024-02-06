@@ -1,19 +1,24 @@
-import { PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
-import { EditorType } from '$lib/types';
+import { EditorType, RequiredInputType } from '$lib/types';
+import { PromptEditor } from '../editor';
 
-export class ChainOfThoughtEditor extends PromptEditor {
+export class JSONDescriptionEditor extends PromptEditor {
 	constructor() {
 		super(
-			'ChainOfThought',
-			'Chain of Thought Format',
-			'Ensure the prompt uses chain-of-thought reasoning.',
-			EditorType.ENHANCEMENT
+			'JSON Description',
+			'JSON Description',
+			'Include a description of the desired JSON format. This can be an example or a specification.',
+			EditorType.ENHANCEMENT,
+			RequiredInputType.TEXT
 		);
 	}
 
 	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+		if (prompt.responseFormat !== 'json' || !prompt.prompt.toLowerCase().includes('json')) {
+			return false;
+		}
+
 		const res = await llm.generate(
 			[
 				{
@@ -24,7 +29,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 				{
 					role: 'user',
 					content:
-						'Prompts should have a statement telling the model to use chain-of-thought reasoning, something like "think step by step". Does this prompt contain a statement telling it to think step-by-step?\n\nprompt: ' +
+						'Does the following prompt specify the format of the desired JSON?\n\nprompt: ' +
 						prompt.prompt
 				}
 			],
@@ -43,7 +48,17 @@ export class ChainOfThoughtEditor extends PromptEditor {
 		}
 	}
 
-	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
+	async apply(
+		prompt: Tables<'prompts'>,
+		llm: LLM,
+		instancePredictions: {
+			id: number;
+			input: string;
+			label: string;
+			predictions: { prediction: string }[];
+		}[],
+		input: string | unknown
+	): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',
@@ -52,7 +67,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content: `Rewrite the prompt to include a sentence near the end that tells the model to do chain-of-thought reasoning with something like "think step by step".\n\nprompt:\n${prompt.prompt}`
+				content: `Rewrite the following prompt so that it has a section that describes the JSON specification of the desired output.\n\nprompt:\n${prompt.prompt}\n\ndesired JSON format:\n${input}`
 			}
 		]);
 

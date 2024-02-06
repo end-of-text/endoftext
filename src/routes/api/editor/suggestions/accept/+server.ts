@@ -12,35 +12,40 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	}
 
 	const requestData = await request.json();
-	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
-	if (!selectedPrompt) {
+	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
+	if (!prompt) {
 		error(500, 'Invalid prompt data');
 	}
 	const suggestion = requestData.suggestion as Tables<'suggestions'> | undefined;
 	if (!suggestion) {
 		error(500, 'Invalid suggestion data');
 	}
-	const projectID = requestData.projectID as string | undefined;
-	if (!projectID) {
-		error(500, 'Invalid project ID');
-	}
+
 	const editor = editors.find((o) => o.id === suggestion.identifier);
 	if (!editor) {
 		error(500, 'Could not find editor');
 	}
 
+	const userInput = requestData.input as string | undefined;
+
 	const instanceRes = await supabase
 		.from('instances')
 		.select('id, input, label, predictions!inner(prediction)')
-		.eq('project_id', selectedPrompt.project_id)
-		.eq('predictions.prompt_id', selectedPrompt.id)
+		.eq('project_id', prompt.project_id)
+		.eq('predictions.prompt_id', prompt.id)
 		.neq('label', '')
 		.order('id', { ascending: true });
+
+	if (instanceRes.error) {
+		error(500, instanceRes.error.message);
+	}
+
 	if (instanceRes.data === null) {
-		return json({ prompt: selectedPrompt });
+		return json({ prompt: prompt });
 	}
 
 	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
-	const prompt = await editor.apply(selectedPrompt, llm, instanceRes.data);
-	return json({ prompt });
+	const newPrompt = await editor.apply(prompt, llm, instanceRes.data, userInput);
+
+	return json({ prompt: newPrompt });
 }

@@ -1,11 +1,6 @@
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
-
-export const enum EditorType {
-	ENHANCEMENT = 'ENHANCEMENT',
-	OPTIMIZATION = 'OPTIMIZATION',
-	ERROR = 'ERROR'
-}
+import type { EditorType, RequiredInputType } from '$lib/types';
 
 export abstract class PromptEditor {
 	/** Create a new prompt editor.
@@ -20,7 +15,8 @@ export abstract class PromptEditor {
 		public readonly id: string,
 		public readonly name: string,
 		public readonly description: string,
-		public readonly type: EditorType
+		public readonly type: EditorType,
+		public readonly requiredInputType: RequiredInputType | undefined = undefined
 	) {}
 
 	/** Determine if the prompt matches the criteria for this editor.
@@ -56,6 +52,7 @@ export abstract class PromptEditor {
 			input: string;
 			label: string;
 			predictions: { prediction: string }[];
-		}[]
+		}[],
+		input: string | unknown
 	): Promise<string>;
 }

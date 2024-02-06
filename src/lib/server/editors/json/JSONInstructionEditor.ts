@@ -1,6 +1,7 @@
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
-import { EditorType, PromptEditor } from './editor';
+import { EditorType } from '$lib/types';
+import { PromptEditor } from '../editor';
 
 export class JSONInstructionEditor extends PromptEditor {
 	constructor() {

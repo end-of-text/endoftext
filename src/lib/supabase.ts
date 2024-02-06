@@ -1,6 +1,6 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
-export interface Database {
+export type Database = {
 	public: {
 		Tables: {
 			instances: {
@@ -187,6 +187,7 @@ export interface Database {
 					identifier: string;
 					name: string;
 					prompt_id: number;
+					required_input_type: string | null;
 					type: string;
 				};
 				Insert: {
@@ -196,6 +197,7 @@ export interface Database {
 					identifier: string;
 					name: string;
 					prompt_id: number;
+					required_input_type?: string | null;
 					type: string;
 				};
 				Update: {
@@ -205,6 +207,7 @@ export interface Database {
 					identifier?: string;
 					name?: string;
 					prompt_id?: number;
+					required_input_type?: string | null;
 					type?: string;
 				};
 				Relationships: [
@@ -257,7 +260,7 @@ export interface Database {
 			[_ in never]: never;
 		};
 	};
-}
+};
 
 export type Tables<
 	PublicTableNameOrOptions extends
