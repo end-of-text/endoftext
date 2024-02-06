@@ -6,26 +6,25 @@
 	import { EditorType, RequiredInputType } from '$lib/types';
 	import { Lightbulb, ShieldPlus, ShieldX } from 'lucide-svelte';
 
-	let { projectId, suggestion, prompt, editPrompt } = $props<{
-		projectId: string;
-		suggestion: Tables<'suggestions'>;
-		prompt: Tables<'prompts'>;
-		editPrompt: (suggestion: string) => void;
-	}>();
-
-	let applyingSuggestion = $state(-1);
-	let input = $state<unknown>(undefined);
-
 	const borderMap: { [key: string]: string } = {
 		ERROR: 'border-l-red-600',
 		ENHANCEMENT: 'border-l-green-600',
 		OPTIMIZATION: 'border-l-blue-600'
 	};
 
-	async function accept(prompt: Tables<'prompts'>, suggestion: Tables<'suggestions'>) {
-		applyingSuggestion = suggestion.id;
-		editPrompt(await acceptSuggestion(prompt, suggestion, projectId, input));
-		applyingSuggestion = -1;
+	let { suggestion, prompt, editPrompt } = $props<{
+		suggestion: Tables<'suggestions'>;
+		prompt: Tables<'prompts'>;
+		editPrompt: (suggestion: string) => void;
+	}>();
+
+	let applyingSuggestion = $state(false);
+	let userInput = $state<string | undefined>(undefined);
+
+	async function accept() {
+		applyingSuggestion = true;
+		editPrompt(await acceptSuggestion(suggestion, prompt, userInput));
+		applyingSuggestion = false;
 	}
 </script>
 
@@ -52,15 +51,15 @@
 		</p>
 		{#if suggestion.required_input_type}
 			{#if suggestion.required_input_type === RequiredInputType.TEXT}
-				<textarea class="w-full" bind:value={input} />
+				<textarea class="w-full" bind:value={userInput} />
 			{/if}
 		{/if}
 	</div>
 	<div class="flex min-w-20 items-center justify-center">
-		{#if applyingSuggestion === suggestion.id}
+		{#if applyingSuggestion}
 			<Spinner />
 		{:else}
-			<Button onclick={() => accept(prompt, suggestion)}>Apply</Button>
+			<Button onclick={accept}>Apply</Button>
 		{/if}
 	</div>
 </div>

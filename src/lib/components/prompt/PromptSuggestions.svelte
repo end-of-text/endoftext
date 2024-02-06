@@ -6,8 +6,7 @@
 	import { untrack } from 'svelte';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
-	let { projectId, prompt, editPrompt } = $props<{
-		projectId: string;
+	let { prompt, editPrompt } = $props<{
 		prompt: Tables<'prompts'>;
 		editPrompt: (suggestion: string) => void;
 	}>();
@@ -53,7 +52,7 @@
 			No suggestions
 		{:else}
 			{#each suggestions as suggestion (suggestion.id)}
-				<PromptSuggestion {projectId} {prompt} {editPrompt} {suggestion} />
+				<PromptSuggestion {prompt} {suggestion} {editPrompt} />
 			{/each}
 		{/if}
 	{/await}

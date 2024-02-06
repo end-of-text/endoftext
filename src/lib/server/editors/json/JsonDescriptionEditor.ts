@@ -57,7 +57,7 @@ export class JSONDescriptionEditor extends PromptEditor {
 			label: string;
 			predictions: { prediction: string }[];
 		}[],
-		input: unknown
+		input: string | unknown
 	): Promise<string> {
 		const res = await llm.generate([
 			{

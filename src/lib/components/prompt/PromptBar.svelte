@@ -47,5 +47,5 @@
 </div>
 <PromptEditor {prompt} {setPrompt} bind:editedPrompt />
 {#if projectId}
-	<PromptSuggestions {projectId} {prompt} {editPrompt} />
+	<PromptSuggestions {prompt} {editPrompt} />
 {/if}

@@ -53,6 +53,6 @@ export abstract class PromptEditor {
 			label: string;
 			predictions: { prediction: string }[];
 		}[],
-		input: unknown
+		input: string | unknown
 	): Promise<string>;
 }

@@ -103,10 +103,9 @@ export async function getSuggestions(
 }
 
 export async function acceptSuggestion(
-	selectedPrompt: Tables<'prompts'>,
 	suggestion: Tables<'suggestions'>,
-	projectID: string,
-	input: unknown
+	prompt: Tables<'prompts'>,
+	userInput: string | undefined
 ): Promise<string> {
 	const res = await fetch(`/api/editor/suggestions/accept`, {
 		method: 'POST',
@@ -114,10 +113,9 @@ export async function acceptSuggestion(
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			selectedPrompt: selectedPrompt,
-			suggestion: suggestion,
-			projectID: projectID,
-			input: input
+			suggestion,
+			prompt,
+			userInput
 		})
 	});
 	const json = await res.json();
