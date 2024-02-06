@@ -126,8 +126,11 @@ export async function acceptSuggestion(
 	return json.prompt as string;
 }
 
-export async function generateInstances(prompt: string, count: number): Promise<string> {
-	const res = await fetch(`/api/instances/generate`, {
+export async function generateInstances(
+	prompt: Tables<'prompts'>,
+	count: number
+): Promise<Tables<'instances'>[]> {
+	const res = await fetch(`/api/instances`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -135,5 +138,5 @@ export async function generateInstances(prompt: string, count: number): Promise<
 		body: JSON.stringify({ prompt, count })
 	});
 	const json = await res.json();
-	return json as string;
+	return json.instances as Tables<'instances'>[];
 }

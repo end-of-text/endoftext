@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { createInstance, deleteInstance } from '$lib/api';
+	import { createInstance, deleteInstance, generateInstances } from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { get } from 'svelte/store';
+	import Spinner from '../ui/Spinner.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
 	let { instances, prompt } = $props<{
 		instances: Tables<'instances'>[];
 		prompt: Tables<'prompts'>;
 	}>();
+
+	let generatingInstances = $state(false);
 
 	function removeInstance(id: number) {
 		instances.splice(
@@ -36,12 +39,27 @@
 			{/each}
 		</tbody>
 	</table>
-	<Button
-		classNames="mt-4 self-end"
-		onclick={() => {
-			createInstance(get(page).params.id).then((d) => instances.push(d));
-		}}
-	>
-		Add Instance
-	</Button>
+	<div class="my-4 flex items-center gap-2 self-end">
+		<Button
+			onclick={() => {
+				createInstance(get(page).params.id).then((d) => instances.push(d));
+			}}
+		>
+			Add Instance
+		</Button>
+		<Button
+			onclick={() => {
+				generatingInstances = true;
+				generateInstances(prompt, 5).then((r) => {
+					instances = [...instances, ...r];
+					generatingInstances = false;
+				});
+			}}
+		>
+			Generate Instances
+		</Button>
+		{#if generatingInstances}
+			<Spinner />
+		{/if}
+	</div>
 </div>

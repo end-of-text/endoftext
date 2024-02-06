@@ -1,31 +1,39 @@
-import { env } from '$env/dynamic/private';
-import { OpenAILLM } from '$lib/server/llms/openai';
+import { generateInstances } from '$lib/server/instances/generateInstances.js';
+import type { Tables } from '$lib/supabase';
 import { error, json } from '@sveltejs/kit';
 
-export async function POST({ locals: { getSession }, request }) {
+export async function POST({ locals: { getSession, supabase }, request }) {
 	const session = getSession();
 	if (!session) {
 		error(401, 'Forbidden');
 	}
 
 	const requestData = await request.json();
-	const prompt = requestData.prompt as string | undefined;
+	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
 	const count = requestData.count as number | undefined;
 	if (!prompt || !count) {
 		error(500, 'Invalid data');
 	}
 
-	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
-	const prediction = await openai.generate(
-		[
-			{
-				role: 'system',
-				content: `You are an assistant that generates example inputs for a given AI prompt. You return exactly ${count} instances in JSON format with the key "instances" and the example inputs as an array. The instances should be in plain text unless specified by the prompt. You only return the inputs for the model, NOT the outputs`
-			},
-			{ role: 'user', content: prompt }
-		],
-		true
-	);
+	const prediction = await generateInstances(prompt.prompt, 5);
 
-	return json({ output: prediction });
+	let instances: string[] = [];
+	try {
+		instances = JSON.parse(prediction || '{}')['instances'];
+	} catch (e) {
+		error(500, 'Invalid prediction');
+	}
+
+	const res = await supabase
+		.from('instances')
+		.insert(
+			instances.map((instance: string) => ({ project_id: prompt.project_id, input: instance }))
+		)
+		.select();
+
+	if (res.error) {
+		error(500, res.error.message);
+	}
+
+	return json({ instances: res.data });
 }

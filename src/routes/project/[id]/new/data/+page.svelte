@@ -6,7 +6,7 @@
 
 	let { data } = $props();
 
-	let instances = $state<string[]>([]);
+	let instances = $state<string[]>(data.instances || []);
 
 	data.generatedInstances?.then((res) => {
 		try {
@@ -27,6 +27,9 @@
 			<p>These are the questions or statements you want your model to respond to.</p>
 		</div>
 		<div class="flex w-full flex-col gap-2">
+			{#if data.generatedInstances && instances.length === 0}
+				<p class="mb-2 italic text-slate-600">Generating instances...</p>
+			{/if}
 			{#each instances as instance, i}
 				<div class="flex items-center gap-2">
 					<textarea

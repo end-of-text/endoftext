@@ -1,7 +1,7 @@
 import { generateInstances } from '$lib/server/instances/generateInstances';
 import { redirect } from '@sveltejs/kit';
 
-export async function load({ parent, locals: { getSession } }) {
+export async function load({ parent, locals: { getSession, supabase } }) {
 	const session = getSession();
 
 	if (!session) {
@@ -20,11 +20,24 @@ export async function load({ parent, locals: { getSession } }) {
 		};
 	}
 
-	const generatedInstances = generateInstances(prompt?.prompt, 5);
+	const res = await supabase.from('instances').select('input').eq('project_id', prompt.project_id);
 
-	return {
-		generatedInstances
-	};
+	if (res.error) {
+		return {
+			status: 500,
+			body: 'Internal Server Error'
+		};
+	} else if (res.data.length > 0) {
+		return {
+			instances: res.data.map((instance) => instance.input)
+		};
+	} else {
+		const generatedInstances = generateInstances(prompt?.prompt, 5);
+
+		return {
+			generatedInstances
+		};
+	}
 }
 
 export const actions = {
