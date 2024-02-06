@@ -1,4 +1,5 @@
 import type { LLM } from '$lib/server/llms/llm';
+import type { Tables } from '$lib/supabase';
 
 export const enum EditorType {
 	ENHANCEMENT = 'ENHANCEMENT',
@@ -30,7 +31,7 @@ export abstract class PromptEditor {
 	 * @returns true if matches the criteria, false otherwise
 	 */
 	abstract filter(
-		prompt: string,
+		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
 			id: number;
@@ -48,7 +49,7 @@ export abstract class PromptEditor {
 	 * @returns the modified prompt
 	 */
 	abstract apply(
-		prompt: string,
+		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
 			id: number;

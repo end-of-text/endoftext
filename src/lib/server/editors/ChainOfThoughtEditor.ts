@@ -1,5 +1,6 @@
 import { EditorType, PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
+import type { Tables } from '$lib/supabase';
 
 export class ChainOfThoughtEditor extends PromptEditor {
 	constructor() {
@@ -11,7 +12,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 		);
 	}
 
-	async filter(prompt: string, llm: LLM): Promise<boolean> {
+	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
 		const res = await llm.generate(
 			[
 				{
@@ -23,7 +24,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 					role: 'user',
 					content:
 						'Prompts should have a statement telling the model to use chain-of-thought reasoning, something like "think step by step". Does this prompt contain a statement telling it to think step-by-step?\n\nprompt: ' +
-						prompt
+						prompt.prompt
 				}
 			],
 			{ json: true }
@@ -41,7 +42,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 		}
 	}
 
-	async apply(prompt: string, llm: LLM): Promise<string> {
+	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',
@@ -50,10 +51,10 @@ export class ChainOfThoughtEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content: `Rewrite the prompt to include a sentence near the end that tells the model to do chain-of-thought reasoning with something like "think step by step".\n\nprompt:\n${prompt}`
+				content: `Rewrite the prompt to include a sentence near the end that tells the model to do chain-of-thought reasoning with something like "think step by step".\n\nprompt:\n${prompt.prompt}`
 			}
 		]);
 
-		return res || prompt;
+		return res || prompt.prompt;
 	}
 }

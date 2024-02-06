@@ -85,7 +85,7 @@ export async function getMetric(
 
 export async function getSuggestions(
 	selectedPrompt: Tables<'prompts'> | undefined,
-	instanceUpdated?: number | undefined
+	clear: boolean = false
 ): Promise<Tables<'suggestions'>[]> {
 	if (selectedPrompt === undefined) {
 		return [];
@@ -96,7 +96,7 @@ export async function getSuggestions(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ selectedPrompt: selectedPrompt, instanceUpdated: instanceUpdated })
+		body: JSON.stringify({ selectedPrompt: selectedPrompt, clear: clear })
 	});
 	const jsonResponse = await response.json();
 	return jsonResponse as Tables<'suggestions'>[];

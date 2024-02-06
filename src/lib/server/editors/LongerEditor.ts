@@ -1,5 +1,6 @@
 import { EditorType, PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
+import type { Tables } from '$lib/supabase';
 
 export class LongerEditor extends PromptEditor {
 	constructor() {
@@ -7,7 +8,7 @@ export class LongerEditor extends PromptEditor {
 	}
 
 	async filter(
-		prompt: string,
+		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
 			id: number;
@@ -37,7 +38,7 @@ export class LongerEditor extends PromptEditor {
 		return false;
 	}
 
-	async apply(prompt: string, llm: LLM): Promise<string> {
+	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',
@@ -46,10 +47,10 @@ export class LongerEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content: `Rewrite the prompt so that the answers produced by the model are longer.\n\nprompt:\n${prompt}`
+				content: `Rewrite the prompt so that the answers produced by the model are longer.\n\nprompt:\n${prompt.prompt}`
 			}
 		]);
 
-		return res || prompt;
+		return res || prompt.prompt;
 	}
 }

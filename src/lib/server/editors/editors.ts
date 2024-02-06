@@ -1,4 +1,5 @@
 import { ChainOfThoughtEditor } from './ChainOfThoughtEditor';
+import { JSONEditor } from './JSONEditor';
 import { LongerEditor } from './LongerEditor';
 import { NoNegationEditor } from './NoNegationEditor';
 import { OutputFormatEditor } from './OutputFormatEditor';
@@ -11,5 +12,6 @@ export const editors = [
 	new SeparateInstructionEditor(),
 	new ShortenEditor(),
 	new LongerEditor(),
-	new OutputFormatEditor()
+	new OutputFormatEditor(),
+	new JSONEditor()
 ];
