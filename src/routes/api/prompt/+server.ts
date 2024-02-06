@@ -13,11 +13,9 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, 'Invalid prompt data');
 	}
 
-	const { id, ...promptWithoutId } = prompt;
-
 	const res = await supabase
 		.from('prompts')
-		.insert({ ...promptWithoutId, parent_prompt_id: id })
+		.insert({ ...prompt, id: undefined, created_at: undefined, parent_prompt_id: prompt.id })
 		.select();
 
 	if (res.error) {
