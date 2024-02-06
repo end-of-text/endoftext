@@ -15,7 +15,6 @@ export class JSONDescriptionEditor extends PromptEditor {
 	}
 
 	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
-		console.log(prompt.responseFormat, prompt.prompt.toLowerCase());
 		if (prompt.responseFormat !== 'json' || !prompt.prompt.toLowerCase().includes('json')) {
 			return false;
 		}
