@@ -1,15 +1,39 @@
 import { env } from '$env/dynamic/private';
+import type { Tables } from '$lib/supabase';
 import { OpenAILLM } from '../llms/openai';
 
-export async function generateInstances(prompt: string, count: number) {
+export async function generateInstances(
+	prompt: string,
+	instances: Tables<'instances'>[],
+	count: number
+) {
 	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
 	const prediction = await openai.generate(
 		[
 			{
 				role: 'system',
-				content: `You are an assistant that generates example inputs for a given AI prompt. You return exactly ${count} instances in JSON format with the key "instances" and the example inputs as an array. The instances should be in plain text unless specified by the prompt. You only return the inputs for the model, NOT the outputs`
+				content: `You are an assistant that generates example inputs for a given AI prompt and example instances.
+
+				### Guidelines
+				* The user will provide an AI prompt and example inputs.
+				* Do not repeat the example inputs.
+				* Generate new and interesting examples.
+				* You return exactly ${count} instances
+				* Return JSON format with the key "instances" and the example inputs as an array.
+				* The instances should be in plain text unless specified by the prompt.
+				* You only return the inputs for the model, NOT the outputs
+				`
 			},
-			{ role: 'user', content: prompt }
+			{
+				role: 'user',
+				content: `
+			prompt:
+			${prompt}
+
+			examples:
+			${instances.map((instance) => instance.input).join('\n')}
+			`
+			}
 		],
 		{ json: true }
 	);

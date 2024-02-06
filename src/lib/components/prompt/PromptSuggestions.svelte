@@ -41,7 +41,9 @@
 			{#if gettingSuggestions}
 				<Spinner />
 			{:else}
-				<RefreshCw class="cursor-pointer transition hover:text-green-600" />
+				<RefreshCw
+					class="cursor-pointer transition duration-500 hover:rotate-180 hover:text-green-600"
+				/>
 			{/if}
 		</button>
 	</div>

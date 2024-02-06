@@ -50,7 +50,7 @@
 		<Button
 			onclick={() => {
 				generatingInstances = true;
-				generateInstances(prompt, 5).then((r) => {
+				generateInstances(prompt, instances, 5).then((r) => {
 					instances = [...instances, ...r];
 					generatingInstances = false;
 				});
