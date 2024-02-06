@@ -46,7 +46,7 @@
 			class="pl-4"
 			onclick={() => {
 				gettingSuggestions = true;
-				getSuggestions(prompt, Date.now()).then((r) => {
+				getSuggestions(prompt, true).then((r) => {
 					suggestionsRequest = r;
 					gettingSuggestions = false;
 				});

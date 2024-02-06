@@ -41,6 +41,6 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	}
 
 	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
-	const prompt = await editor.apply(selectedPrompt.prompt, llm, instanceRes.data);
+	const prompt = await editor.apply(selectedPrompt, llm, instanceRes.data);
 	return json({ prompt });
 }

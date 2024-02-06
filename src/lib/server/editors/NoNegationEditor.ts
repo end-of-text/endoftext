@@ -1,5 +1,6 @@
 import { EditorType, PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
+import type { Tables } from '$lib/supabase';
 
 export class NoNegationEditor extends PromptEditor {
 	constructor() {
@@ -11,7 +12,7 @@ export class NoNegationEditor extends PromptEditor {
 		);
 	}
 
-	async filter(prompt: string, llm: LLM): Promise<boolean> {
+	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
 		const res = await llm.generate(
 			[
 				{
@@ -23,7 +24,7 @@ export class NoNegationEditor extends PromptEditor {
 					role: 'user',
 					content:
 						'Prompts should not instruct the model about undesirable behavior. Does this prompt tell the model to not behave in a certain way?\n\nprompt: ' +
-						prompt
+						prompt.prompt
 				}
 			],
 			{ json: true }
@@ -41,7 +42,7 @@ export class NoNegationEditor extends PromptEditor {
 		}
 	}
 
-	async apply(prompt: string, llm: LLM): Promise<string> {
+	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',
@@ -50,10 +51,10 @@ export class NoNegationEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content: `Rewrite the prompt to remove any sentences that tell the model to not do something.\n\nprompt:\n${prompt}`
+				content: `Rewrite the prompt to remove any sentences that tell the model to not do something.\n\nprompt:\n${prompt.prompt}`
 			}
 		]);
 
-		return res || prompt;
+		return res || prompt.prompt;
 	}
 }

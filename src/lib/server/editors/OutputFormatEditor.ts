@@ -1,4 +1,5 @@
 import type { LLM } from '$lib/server/llms/llm';
+import type { Tables } from '$lib/supabase';
 import { EditorType, PromptEditor } from './editor';
 
 export class OutputFormatEditor extends PromptEditor {
@@ -12,7 +13,7 @@ export class OutputFormatEditor extends PromptEditor {
 	}
 
 	async filter(
-		prompt: string,
+		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
 			id: number;
@@ -38,7 +39,7 @@ export class OutputFormatEditor extends PromptEditor {
 					role: 'user',
 					content:
 						`Is there a pattern in the desired output that is not yet in the prompt?\n\noutput examples:${labels.join('\n- ')}\n\nprompt:\n` +
-						prompt
+						prompt.prompt
 				}
 			],
 			{ json: true }
@@ -57,7 +58,7 @@ export class OutputFormatEditor extends PromptEditor {
 	}
 
 	async apply(
-		prompt: string,
+		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
 			id: number;
@@ -68,7 +69,7 @@ export class OutputFormatEditor extends PromptEditor {
 	): Promise<string> {
 		const filteredPredictions = instancePredictions.filter((i) => i.label !== '');
 		if (filteredPredictions.length === 0) {
-			return prompt;
+			return prompt.prompt;
 		}
 		const labels = filteredPredictions.map((i) => i.label).slice(0, 10);
 
@@ -80,10 +81,10 @@ export class OutputFormatEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content: `Rewrite the prompt so that the model answers match the format of these example outputs:\n${labels.join('\n- ')}\n\nprompt:\n${prompt}`
+				content: `Rewrite the prompt so that the model answers match the format of these example outputs:\n${labels.join('\n- ')}\n\nprompt:\n${prompt.prompt}`
 			}
 		]);
 
-		return res || prompt;
+		return res || prompt.prompt;
 	}
 }

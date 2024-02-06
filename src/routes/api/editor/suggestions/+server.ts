@@ -16,25 +16,22 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, 'Invalid prompt data');
 	}
 
-	const suggestions: Tables<'suggestions'>[] = [];
-
-	const instanceUpdated = requestData.instanceUpdated as number | undefined;
-
-	if (instanceUpdated === undefined) {
+	const clear = requestData.clear as boolean;
+	if (clear) {
+		// Delete all entries from the DB
+		await supabase.from('suggestions').delete().eq('prompt_id', selectedPrompt.id);
+	} else {
+		// Fetch all suggestions from the DB and return if some are found
 		const fetchRes = await supabase
 			.from('suggestions')
 			.select('*')
 			.eq('prompt_id', selectedPrompt.id);
 
 		if (fetchRes.data && fetchRes.data.length > 0) {
-			suggestions.push(...fetchRes.data);
-			return json(suggestions);
+			return json(fetchRes.data);
 		}
-	} else {
-		await supabase.from('suggestions').delete().eq('prompt_id', selectedPrompt.id);
 	}
 
-	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
 	const instanceRes = await supabase
 		.from('instances')
 		.select('id, input, label, predictions!inner(prediction)')
@@ -45,14 +42,15 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	if (instanceRes.data === null) {
 		return json([]);
 	}
-
+	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
 	const results = await Promise.all(
 		editors.map(async (e) => {
-			const applicable = await e.filter(selectedPrompt.prompt, llm, instanceRes.data);
+			const applicable = await e.filter(selectedPrompt, llm, instanceRes.data);
 			return { applicable, editor: e };
 		})
 	);
 
+	const suggestions: Tables<'suggestions'>[] = [];
 	for (const result of results) {
 		if (result.applicable) {
 			const insertRes = await supabase
