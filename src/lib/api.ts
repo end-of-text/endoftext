@@ -103,14 +103,10 @@ export async function getSuggestions(
 }
 
 export async function acceptSuggestion(
-	selectedPrompt: string | undefined,
+	selectedPrompt: Tables<'prompts'>,
 	suggestion: Tables<'suggestions'>,
 	projectID: string
 ): Promise<string> {
-	if (selectedPrompt === undefined) {
-		return '';
-	}
-
 	const res = await fetch(`/api/editor/suggestions/accept`, {
 		method: 'POST',
 		headers: {

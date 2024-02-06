@@ -50,9 +50,7 @@ export class SeparateInstructionEditor extends PromptEditor {
 			},
 			{
 				role: 'user',
-				content:
-					"Rewrite the prompt so that the description of the model's task is clearly separated from the remaining instructions and information in the prompt. For example, you could rewrite it according to this format:\n### Instruction ###\n{instruction}\n\n{other information}\n\nprompt: " +
-					prompt
+				content: `Rewrite the prompt so that the description of the model's task is clearly separated from the remaining instructions and information in the prompt. For example, you could rewrite it according to this format:\n### Instruction ###\n{instruction}\n\n{other information}\n\nprompt:\n${prompt}`
 			}
 		]);
 
