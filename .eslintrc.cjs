@@ -7,7 +7,10 @@ module.exports = {
 		'plugin:svelte/recommended',
 		'prettier'
 	],
-	rules: { 'svelte/valid-compile': 'off' },
+	rules: {
+		// blocked by https://github.com/sveltejs/eslint-plugin-svelte/issues/652
+		'svelte/valid-compile': 'off'
+	},
 	parser: '@typescript-eslint/parser',
 	plugins: ['@typescript-eslint'],
 	parserOptions: {
