@@ -45,6 +45,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
 	const results = await Promise.all(
 		editors.map(async (e) => {
+			console.log('Checking', e.name);
 			const applicable = await e.filter(selectedPrompt, llm, instanceRes.data);
 			return { applicable, editor: e };
 		})
@@ -60,7 +61,8 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 					name: result.editor.name,
 					description: result.editor.description,
 					identifier: result.editor.id,
-					type: result.editor.type
+					type: result.editor.type,
+					required_input_type: result.editor.requiredInputType
 				})
 				.select();
 			if (insertRes.data && insertRes.data.length > 0) {

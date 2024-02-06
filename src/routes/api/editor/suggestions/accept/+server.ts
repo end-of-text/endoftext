@@ -28,6 +28,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	if (!editor) {
 		error(500, 'Could not find editor');
 	}
+	const input = requestData.input as unknown;
 
 	const instanceRes = await supabase
 		.from('instances')
@@ -41,6 +42,6 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	}
 
 	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
-	const prompt = await editor.apply(selectedPrompt, llm, instanceRes.data);
+	const prompt = await editor.apply(selectedPrompt, llm, instanceRes.data, input);
 	return json({ prompt });
 }
