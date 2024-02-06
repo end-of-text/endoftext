@@ -25,7 +25,7 @@ export class NoNegationOptimizer extends Optimizer {
 						prompt
 				}
 			],
-			true
+			{ json: true }
 		);
 
 		if (!res) {

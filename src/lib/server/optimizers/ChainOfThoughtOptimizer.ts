@@ -25,7 +25,7 @@ export class ChainOfThoughtOptimizer extends Optimizer {
 						prompt
 				}
 			],
-			true
+			{ json: true }
 		);
 
 		if (!res) {

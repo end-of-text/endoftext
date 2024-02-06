@@ -25,7 +25,7 @@ export class SeparateInstructionOptimizer extends Optimizer {
 						prompt
 				}
 			],
-			true
+			{ json: true }
 		);
 
 		if (!res) {
