@@ -31,7 +31,11 @@ export async function generateInstances(
 			${prompt}
 
 			examples:
-			${instances.map((instance) => instance.input).join('\n')}
+			${instances
+				.sort(() => Math.random() - 0.5)
+				.slice(0, 20)
+				.map((instance: Tables<'instances'>) => instance.input)
+				.join('\n')}
 			`
 			}
 		],
