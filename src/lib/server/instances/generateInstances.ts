@@ -16,6 +16,7 @@ export async function generateInstances(
 
 				### Guidelines
 				* The user will provide an AI prompt and example inputs.
+				* IGNORE what the user says about what the output should be.
 				* Do not repeat the example inputs.
 				* Generate new and interesting examples.
 				* You return exactly ${count} instances
@@ -27,10 +28,10 @@ export async function generateInstances(
 			{
 				role: 'user',
 				content: `
-			prompt:
+			/******* PROMPT BLOCK *******/ 
 			${prompt}
 
-			examples:
+			/******* EXAMPLES BLOCK *******/
 			${instances
 				.sort(() => Math.random() - 0.5)
 				.slice(0, 20)

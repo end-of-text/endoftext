@@ -3,10 +3,11 @@
 	import type { Tables } from '$lib/supabase';
 	import { Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, removeInstance } = $props<{
+	let { instance, prompt, removeInstance, selectInstance } = $props<{
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
 		removeInstance: (id: number) => void;
+		selectInstance: (id: number) => void;
 	}>();
 
 	let localInstanceInput = $state(instance.input);
@@ -16,9 +17,10 @@
 </script>
 
 <tr class="border-b-2">
+	<td class="p-2"><input onclick={() => selectInstance(instance.id)} type="checkbox" /></td>
 	<td
 		contenteditable="plaintext-only"
-		class="box-border px-2 py-2 align-top"
+		class="box-border p-2 align-top"
 		bind:innerText={localInstanceInput}
 		onblur={() => {
 			updateInstance({ ...instance, input: localInstanceInput }).then(() => {
@@ -31,7 +33,7 @@
 			}
 		}}
 	/>
-	<td class="px-2 py-2 align-top">
+	<td class="p-2 align-top">
 		{#await prediction}
 			Loading...
 		{:then pred}
@@ -40,7 +42,7 @@
 	</td>
 	<td
 		contenteditable="plaintext-only"
-		class="box-border px-2 py-2 align-top"
+		class="box-border p-2 align-top"
 		bind:innerText={localInstanceLabel}
 		onblur={() => {
 			updateInstance({ ...instance, label: localInstanceLabel }).then(() => {
