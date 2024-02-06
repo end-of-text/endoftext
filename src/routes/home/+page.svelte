@@ -6,7 +6,10 @@
 	const { data } = $props();
 </script>
 
-{#if data.projects && data.projects.length > 0}
+{#if data.projects.length === 0}
+	<h1>Welcome to Prompt Optimizer!</h1>
+	<p>Create your first project and start improving your prompts.</p>
+{:else}
 	<form method="POST" use:enhance action="?/delete">
 		<h1>Projects</h1>
 		{#each data.projects as project (project.id)}

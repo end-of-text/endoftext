@@ -18,14 +18,18 @@ export class ChainOfThoughtEditor extends PromptEditor {
 			[
 				{
 					role: 'system',
-					content:
-						'You are an AI prompt writing critiquer. Given the following prompt, you return JSON with the key `output` that is either true if the prompt matches the user description or false otherwise.'
+					content: `You are an AI prompt writing critiquer. You decide whether a prompt should implement chain-of-thought reasoning. 
+
+						### Guidelines
+						* First, decide if the prompt already implements chain-of-thought reasoning. For example, it might include "think step-by-step". If so, return false.
+						* If the prompt doesn't implement chain-of-thought reasoning, decide if it should or not. Only prompts for complex reasoning tasks such as arithmetic, commonsense reasoning, and symbolic reasoning tasks require chain-of-thought prompting. If the prompt is one of these, return true.
+						
+						### Output
+						Return the output in JSON with the key "output" that is either true or false.`
 				},
 				{
 					role: 'user',
-					content:
-						'Prompts should have a statement telling the model to use chain-of-thought reasoning, something like "think step by step". Does this prompt contain a statement telling it to think step-by-step?\n\nprompt: ' +
-						prompt.prompt
+					content: prompt.prompt
 				}
 			],
 			{ json: true }
@@ -47,12 +51,11 @@ export class ChainOfThoughtEditor extends PromptEditor {
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content:
-					'You are an AI assistant that rewrites prompts given the specified criteria. Only return the new prompt.'
-			},
-			{
-				role: 'user',
-				content: `Rewrite the prompt to include a sentence near the end that tells the model to do chain-of-thought reasoning with something like "think step by step".\n\nprompt:\n${prompt.prompt}`
+				content: `Given a prompt, you append a sentence to the end of the prompt that tells the model to "think step by step". Keep the original prompt unchanged except for this addition.
+
+					Examples:
+					Input: Solve the following math problem.
+					Output: Solve the following math problem. Think step-by-step`
 			}
 		]);
 

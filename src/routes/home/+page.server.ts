@@ -1,22 +1,16 @@
-import { redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 export async function load({ locals: { supabase, getSession } }) {
 	const session = getSession();
 
 	if (!session) {
-		return {
-			status: 401,
-			body: 'Forbidden'
-		};
+		error(401, 'Forbidden');
 	}
 
 	const res = await supabase.from('projects').select('id, name');
 
 	if (res.error) {
-		return {
-			status: 500,
-			body: 'Internal Server Error'
-		};
+		error(500, res.error.message);
 	}
 
 	return {
