@@ -5,7 +5,7 @@
 	let { prompt } = $props<{ prompt: Tables<'prompts'> }>();
 </script>
 
-<div class="flex flex-col gap-2 rounded border bg-slate-50 p-2" transition:slide>
+<div class="mt-2 flex flex-col gap-2 rounded border bg-slate-50 p-2" transition:slide>
 	<div>
 		<label class="mr-2 italic text-slate-500" for="model">model:</label>
 		<select class="rounded border p-1" name="model" bind:value={prompt.model}>

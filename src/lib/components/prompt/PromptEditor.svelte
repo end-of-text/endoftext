@@ -2,7 +2,6 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { ChevronDown, ChevronUp, Save, Undo2 } from 'lucide-svelte';
-	import { fade } from 'svelte/transition';
 	import PromptOptions from '../options/PromptOptions.svelte';
 
 	let { prompt, editedPrompt, setPrompt } = $props<{
@@ -41,26 +40,25 @@
 				<ChevronDown />
 			{/if}
 		</Button>
-		{#if promptWasEdited}
-			<div class="flex items-center gap-3" transition:fade>
-				<p class="text-stone-500">unsaved changes</p>
+		<div class="flex items-center gap-1">
+			{#if promptWasEdited}
 				<Button
 					classNames="border-blue-400 bg-blue-50 hover:bg-blue-100"
 					onclick={() => (editedPrompt = { ...prompt })}
 				>
 					<Undo2 />
 				</Button>
-			</div>
-		{/if}
-		<Button
-			onclick={() => setPrompt()}
-			classNames="w-fit {promptWasEdited
-				? 'border-emerald-600 bg-emerald-50 hover:bg-emerald-100'
-				: 'border'}"
-		>
-			<Save />
-			Save and Run
-		</Button>
+			{/if}
+			<Button
+				onclick={() => setPrompt()}
+				classNames="w-fit {promptWasEdited
+					? 'border-emerald-600 bg-emerald-50 hover:bg-emerald-100'
+					: 'border'}"
+			>
+				<Save />
+				Save & Run
+			</Button>
+		</div>
 	</div>
 	{#if showOptions}
 		<PromptOptions bind:prompt={editedPrompt} />

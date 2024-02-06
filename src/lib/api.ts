@@ -85,10 +85,10 @@ export async function getMetric(
 
 export async function getSuggestions(
 	selectedPrompt: Tables<'prompts'> | undefined,
-	instanceUpdated: number | undefined
-): Promise<Tables<'suggestions'>[] | undefined> {
+	instanceUpdated?: number | undefined
+): Promise<Tables<'suggestions'>[]> {
 	if (selectedPrompt === undefined) {
-		return;
+		return [];
 	}
 
 	const response = await fetch(`/api/editor/suggestions`, {
