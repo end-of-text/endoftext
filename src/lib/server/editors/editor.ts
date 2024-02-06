@@ -1,20 +1,28 @@
 import type { LLM } from '$lib/server/llms/llm';
 
-export abstract class Optimizer {
-	/** Create a new optimizer.
+export const enum EditorType {
+	ENHANCEMENT = 'ENHANCEMENT',
+	OPTIMIZATION = 'OPTIMIZATION',
+	ERROR = 'ERROR'
+}
+
+export abstract class PromptEditor {
+	/** Create a new prompt editor.
 	 *
-	 * @param type the type of the optimizer
-	 * @param name human-readable name of the optimizer
-	 * @param description description of the optimizer
+	 * @param id string identifier of the editor
+	 * @param name human-readable name of the editor
+	 * @param description description of the editor
+	 * @param type type of the editor
 	 * @param llm the language model to be used
 	 */
 	constructor(
-		public readonly type: string,
+		public readonly id: string,
 		public readonly name: string,
-		public readonly description: string
+		public readonly description: string,
+		public readonly type: EditorType
 	) {}
 
-	/** Determine if the prompt matches the criteria for this optimizer.
+	/** Determine if the prompt matches the criteria for this editor.
 	 *
 	 * @param prompt the prompt to be checked
 	 * @param llm the language model to be used
@@ -32,7 +40,7 @@ export abstract class Optimizer {
 		}[]
 	): Promise<boolean>;
 
-	/** Modify the prompt to match the criteria for this optimizer.
+	/** Modify the prompt using the editor.
 	 *
 	 * @param prompt the prompt to be modified
 	 * @param llm the language model to be used

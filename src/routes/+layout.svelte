@@ -7,7 +7,7 @@
 	let session = $derived(data.session);
 </script>
 
-<main class="flex h-screen w-screen flex-col">
+<main class="flex h-screen w-screen">
 	<Header {session} />
 	<div class="flex min-h-0 w-full grow flex-col items-center justify-center">
 		{@render children()}

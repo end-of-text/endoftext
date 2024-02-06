@@ -85,13 +85,13 @@ export async function getMetric(
 
 export async function getSuggestions(
 	selectedPrompt: Tables<'prompts'> | undefined,
-	instanceUpdated: number | undefined
-): Promise<Tables<'suggestions'>[] | undefined> {
+	instanceUpdated?: number | undefined
+): Promise<Tables<'suggestions'>[]> {
 	if (selectedPrompt === undefined) {
-		return;
+		return [];
 	}
 
-	const response = await fetch(`/api/optimizer/suggestions`, {
+	const response = await fetch(`/api/editor/suggestions`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -111,7 +111,7 @@ export async function acceptSuggestion(
 		return '';
 	}
 
-	const res = await fetch(`/api/optimizer/suggestions/accept`, {
+	const res = await fetch(`/api/editor/suggestions/accept`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

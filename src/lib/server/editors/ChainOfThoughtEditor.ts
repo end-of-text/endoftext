@@ -1,12 +1,13 @@
+import { EditorType, PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
-import { Optimizer } from '$lib/server/optimizers/optimizer';
 
-export class NoNegationOptimizer extends Optimizer {
+export class ChainOfThoughtEditor extends PromptEditor {
 	constructor() {
 		super(
-			'NoNegation',
-			'No Negation Format',
-			'Ensure the prompts do not tell models what they *should not* do.'
+			'ChainOfThought',
+			'Chain of Thought Format',
+			'Ensure the prompt uses chain-of-thought reasoning.',
+			EditorType.ENHANCEMENT
 		);
 	}
 
@@ -21,7 +22,7 @@ export class NoNegationOptimizer extends Optimizer {
 				{
 					role: 'user',
 					content:
-						'Prompts should not instruct the model about undesirable behavior. Does this prompt tell the model to not behave in a certain way?\n\nprompt: ' +
+						'Prompts should have a statement telling the model to use chain-of-thought reasoning, something like "think step by step". Does this prompt contain a statement telling it to think step-by-step?\n\nprompt: ' +
 						prompt
 				}
 			],
@@ -34,7 +35,7 @@ export class NoNegationOptimizer extends Optimizer {
 
 		try {
 			const resJSON = JSON.parse(res);
-			return resJSON.output;
+			return !resJSON.output;
 		} catch (e) {
 			return false;
 		}
@@ -50,7 +51,7 @@ export class NoNegationOptimizer extends Optimizer {
 			{
 				role: 'user',
 				content:
-					'Rewrite the prompt to remove any sentences that tell the model to not do something.\n\nprompt: ' +
+					'Rewrite the prompt to include a sentence near the end that tells the model to do chain-of-thought reasoning with something like "think step by step".\n\nprompt: ' +
 					prompt
 			}
 		]);
