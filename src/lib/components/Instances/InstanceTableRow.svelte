@@ -31,7 +31,7 @@
 			}
 		}}
 	/>
-	<td class="px-2 py-2">
+	<td class="px-2 py-2 align-top">
 		{#await prediction}
 			Loading...
 		{:then pred}
