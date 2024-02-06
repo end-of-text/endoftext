@@ -8,6 +8,14 @@ export async function generateInstances(
 	count: number
 ) {
 	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
+	const cleanedPrompt = await openai.generate([
+		{
+			role: 'system',
+			content: `
+		You are an AI prompt cleaner. Given a user's input, you remove any information saying what the output should look like. ONLY RETURN THE CLEANED PROMPT`
+		},
+		{ role: 'user', content: prompt }
+	]);
 	const prediction = await openai.generate(
 		[
 			{
@@ -29,7 +37,7 @@ export async function generateInstances(
 				role: 'user',
 				content: `
 			/******* PROMPT BLOCK *******/ 
-			${prompt}
+			${cleanedPrompt}
 
 			/******* EXAMPLES BLOCK *******/
 			${instances
