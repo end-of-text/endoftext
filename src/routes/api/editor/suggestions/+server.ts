@@ -16,7 +16,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, 'Invalid prompt data');
 	}
 
-	const clear = requestData.instanceUpdated as boolean;
+	const clear = requestData.clear as boolean;
 	if (clear) {
 		// Delete all entries from the DB
 		await supabase.from('suggestions').delete().eq('prompt_id', selectedPrompt.id);

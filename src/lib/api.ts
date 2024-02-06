@@ -96,7 +96,7 @@ export async function getSuggestions(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ selectedPrompt: selectedPrompt, clear: clear })
+		body: JSON.stringify({ selectedPrompt: selectedPrompt, clear })
 	});
 	const jsonResponse = await response.json();
 	return jsonResponse as Tables<'suggestions'>[];

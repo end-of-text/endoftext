@@ -2,12 +2,12 @@ import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
 import { EditorType, PromptEditor } from './editor';
 
-export class JSONEditor extends PromptEditor {
+export class JSONInstructionEditor extends PromptEditor {
 	constructor() {
 		super(
 			'JSON',
 			'JSON',
-			'Include a description that the user wants the output to be in JSON format.',
+			'When using JSON mode you must also tell the model explicitly to output JSON.',
 			EditorType.ERROR
 		);
 	}
