@@ -11,7 +11,7 @@ export async function generateInstances(prompt: string, count: number) {
 			},
 			{ role: 'user', content: prompt }
 		],
-		true
+		{ json: true }
 	);
 	return prediction;
 }
