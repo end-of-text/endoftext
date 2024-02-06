@@ -14,6 +14,6 @@ export const editors = [
 	new ShortenEditor(),
 	new LongerEditor(),
 	new OutputFormatEditor(),
-	new JSONInstructionEditor()
+	new JSONInstructionEditor(),
 	new JSONDescriptionEditor()
 ];
