@@ -127,7 +127,6 @@ export async function generateInstances(
 	instances: Tables<'instances'>[],
 	count: number
 ): Promise<Tables<'instances'>[]> {
-	console.log(instances);
 	const res = await fetch(`/api/instances`, {
 		method: 'POST',
 		headers: {
