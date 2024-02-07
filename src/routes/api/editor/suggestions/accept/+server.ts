@@ -26,7 +26,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		error(500, 'Could not find editor');
 	}
 
-	const userInput = requestData.input as string | undefined;
+	const userInput = requestData.userInput as string | undefined;
 
 	const instanceRes = await supabase
 		.from('instances')

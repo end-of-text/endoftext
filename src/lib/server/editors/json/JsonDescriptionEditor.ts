@@ -23,14 +23,20 @@ export class JSONDescriptionEditor extends PromptEditor {
 			[
 				{
 					role: 'system',
-					content:
-						'You are an AI prompt writing critiquer. Given the following prompt, you return JSON with the key `output` that is either true if the prompt matches the user description or false otherwise.'
+					content: `### Task
+						You are an AI prompt writing critiquer. Given a prompt by a user, you decide whether the prompt specifies the format of the desired JSON outuput.
+						
+						### Instructions
+						1. Check whether the prompt includes a description of the desired JSON format. This can be an example or a specification but it needs to clearly outline the JSON structure of the answer. If it does, return false.
+						2. If the prompt does not include a description of the desired JSON format, return true.
+
+						### Output
+						Return the output in JSON with the key "output" that is either true or false.
+						`
 				},
 				{
 					role: 'user',
-					content:
-						'Does the following prompt specify the format of the desired JSON?\n\nprompt: ' +
-						prompt.prompt
+					content: prompt.prompt
 				}
 			],
 			{ json: true }
@@ -41,8 +47,7 @@ export class JSONDescriptionEditor extends PromptEditor {
 		}
 
 		try {
-			const resJSON = JSON.parse(res);
-			return !resJSON.output;
+			return JSON.parse(res).output;
 		} catch (e) {
 			return false;
 		}
@@ -62,12 +67,16 @@ export class JSONDescriptionEditor extends PromptEditor {
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content:
-					'You are an AI assistant that rewrites prompts given the specified criteria. Only return the new prompt.'
+				content: `You are an AI assistant that rewrites prompts to include a description of the desired JSON format. Users provide a prompt and the desired JSON format. Your task is to append the desired format to the prompt.
+				
+				### Instructions
+				* You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the propmt should not be changed. 
+				* Make sure the desirer format is added somewhere towards the end of the prompt.
+				* Only return the new prompt in plain text without any other information or formatting.`
 			},
 			{
 				role: 'user',
-				content: `Rewrite the following prompt so that it has a section that describes the JSON specification of the desired output.\n\nprompt:\n${prompt.prompt}\n\ndesired JSON format:\n${input}`
+				content: `prompt:\n${prompt.prompt}\n\nDesired JSON format:\n${input}\n\nmodified prompt:`
 			}
 		]);
 

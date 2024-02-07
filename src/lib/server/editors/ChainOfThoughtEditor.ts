@@ -14,6 +14,9 @@ export class ChainOfThoughtEditor extends PromptEditor {
 	}
 
 	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+		if (prompt.responseFormat !== 'text') {
+			return false;
+		}
 		const res = await llm.generate(
 			[
 				{
@@ -40,8 +43,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 		}
 
 		try {
-			const resJSON = JSON.parse(res);
-			return !resJSON.output;
+			return JSON.parse(res).output;
 		} catch (e) {
 			return false;
 		}
