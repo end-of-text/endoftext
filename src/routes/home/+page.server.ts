@@ -7,7 +7,7 @@ export async function load({ locals: { supabase, getSession } }) {
 		error(401, 'Forbidden');
 	}
 
-	const res = await supabase.from('projects').select('id, name');
+	const res = await supabase.from('projects').select('*');
 
 	if (res.error) {
 		error(500, res.error.message);
@@ -35,7 +35,7 @@ export const actions = {
 		await supabase.from('projects').delete().eq('id', deleteId);
 	},
 
-	create: async ({ request, locals: { supabase, getSession } }) => {
+	create: async ({ locals: { supabase, getSession } }) => {
 		const session = await getSession();
 
 		if (!session) {
@@ -45,11 +45,9 @@ export const actions = {
 			};
 		}
 
-		const formData = await request.formData();
-
 		const res = await supabase
 			.from('projects')
-			.insert({ user_id: session.user.id, name: formData.get('name') })
+			.insert({ user_id: session.user.id, name: 'New Prompt' })
 			.select();
 
 		if (res.error || (res.data && res.data.length === 0)) {
