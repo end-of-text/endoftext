@@ -14,7 +14,7 @@
 	<ProjectSettingsPopup {project} onclose={() => (showSettings = false)} />
 {/if}
 <div class="flex w-full shrink-0 border-b px-6">
-	<h1>{project.name}</h1>
+	<span class="my-4 text-3xl font-bold text-slate-700">{project.name}</span>
 	<button class="ml-auto" onclick={() => (showSettings = true)}>
 		<Settings class="cursor-pointer transition hover:text-blue-600" />
 	</button>
