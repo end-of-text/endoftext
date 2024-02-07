@@ -8,6 +8,8 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		error(401, { message: 'Forbidden' });
 	}
 
+	const projectReq = supabase.from('projects').select('*').eq('id', params.id);
+
 	const promptsReq = supabase
 		.from('prompts')
 		.select('*')
@@ -20,10 +22,14 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		.eq('project_id', params.id)
 		.order('id', { ascending: true });
 
-	const [promptsRes, instancesRes] = await Promise.all([promptsReq, instancesReq]);
+	const [promptsRes, instancesRes, projectRes] = await Promise.all([
+		promptsReq,
+		instancesReq,
+		projectReq
+	]);
 
-	if (promptsRes.error || instancesRes.error) {
-		error(505, { message: 'Failed to get prompts and instances' });
+	if (promptsRes.error || instancesRes.error || projectRes.error) {
+		error(505, { message: 'Failed to get project, prompts, or instances' });
 	}
 
 	if (promptsRes.data.length === 0) {
@@ -31,7 +37,7 @@ export async function load({ locals: { supabase, getSession }, params }) {
 	}
 
 	return {
-		projectId: params.id,
+		project: projectRes.data[0] as Tables<'projects'>,
 		prompt: promptsRes.data[0] as Tables<'prompts'>,
 		instances: instancesRes.data as Tables<'instances'>[]
 	};

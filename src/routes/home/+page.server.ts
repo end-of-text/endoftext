@@ -7,7 +7,7 @@ export async function load({ locals: { supabase, getSession } }) {
 		error(401, 'Forbidden');
 	}
 
-	const res = await supabase.from('projects').select('id, name');
+	const res = await supabase.from('projects').select('*');
 
 	if (res.error) {
 		error(500, res.error.message);

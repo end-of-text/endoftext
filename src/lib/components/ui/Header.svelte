@@ -10,7 +10,7 @@
 	{#if session}
 		<a
 			href="/home"
-			class="rounded-full px-1 py-2 transition hover:bg-slate-100 {$page.url.pathname === '/home'
+			class="rounded-full px-1 py-1 transition hover:bg-slate-100 {$page.url.pathname === '/home'
 				? 'text-purple-600'
 				: ''}"
 		>
