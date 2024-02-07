@@ -137,3 +137,19 @@ export async function generateInstances(
 	const json = await res.json();
 	return json.instances as Tables<'instances'>[];
 }
+
+export async function getProjectUsers(projectId: string): Promise<Tables<'users'>[]> {
+	const res = await fetch(`/api/project/${projectId}/users`);
+	const json = await res.json();
+	return json as Tables<'users'>[];
+}
+
+export async function addProjectUser(projectId: string, email: string): Promise<void> {
+	await fetch(`/api/project/${projectId}/users`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ projectId, email })
+	});
+}
