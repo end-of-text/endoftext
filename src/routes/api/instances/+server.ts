@@ -10,16 +10,17 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 
 	const requestData = await request.json();
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
+	const instances = requestData.instances as Tables<'instances'>[] | undefined;
 	const count = requestData.count as number | undefined;
-	if (!prompt || !count) {
+	if (!prompt || !instances || !count) {
 		error(500, 'Invalid data');
 	}
 
-	const prediction = await generateInstances(prompt.prompt, 5);
+	const prediction = await generateInstances(prompt.prompt, instances, 5);
 
-	let instances: string[] = [];
+	let newInstances: string[] = [];
 	try {
-		instances = JSON.parse(prediction || '{}')['instances'];
+		newInstances = JSON.parse(prediction || '{}')['instances'];
 	} catch (e) {
 		error(500, 'Invalid prediction');
 	}
@@ -27,7 +28,7 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 	const res = await supabase
 		.from('instances')
 		.insert(
-			instances.map((instance: string) => ({ project_id: prompt.project_id, input: instance }))
+			newInstances.map((instance: string) => ({ project_id: prompt.project_id, input: instance }))
 		)
 		.select();
 

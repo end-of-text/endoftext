@@ -32,7 +32,7 @@ export async function load({ parent, locals: { getSession, supabase } }) {
 			instances: res.data.map((instance) => instance.input)
 		};
 	} else {
-		const generatedInstances = generateInstances(prompt?.prompt, 5);
+		const generatedInstances = generateInstances(prompt?.prompt, [], 5);
 
 		return {
 			generatedInstances

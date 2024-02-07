@@ -124,6 +124,7 @@ export async function acceptSuggestion(
 
 export async function generateInstances(
 	prompt: Tables<'prompts'>,
+	instances: Tables<'instances'>[],
 	count: number
 ): Promise<Tables<'instances'>[]> {
 	const res = await fetch(`/api/instances`, {
@@ -131,7 +132,7 @@ export async function generateInstances(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ prompt, count })
+		body: JSON.stringify({ prompt, instances, count })
 	});
 	const json = await res.json();
 	return json.instances as Tables<'instances'>[];

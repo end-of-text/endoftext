@@ -13,6 +13,7 @@
 	}>();
 
 	let generatingInstances = $state(false);
+	let selectedInstances = $state<number[]>([]);
 
 	function removeInstance(id: number) {
 		instances.splice(
@@ -21,12 +22,21 @@
 		);
 		deleteInstance(id);
 	}
+
+	function selectInstance(id: number) {
+		if (selectedInstances.includes(id)) {
+			selectedInstances.splice(selectedInstances.indexOf(id), 1);
+		} else {
+			selectedInstances.push(id);
+		}
+	}
 </script>
 
 <div class="mt-2 w-full grow overflow-auto">
 	<table class="w-full">
 		<thead class="sticky top-0 z-10 bg-slate-200 text-left">
 			<tr class="border-b-2">
+				<th />
 				<th class="w-1/3 rounded-tl px-2 py-1">Input</th>
 				<th class="w-1/3 px-2 py-1">Prediction</th>
 				<th class="w-1/3 px-2 py-1">Label</th>
@@ -35,7 +45,7 @@
 		</thead>
 		<tbody>
 			{#each instances as instance (instance.id)}
-				<InstanceTableRow bind:instance {prompt} {removeInstance} />
+				<InstanceTableRow bind:instance {prompt} {removeInstance} {selectInstance} />
 			{/each}
 		</tbody>
 	</table>
@@ -50,7 +60,7 @@
 		<Button
 			onclick={() => {
 				generatingInstances = true;
-				generateInstances(prompt, 5).then((r) => {
+				generateInstances(prompt, instances, 5).then((r) => {
 					instances = [...instances, ...r];
 					generatingInstances = false;
 				});
@@ -58,6 +68,25 @@
 		>
 			Generate Instances
 		</Button>
+		{#if selectedInstances.length > 0}
+			<Button
+				classNames="bg-blue-50 hover:bg-blue-100"
+				onclick={() => {
+					generatingInstances = true;
+					generateInstances(
+						prompt,
+						instances.filter((instance) => selectedInstances.includes(instance.id)),
+						5
+					).then((r) => {
+						instances = [...instances, ...r];
+						selectedInstances = [];
+						generatingInstances = false;
+					});
+				}}
+			>
+				Generate Similar
+			</Button>
+		{/if}
 		{#if generatingInstances}
 			<Spinner />
 		{/if}
