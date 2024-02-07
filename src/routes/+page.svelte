@@ -1,9 +1,8 @@
-<div class="flex flex-col items-center gap-2 [&_p]:text-slate-600">
+<div class="mx-auto mt-20 flex flex-col items-center gap-2 [&_p]:text-slate-600">
 	<h1>Prompt Optimizer</h1>
 
-	<a
-		class="w-fit rounded border bg-slate-200 px-4 py-2 transition hover:bg-slate-300"
-		href="/account">Get Started</a
+	<a class="w-fit rounded border bg-slate-200 px-4 py-2 transition hover:bg-slate-300" href="/auth"
+		>Get Started</a
 	>
 
 	<div class="max-w-3xl rounded border p-5">

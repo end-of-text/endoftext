@@ -4,6 +4,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { get } from 'svelte/store';
+	import { fade } from 'svelte/transition';
 	import Spinner from '../ui/Spinner.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
@@ -69,23 +70,25 @@
 			Generate Instances
 		</Button>
 		{#if selectedInstances.length > 0}
-			<Button
-				classNames="bg-blue-50 hover:bg-blue-100"
-				onclick={() => {
-					generatingInstances = true;
-					generateInstances(
-						prompt,
-						instances.filter((instance) => selectedInstances.includes(instance.id)),
-						5
-					).then((r) => {
-						instances = [...instances, ...r];
-						selectedInstances = [];
-						generatingInstances = false;
-					});
-				}}
-			>
-				Generate Similar
-			</Button>
+			<div transition:fade={{ duration: 300 }}>
+				<Button
+					classNames="bg-blue-50 hover:bg-blue-100"
+					onclick={() => {
+						generatingInstances = true;
+						generateInstances(
+							prompt,
+							instances.filter((instance) => selectedInstances.includes(instance.id)),
+							5
+						).then((r) => {
+							instances = [...instances, ...r];
+							selectedInstances = [];
+							generatingInstances = false;
+						});
+					}}
+				>
+					Generate Similar
+				</Button>
+			</div>
 		{/if}
 		{#if generatingInstances}
 			<Spinner />

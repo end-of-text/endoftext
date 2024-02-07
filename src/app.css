@@ -4,10 +4,10 @@
 
 @layer base {
 	h1 {
-		@apply mb-2 bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-3xl font-black text-transparent;
+		@apply bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-3xl font-black text-transparent;
 	}
 	h2 {
-		@apply mb-2 text-xl font-black;
+		@apply text-xl font-bold text-slate-700;
 	}
 	input {
 		@apply rounded border border-slate-300 px-2 py-1;

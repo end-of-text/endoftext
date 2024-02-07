@@ -17,7 +17,9 @@
 </script>
 
 <tr class="border-b-2">
-	<td class="p-2"><input onclick={() => selectInstance(instance.id)} type="checkbox" /></td>
+	<td class="p-2 align-top"
+		><input onclick={() => selectInstance(instance.id)} type="checkbox" /></td
+	>
 	<td
 		contenteditable="plaintext-only"
 		class="box-border p-2 align-top"

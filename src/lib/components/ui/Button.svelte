@@ -36,7 +36,7 @@
 {:else}
 	<button
 		class={twMerge(
-			'flex gap-2 rounded border px-4 py-2 transition-all hover:bg-slate-100',
+			'flex gap-2 rounded border px-3 py-1.5 transition-all hover:bg-slate-100',
 			classNames
 		)}
 		{disabled}

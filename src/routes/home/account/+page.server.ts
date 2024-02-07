@@ -1,65 +1,27 @@
-import { AuthApiError } from '@supabase/supabase-js';
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+
+export const load = async ({ locals: { supabase, getSession } }) => {
+	const session = await getSession();
+
+	if (!session) {
+		redirect(303, '/');
+	}
+
+	const { data: profile } = await supabase
+		.from('profiles')
+		.select(`username, full_name, website, avatar_url`)
+		.eq('id', session.user.id)
+		.single();
+
+	return { session, profile };
+};
 
 export const actions = {
-	login: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email') as string;
-		const password = formData.get('password') as string;
-
-		const { error } = await supabase.auth.signInWithPassword({
-			email,
-			password
-		});
-		if (error) {
-			return fail(500, { message: 'Server error. Try again later.', success: false, email });
+	signout: async ({ locals: { supabase, getSession } }) => {
+		const session = await getSession();
+		if (session) {
+			await supabase.auth.signOut();
+			redirect(303, '/');
 		}
-		redirect(303, '/home');
-	},
-
-	signup: async ({ request, url, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const email = formData.get('email') as string;
-		const password = formData.get('password') as string;
-
-		const { data, error } = await supabase.auth.signUp({
-			email,
-			password,
-			options: {
-				emailRedirectTo: `${url.origin}/auth/callback`
-			}
-		});
-		if (error) {
-			if (error instanceof AuthApiError && error.status >= 400 && error.status < 500) {
-				return fail(400, {
-					error: 'invalidCredentials',
-					email: email,
-					invalid: true,
-					message: error.message
-				});
-			}
-			return fail(500, {
-				error: 'Server error. Please try again later.'
-			});
-		}
-
-		if (!error && !!data.user && !data.user.identities?.length) {
-			return fail(409, {
-				error: 'User already exists',
-				email: email,
-				invalid: true,
-				message: 'User already exists'
-			});
-		}
-
-		const res = await supabase.from('users').insert([{ id: data.user?.id, email: email }]);
-
-		if (res.error) {
-			return fail(500, {
-				error: 'Server error. Please try again later.'
-			});
-		}
-
-		return { success: true };
 	}
 };
