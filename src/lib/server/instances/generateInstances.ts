@@ -12,10 +12,19 @@ export async function generateInstances(
 		{
 			role: 'system',
 			content: `
-		You are an AI prompt cleaner. Given a user's input, you remove any information saying what the output should look like. ONLY RETURN THE CLEANED PROMPT`
+		You are an AI prompt cleaner. Given a user's input, you remove any information saying what the output should look like. ONLY RETURN THE CLEANED PROMPT.`
 		},
 		{ role: 'user', content: prompt }
 	]);
+	const examplesBlock =
+		instances.length > 0
+			? `/******* EXAMPLES BLOCK *******/
+	${instances
+		.sort(() => Math.random() - 0.5)
+		.slice(0, 20)
+		.map((instance: Tables<'instances'>) => instance.input)
+		.join('\n')}`
+			: '';
 	const prediction = await openai.generate(
 		[
 			{
@@ -27,10 +36,10 @@ export async function generateInstances(
 				* IGNORE what the user says about what the output should be.
 				* Do not repeat the example inputs.
 				* Generate new and interesting examples.
-				* You return exactly ${count} instances
+				* You return exactly ${count} instances.
 				* Return JSON format with the key "instances" and the example inputs as an array.
 				* The instances should be in plain text unless specified by the prompt.
-				* You only return the inputs for the model, NOT the outputs
+				* You only return the inputs for the model, NOT the outputs.
 				`
 			},
 			{
@@ -39,12 +48,7 @@ export async function generateInstances(
 			/******* PROMPT BLOCK *******/ 
 			${cleanedPrompt}
 
-			/******* EXAMPLES BLOCK *******/
-			${instances
-				.sort(() => Math.random() - 0.5)
-				.slice(0, 20)
-				.map((instance: Tables<'instances'>) => instance.input)
-				.join('\n')}
+			${examplesBlock}
 			`
 			}
 		],
