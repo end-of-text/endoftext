@@ -39,6 +39,10 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		error(500, userRes.error.message);
 	}
 
+	if (userRes.data.length === 0) {
+		error(404, 'User not found');
+	}
+
 	const res = await supabase
 		.from('user_project')
 		.insert([{ project_id: projectId, user_id: userRes.data[0].id }])
