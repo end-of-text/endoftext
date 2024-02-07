@@ -18,14 +18,19 @@ export class SeparateInstructionEditor extends PromptEditor {
 			[
 				{
 					role: 'system',
-					content:
-						'You are an AI prompt writing critiquer. Given the following prompt, you return JSON with the key `output` that is either true if the prompt matches the user description or false otherwise.'
+					content: `You are an AI prompt writing critiquer. You decide if a prompt could be split into a task instruction and other information.
+
+						### Guidelines
+						1. Check whether it makes sense to separate the task instruction from the rest of the prompt. For example, if there is only a task instruction and no other information, return false.
+						2. If the task instruction is already clearly separated, return false.
+						3. If it makes sense to separate the task instruction from the rest of the prompt and the instruction is not already sparated, return true.
+
+						### Output
+						Return the output in JSON with the key "output" that is either true or false.`
 				},
 				{
 					role: 'user',
-					content:
-						'The instruction of what the task is that the model has to solve should be separated clearly from the rest of the prompt. Is the task instruction in this prompt well separated from other information in the prompt?\n\nprompt: ' +
-						prompt.prompt
+					content: prompt.prompt
 				}
 			],
 			{ json: true }
