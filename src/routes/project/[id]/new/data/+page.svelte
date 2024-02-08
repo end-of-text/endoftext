@@ -19,10 +19,13 @@
 </script>
 
 <div class="flex h-full flex-col items-center justify-center">
-	<form class="flex flex-col items-start" method="POST" use:enhance>
-		<p class="mb-2 text-gray-500">2 / 2</p>
+	<form class="flex flex-col items-start gap-2" method="POST" use:enhance>
+		<div class="flex w-full items-center justify-between">
+			<p class="mb-2 text-gray-500">2 / 2</p>
+			<img src="/logo.png" alt="logo" class="h-4" />
+		</div>
 		<h1>Example Inputs</h1>
-		<div class="mb-4 flex flex-col gap-2">
+		<div class="mb-2 flex flex-col gap-2">
 			<p>To improve your prompt we'll need some example inputs</p>
 			<p>These are the questions or statements you want your model to respond to.</p>
 		</div>

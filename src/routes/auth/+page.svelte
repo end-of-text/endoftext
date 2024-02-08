@@ -12,7 +12,7 @@
 </svelte:head>
 
 <div class="mx-auto my-auto h-1/2 w-60">
-	<h1>log in or sign up</h1>
+	<img class="mb-6 w-full" src="/logo.png" alt="logo" />
 	<div class="my-2 flex w-full">
 		<button
 			class="w-1/2 cursor-default rounded-bl rounded-tl border border-r py-2 text-center {formType ===
@@ -39,13 +39,13 @@
 	{#if formType === 'login'}
 		<form class="flex flex-col gap-2" method="post" action="?/login" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
-			<input class="mb-4" type="password" name="password" placeholder="password" />
+			<input class="mb-2" type="password" name="password" placeholder="password" />
 			<Button classNames="ml-auto">Sign in</Button>
 		</form>
 	{:else}
 		<form class="flex flex-col gap-2" method="post" action="?/signup" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
-			<input class="mb-4" type="password" name="password" placeholder="password" />
+			<input class="mb-2" type="password" name="password" placeholder="password" />
 			<Button classNames="ml-auto">Sign up</Button>
 		</form>
 	{/if}
