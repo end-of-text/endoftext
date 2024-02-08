@@ -105,7 +105,7 @@
 				<th class="w-6 rounded-tl" />
 				<th class="p-3 font-semibold">Input</th>
 				<th class="p-3 font-semibold">Prediction</th>
-				<th class="min-w-16 whitespace-nowrap rounded-tr px-2 py-1"></th>
+				<th class="w-12 whitespace-nowrap rounded-tr px-2 py-1"></th>
 			</tr>
 		</thead>
 		<tbody>

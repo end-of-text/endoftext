@@ -30,7 +30,7 @@
 			}
 		}}
 	/>
-	<div class="mt-2 flex items-center justify-between gap-2">
+	<div class="mt-3 flex items-center justify-between gap-2">
 		<Button onclick={() => (showOptions = !showOptions)}>
 			<span class="text-black">Model Options</span>
 			{#if showOptions}
