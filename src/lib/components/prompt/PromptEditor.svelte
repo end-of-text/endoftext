@@ -1,8 +1,8 @@
 <script lang="ts">
+	import PromptOptions from '$lib/components/options/PromptOptions.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { ChevronDown, ChevronUp, Save, Undo2 } from 'lucide-svelte';
-	import PromptOptions from '../options/PromptOptions.svelte';
 
 	let { prompt, editedPrompt, showOptions, setPrompt } = $props<{
 		prompt: Tables<'prompts'>;

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { addProjectUser, getProjectUsers } from '$lib/api';
+	import Button from '$lib/components/ui/Button.svelte';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import Button from '../ui/Button.svelte';
-	import Spinner from '../ui/Spinner.svelte';
 	import Popup from './Popup.svelte';
 
 	let { project, onclose } = $props<{ project: Tables<'projects'>; onclose: () => void }>();

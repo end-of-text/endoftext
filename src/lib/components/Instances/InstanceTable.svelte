@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { createInstance, deleteInstance, generateInstances } from '$lib/api';
+	import Button from '$lib/components/ui/Button.svelte';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { PlusCircle, Sparkle, Sparkles } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
-	import Button from '../ui/Button.svelte';
-	import Spinner from '../ui/Spinner.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
 	let { instances, prompt } = $props<{
