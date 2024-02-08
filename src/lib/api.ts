@@ -150,6 +150,16 @@ export async function addProjectUser(projectId: string, email: string): Promise<
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ projectId, email })
+		body: JSON.stringify({ email })
+	});
+}
+
+export async function removeProjectUser(projectId: string, userId: string): Promise<void> {
+	await fetch(`/api/project/${projectId}/users`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ userId })
 	});
 }

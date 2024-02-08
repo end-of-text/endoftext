@@ -25,13 +25,13 @@ export async function GET({ params, locals: { supabase, getSession } }) {
 	return json(finalData);
 }
 
-export async function POST({ request, locals: { supabase, getSession } }) {
+export async function POST({ params, request, locals: { supabase, getSession } }) {
 	const session = getSession();
 	if (!session) {
 		error(401, 'Forbidden');
 	}
 	const requestData = await request.json();
-	const projectId = requestData.projectId;
+	const projectId = params.id;
 	const email = requestData.email;
 
 	const userRes = await supabase.from('users').select('id').eq('email', email);
@@ -47,6 +47,27 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		.from('user_project')
 		.insert([{ project_id: projectId, user_id: userRes.data[0].id }])
 		.select();
+
+	if (res.error) {
+		error(500, res.error.message);
+	}
+	return json(res.data);
+}
+
+export async function DELETE({ params, request, locals: { supabase, getSession } }) {
+	const session = getSession();
+	if (!session) {
+		error(401, 'Forbidden');
+	}
+	const requestData = await request.json();
+	const projectId = params.id;
+	const userId = requestData.userId;
+
+	const res = await supabase
+		.from('user_project')
+		.delete()
+		.eq('project_id', projectId)
+		.eq('user_id', userId);
 
 	if (res.error) {
 		error(500, res.error.message);
