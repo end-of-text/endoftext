@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { addProjectUser, getProjectUsers } from '$lib/api';
+	import { addProjectUser, getProjectUsers, removeProjectUser } from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
+	import { X } from 'lucide-svelte';
 	import Popup from './Popup.svelte';
 
 	let { project, onclose } = $props<{ project: Tables<'projects'>; onclose: () => void }>();
@@ -28,6 +29,11 @@
 		userRequest = getProjectUsers(project.id || '');
 		addingUser = false;
 	}
+
+	async function removeUser(userId: string) {
+		await removeProjectUser(project.id, userId);
+		userRequest = getProjectUsers(project.id || '');
+	}
 </script>
 
 <svelte:window onkeydown={submit} />
@@ -40,9 +46,14 @@
 			{#await userRequest}
 				<Spinner />
 			{:then users}
-				{#each users as user (user.id)}
-					<div class="rounded-full bg-gray-100 px-3 py-1">
+				{#each users as user, index (user.id)}
+					<div class="flex gap-2 rounded-full bg-gray-100 px-3 py-1">
 						{user.email}
+						{#if index > 0}
+							<button onclick={() => removeUser(user.id)}>
+								<X class="cursor-pointer transition hover:text-red-600" />
+							</button>
+						{/if}
 					</div>
 				{/each}
 			{/await}
