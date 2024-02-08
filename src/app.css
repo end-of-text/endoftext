@@ -4,7 +4,7 @@
 
 @layer base {
 	h1 {
-		@apply text-3xl font-black text-rose-400;
+		@apply text-3xl font-black text-gray-700;
 	}
 	h2 {
 		@apply text-xl font-bold text-gray-700;

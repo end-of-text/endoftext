@@ -68,17 +68,19 @@
 					generatingInstances = false;
 				});
 			}}
+			title="Generate"
+			classNames="hover:text-yellow-500"
 		>
-			<Sparkle />
-			Generate
+			<Sparkle class="transition" />
 		</Button>
 		<Button
 			onclick={() => {
 				createInstance($page.params.id).then((d) => instances.push(d));
 			}}
+			title="Add"
+			classNames="hover:text-green-500"
 		>
-			<PlusCircle />
-			Add
+			<PlusCircle class="transition" />
 		</Button>
 	</div>
 </div>
