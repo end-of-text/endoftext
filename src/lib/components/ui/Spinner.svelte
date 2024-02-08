@@ -1,4 +1,10 @@
-<div role="status">
+<script lang="ts">
+	let { classNames = '' } = $props<{
+		classNames?: string;
+	}>();
+</script>
+
+<div class={classNames} role="status">
 	<svg
 		aria-hidden="true"
 		class="h-5 w-5 animate-spin fill-blue-600 text-gray-100 dark:text-gray-600"

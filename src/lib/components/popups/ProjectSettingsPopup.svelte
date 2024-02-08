@@ -17,7 +17,9 @@
 			onclose();
 		}
 		if (e.key === 'Enter') {
-			onclose();
+			if (newUser !== '') {
+				addUser();
+			}
 		}
 	}
 
@@ -58,10 +60,10 @@
 				{/each}
 			{/await}
 		</div>
-		<div class="mt-2 flex">
+		<div class="mt-2 flex items-center">
 			<input class="py-1" placeholder="email" bind:value={newUser} />
 			{#if addingUser}
-				<Spinner />
+				<Spinner classNames="pl-2" />
 			{:else}
 				<Button classNames="self-end ml-2" disabled={newUser === ''} onclick={addUser}
 					>Add User</Button
