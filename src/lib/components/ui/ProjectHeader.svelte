@@ -20,7 +20,7 @@
 	</div>
 	<div class="ml-auto flex items-center gap-4">
 		<a href="/home">
-			<Home class="cursor-pointer transition hover:text-rose-400" />
+			<Home class="cursor-pointer transition hover:text-blue-600" />
 		</a>
 		<button onclick={() => (showSettings = true)}>
 			<Settings class="cursor-pointer transition hover:text-blue-600" />

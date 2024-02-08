@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
-	import { Trash2 } from 'lucide-svelte';
+	import { PlusCircle, Trash2 } from 'lucide-svelte';
 
 	const { data } = $props();
 </script>
@@ -9,7 +9,7 @@
 <div class="mb-4 flex items-center justify-between">
 	<h1>Your Prompts</h1>
 	<form class="flex" method="post" use:enhance action="?/create">
-		<Button fancy>New Prompt</Button>
+		<Button title="New Prompt" classNames="text-green-600"><PlusCircle /></Button>
 	</form>
 </div>
 {#if data.projects.length === 0}
@@ -21,7 +21,7 @@
 	<div class="grid grid-cols-3 gap-4">
 		{#each data.projects as project (project.id)}
 			<a
-				class="flex h-24 gap-2 rounded border p-2 transition hover:shadow"
+				class="flex min-h-24 gap-2 rounded border p-2 transition hover:shadow"
 				href="/project/{project.id}"
 			>
 				<p class="w-full px-4 py-2 transition">

@@ -40,13 +40,13 @@
 		<form class="flex flex-col gap-2" method="post" action="?/login" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
 			<input class="mb-4" type="password" name="password" placeholder="password" />
-			<Button classNames="ml-auto" fancy>Sign in</Button>
+			<Button classNames="ml-auto">Sign in</Button>
 		</form>
 	{:else}
 		<form class="flex flex-col gap-2" method="post" action="?/signup" use:enhance>
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
 			<input class="mb-4" type="password" name="password" placeholder="password" />
-			<Button classNames="ml-auto" fancy>Sign up</Button>
+			<Button classNames="ml-auto">Sign up</Button>
 		</form>
 	{/if}
 	{#if form?.success}

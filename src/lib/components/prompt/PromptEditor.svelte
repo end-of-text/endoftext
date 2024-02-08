@@ -31,7 +31,7 @@
 		}}
 	/>
 	<div class="mt-2 flex items-center justify-between gap-2">
-		<Button onclick={() => (showOptions = !showOptions)} classNames="hover:text-blue-500">
+		<Button onclick={() => (showOptions = !showOptions)}>
 			<span class="text-black">Model Options</span>
 			{#if showOptions}
 				<ChevronUp />
@@ -41,21 +41,18 @@
 		</Button>
 		<div class="flex items-center gap-1">
 			{#if promptWasEdited}
-				<Button
-					classNames="hover:text-blue-500"
-					onclick={() => (editedPrompt = { ...prompt })}
-					title=""
-				>
-					<Undo2 class="transition" />
-				</Button>
-				<Button
-					onclick={() => setPrompt()}
-					classNames="w-fit hover:text-green-500"
-					title="Save & Run"
-				>
-					<Save class="transition" />
+				<Button onclick={() => (editedPrompt = { ...prompt })} classNames="text-gray-500">
+					<Undo2 />
 				</Button>
 			{/if}
+			<Button
+				onclick={() => setPrompt()}
+				disabled={!promptWasEdited}
+				classNames="w-fit text-blue-500"
+				title="Save & Run"
+			>
+				<Save class="transition" />
+			</Button>
 		</div>
 	</div>
 	{#if showOptions}
