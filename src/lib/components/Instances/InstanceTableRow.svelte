@@ -59,7 +59,7 @@
 	/>
 	<td class="flex justify-end p-3">
 		<button onclick={() => removeInstance(instance.id)}>
-			<Trash2 class="cursor-pointer transition  hover:text-red-600" />
+			<Trash2 class="cursor-pointer transition hover:text-red-600" />
 		</button>
 	</td>
 </tr>
