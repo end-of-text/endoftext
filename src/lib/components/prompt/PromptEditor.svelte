@@ -19,7 +19,7 @@
 <div class="flex flex-col">
 	<div
 		contenteditable="plaintext-only"
-		class="mt-2 min-h-24 overflow-hidden rounded border bg-white bg-opacity-90 p-2 text-sm"
+		class="mt-2 min-h-24 overflow-hidden rounded border bg-white bg-opacity-90 p-2 text-sm shadow"
 		role="textbox"
 		aria-multiline="true"
 		tabindex="0"
@@ -32,7 +32,7 @@
 	/>
 	<div class="mt-2 flex items-center justify-between gap-2">
 		<Button onclick={() => (showOptions = !showOptions)}>
-			Model Options
+			<span class="text-black">Model Options</span>
 			{#if showOptions}
 				<ChevronUp />
 			{:else}
@@ -41,19 +41,17 @@
 		</Button>
 		<div class="flex items-center gap-1">
 			{#if promptWasEdited}
-				<Button
-					classNames="bg-blue-50 hover:bg-blue-100"
-					onclick={() => (editedPrompt = { ...prompt })}
-				>
+				<Button onclick={() => (editedPrompt = { ...prompt })} classNames="text-gray-500">
 					<Undo2 />
 				</Button>
 			{/if}
 			<Button
 				onclick={() => setPrompt()}
-				classNames="w-fit {promptWasEdited ? 'bg-emerald-50 hover:bg-emerald-100' : 'border'}"
+				disabled={!promptWasEdited}
+				classNames="w-fit text-blue-500"
+				title="Save & Run"
 			>
-				<Save />
-				Save & Run
+				<Save class="transition" />
 			</Button>
 		</div>
 	</div>

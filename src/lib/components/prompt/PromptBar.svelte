@@ -13,7 +13,7 @@
 
 	let editedPrompt = $state({ ...prompt });
 	let showOptions = $state(false);
-	let copied = $state(false);
+	let promptCopied = $state(false);
 
 	function editPrompt(suggestion: string) {
 		editedPrompt.prompt = suggestion;
@@ -29,22 +29,22 @@
 
 	function copyPrompt() {
 		navigator.clipboard.writeText(prompt.prompt);
-		copied = true;
+		promptCopied = true;
 		setTimeout(() => {
-			copied = false;
+			promptCopied = false;
 		}, 3000);
 	}
 </script>
 
 <div class="mb-2 flex items-center justify-between">
 	<h1>Prompt</h1>
-	<button onclick={copyPrompt} class="p-1 {copied ? 'text-emerald-600' : ''}">
-		{#if copied}
+	<button onclick={copyPrompt} class="p-1 {promptCopied ? 'text-emerald-600' : ''}">
+		{#if promptCopied}
 			<span class="flex items-center gap-2" in:fade><Check /> Copied!</span>
 		{:else}
-			<span class="flex items-center gap-2 text-gray-500 hover:text-gray-950" in:fade
-				><Copy /> Copy</span
-			>
+			<span class="group flex items-center gap-2 text-gray-500 hover:text-gray-950" in:fade>
+				<Copy />
+			</span>
 		{/if}
 	</button>
 </div>

@@ -41,7 +41,8 @@
 			</button>
 			<div transition:fade={{ duration: 300 }}>
 				<Button
-					classNames="bg-blue-50 hover:bg-blue-100"
+					classNames="text-blue-600"
+					title="Generate Similar"
 					onclick={() => {
 						generatingInstances = true;
 						generateInstances(
@@ -56,7 +57,6 @@
 					}}
 				>
 					<Sparkles />
-					Generate Similar
 				</Button>
 			</div>
 		{/if}
@@ -68,17 +68,19 @@
 					generatingInstances = false;
 				});
 			}}
+			title="Generate"
+			classNames="text-yellow-400"
 		>
-			<Sparkle />
-			Generate
+			<Sparkle class="transition" />
 		</Button>
 		<Button
 			onclick={() => {
 				createInstance($page.params.id).then((d) => instances.push(d));
 			}}
+			title="Add"
+			classNames="text-green-600"
 		>
-			<PlusCircle />
-			Add
+			<PlusCircle class="transition" />
 		</Button>
 	</div>
 </div>
