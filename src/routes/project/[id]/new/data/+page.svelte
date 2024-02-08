@@ -20,7 +20,7 @@
 
 <div class="flex h-full flex-col items-center justify-center">
 	<form class="flex flex-col items-start" method="POST" use:enhance>
-		<p class="mb-2 text-slate-500">2 / 2</p>
+		<p class="mb-2 text-gray-500">2 / 2</p>
 		<h1>Example Inputs</h1>
 		<div class="mb-4 flex flex-col gap-2">
 			<p>To improve your prompt we'll need some example inputs</p>
@@ -28,7 +28,7 @@
 		</div>
 		<div class="flex w-full flex-col gap-2">
 			{#if data.generatedInstances && instances.length === 0}
-				<p class="mb-2 italic text-slate-600">Generating instances...</p>
+				<p class="mb-2 italic text-gray-600">Generating instances...</p>
 			{/if}
 			{#each instances as instance, i}
 				<div class="flex items-center gap-2">

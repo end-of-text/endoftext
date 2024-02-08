@@ -3,11 +3,11 @@
 	import type { Tables } from '$lib/supabase';
 	import { Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, removeInstance, selectInstance } = $props<{
+	let { instance, prompt, selected, removeInstance } = $props<{
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
+		selected: boolean;
 		removeInstance: (id: number) => void;
-		selectInstance: (id: number) => void;
 	}>();
 
 	let localInstanceInput = $state(instance.input);
@@ -16,11 +16,13 @@
 	let prediction = $derived(getPrediction(prompt, instance.id, instance.input));
 </script>
 
-<tr class="border-b-2">
-	<td class="p-2"><input onclick={() => selectInstance(instance.id)} type="checkbox" /></td>
+<tr class="border-b align-top text-sm">
+	<td class="p-3 align-top">
+		<input bind:checked={selected} type="checkbox" />
+	</td>
 	<td
 		contenteditable="plaintext-only"
-		class="box-border p-2 align-top"
+		class="box-border p-3"
 		bind:innerText={localInstanceInput}
 		onblur={() => {
 			updateInstance({ ...instance, input: localInstanceInput }).then(() => {
@@ -33,7 +35,7 @@
 			}
 		}}
 	/>
-	<td class="p-2 align-top">
+	<td class="p-3">
 		{#await prediction}
 			Loading...
 		{:then pred}
@@ -42,7 +44,7 @@
 	</td>
 	<td
 		contenteditable="plaintext-only"
-		class="box-border p-2 align-top"
+		class="box-border p-3"
 		bind:innerText={localInstanceLabel}
 		onblur={() => {
 			updateInstance({ ...instance, label: localInstanceLabel }).then(() => {
@@ -55,7 +57,7 @@
 			}
 		}}
 	/>
-	<td class="flex justify-end p-2">
+	<td class="flex justify-end p-3">
 		<button onclick={() => removeInstance(instance.id)}>
 			<Trash2 class="cursor-pointer transition hover:text-red-600" />
 		</button>

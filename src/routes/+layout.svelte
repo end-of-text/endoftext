@@ -1,15 +1,7 @@
 <script lang="ts">
-	import Header from '$lib/components/ui/Header.svelte';
 	import '../app.css';
 
-	let { data, children } = $props();
-
-	let session = $derived(data.session);
+	let { children } = $props();
 </script>
 
-<main class="flex h-screen w-screen">
-	<Header {session} />
-	<div class="flex min-h-0 w-full grow flex-col items-center justify-center">
-		{@render children()}
-	</div>
-</main>
+<main class="flex h-screen w-screen">{@render children()}</main>

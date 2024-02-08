@@ -1,6 +1,6 @@
 import { env } from '$env/dynamic/private';
+import { OpenAILLM } from '$lib/server/llms/openai';
 import type { Tables } from '$lib/supabase';
-import { OpenAILLM } from '../llms/openai';
 
 export async function generateInstances(
 	prompt: string,
