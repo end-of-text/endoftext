@@ -26,7 +26,7 @@
 				: 'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 group-hover:opacity-100'} opacity-75 blur transition duration-500"
 		></div>
 		<button
-			class="animate relative rounded-lg bg-white px-4 py-2 hover:bg-slate-50 disabled:text-gray-500"
+			class="animate relative rounded-lg bg-white px-4 py-2 hover:bg-neutral-50 disabled:text-gray-500"
 			{onclick}
 			{disabled}
 		>
@@ -36,7 +36,7 @@
 {:else}
 	<button
 		class={twMerge(
-			'flex gap-2 rounded border px-3 py-1.5 transition-all hover:bg-slate-100',
+			'flex gap-2 rounded border px-3 py-1.5 transition-all hover:bg-neutral-100',
 			classNames
 		)}
 		{disabled}

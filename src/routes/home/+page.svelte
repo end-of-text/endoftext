@@ -20,13 +20,16 @@
 {:else}
 	<div class="grid grid-cols-3 gap-4">
 		{#each data.projects as project (project.id)}
-			<a class="flex h-24 gap-2 rounded border p-2 hover:bg-slate-100" href="/project/{project.id}">
+			<a
+				class="flex h-24 gap-2 rounded border p-2 transition hover:bg-neutral-100"
+				href="/project/{project.id}"
+			>
 				<p class="w-full px-4 py-2 transition">
 					{project.name}
 				</p>
 				<form method="POST" use:enhance action="?/delete">
 					<button
-						class="ml-auto rounded p-2 transition hover:bg-slate-200 hover:text-red-600"
+						class="ml-auto rounded p-2 transition hover:bg-neutral-200 hover:text-red-600"
 						name="delete"
 						value={project.id}
 						onclick={(e) => e.stopPropagation()}

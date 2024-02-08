@@ -29,12 +29,12 @@
 </script>
 
 <div
-	class="flex items-start justify-between rounded border border-l-4 p-2 {borderMap[
+	class="flex items-start justify-between rounded-br rounded-tr border border-l-4 p-3 {borderMap[
 		suggestion.type
 	]}"
 >
-	<div class="mr-4 flex flex-col">
-		<div class="mb-2 flex items-center gap-2">
+	<div class="flex flex-col">
+		<div class="flex items-center gap-2">
 			{#if suggestion.type === EditorType.ERROR}
 				<ShieldX class="text-red-600" />
 			{:else if suggestion.type === EditorType.ENHANCEMENT}
@@ -42,16 +42,16 @@
 			{:else if suggestion.type === EditorType.OPTIMIZATION}
 				<ShieldPlus class="text-blue-600" />
 			{/if}
-			<p class="font-bold">
+			<p class="font-semibold">
 				{suggestion.name}
 			</p>
 		</div>
-		<p>
+		<p class="my-1 text-neutral-600">
 			{suggestion.description}
 		</p>
 		{#if suggestion.required_input_type}
 			{#if suggestion.required_input_type === RequiredInputType.TEXT}
-				<textarea class="w-full" bind:value={userInput} />
+				<textarea class="mt-2 w-full" bind:value={userInput} />
 			{/if}
 		{/if}
 	</div>

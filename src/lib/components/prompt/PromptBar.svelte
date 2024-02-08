@@ -3,7 +3,6 @@
 	import type { Tables } from '$lib/supabase';
 	import { Check, Copy } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
-	import Button from '../ui/Button.svelte';
 	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
@@ -13,6 +12,7 @@
 	}>();
 
 	let editedPrompt = $state({ ...prompt });
+	let showOptions = $state(false);
 	let copied = $state(false);
 
 	function editPrompt(suggestion: string) {
@@ -22,6 +22,7 @@
 	function setPrompt() {
 		updatePrompt(editedPrompt).then((r) => {
 			prompt = r;
+			showOptions = false;
 			editedPrompt = { ...prompt };
 		});
 	}
@@ -35,17 +36,17 @@
 	}
 </script>
 
-<div class="flex items-center justify-between">
+<div class="mb-2 flex items-center justify-between">
 	<h1>Prompt</h1>
-	<Button onclick={copyPrompt} classNames={copied ? 'text-emerald-600' : ''}>
+	<button onclick={copyPrompt} class="p-1 {copied ? 'text-emerald-600' : ''}">
 		{#if copied}
 			<span class="flex items-center gap-2" in:fade><Check /> Copied!</span>
 		{:else}
 			<span class="flex items-center gap-2" in:fade><Copy /> Copy</span>
 		{/if}
-	</Button>
+	</button>
 </div>
-<PromptEditor {prompt} {setPrompt} bind:editedPrompt />
+<PromptEditor {prompt} {setPrompt} bind:showOptions bind:editedPrompt />
 {#if projectId}
 	<PromptSuggestions {prompt} {editPrompt} />
 {/if}

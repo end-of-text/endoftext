@@ -12,7 +12,7 @@
 <div class="flex h-full flex-col items-center justify-center">
 	<form class="flex flex-col items-start" method="POST" use:enhance>
 		<div class="mb-4 flex max-w-xl flex-col gap-2">
-			<p class="mb-2 text-slate-500">1 / 2</p>
+			<p class="mb-2 text-neutral-500">1 / 2</p>
 			<h1>Initial Prompt</h1>
 			<p>
 				Create your initial prompt and give it a name. This is the system prompt passed to the LLM.
@@ -23,7 +23,7 @@
 				<li class="list-inside list-disc italic">
 					You are a assistant for helping users with insurance claims.
 				</li>
-				<li class="list-inside list-disc italic">Translate this text into French.</li>
+				<li class="list-inside list-disc italic">Tranneutral this text into French.</li>
 			</ol>
 			<p>Don't stress, we'll help you refine it later.</p>
 		</div>

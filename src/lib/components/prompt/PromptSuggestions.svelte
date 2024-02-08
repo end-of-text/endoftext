@@ -25,9 +25,9 @@
 	});
 </script>
 
-<div class="mt-4 flex flex-col gap-2">
-	<div class="my-2 flex">
-		<h2 class="mb-0">Suggestions</h2>
+<div class="mt-6 flex flex-col gap-2">
+	<div class="mb-3 flex items-center">
+		<h2>Suggestions</h2>
 		<button
 			class="pl-4"
 			onclick={() => {
@@ -47,15 +47,17 @@
 			{/if}
 		</button>
 	</div>
-	{#await suggestionsRequest}
-		<Spinner />
-	{:then suggestions}
-		{#if suggestions === undefined || suggestions.length === 0}
-			No suggestions
-		{:else}
-			{#each suggestions as suggestion (suggestion.id)}
-				<PromptSuggestion {prompt} {suggestion} {editPrompt} />
-			{/each}
-		{/if}
-	{/await}
+	<div class="flex flex-col gap-4">
+		{#await suggestionsRequest}
+			<Spinner />
+		{:then suggestions}
+			{#if suggestions === undefined || suggestions.length === 0}
+				No suggestions
+			{:else}
+				{#each suggestions as suggestion (suggestion.id)}
+					<PromptSuggestion {prompt} {suggestion} {editPrompt} />
+				{/each}
+			{/if}
+		{/await}
+	</div>
 </div>

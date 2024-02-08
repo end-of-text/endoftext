@@ -4,13 +4,12 @@
 	import { ChevronDown, ChevronUp, Save, Undo2 } from 'lucide-svelte';
 	import PromptOptions from '../options/PromptOptions.svelte';
 
-	let { prompt, editedPrompt, setPrompt } = $props<{
+	let { prompt, editedPrompt, showOptions, setPrompt } = $props<{
 		prompt: Tables<'prompts'>;
 		editedPrompt: Tables<'prompts'>;
+		showOptions: boolean;
 		setPrompt: () => void;
 	}>();
-
-	let showOptions = $state(false);
 
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true

@@ -33,29 +33,30 @@
 <svelte:window onkeydown={submit} />
 
 <Popup {onclose} classNames="w-1/2">
-	<div class="flex w-full flex-col justify-center">
-		<div class="m-2 flex flex-col items-start gap-2">
-			<h2>Users</h2>
+	<div class="flex w-full flex-col justify-center p-2">
+		<div class="flex flex-col items-start gap-2">
+			<h1>Project Settings</h1>
+			<h2 class="mt-4">Users</h2>
 			{#await userRequest}
 				<Spinner />
 			{:then users}
 				{#each users as user (user.id)}
-					<div>
+					<div class="rounded-full bg-neutral-100 px-3 py-1">
 						{user.email}
 					</div>
 				{/each}
 			{/await}
 		</div>
-		<div class="flex">
-			<input placeholder="email" bind:value={newUser} />
+		<div class="mt-2 flex">
+			<input class="py-1" placeholder="email" bind:value={newUser} />
 			{#if addingUser}
 				<Spinner />
 			{:else}
-				<Button classNames="m-2 self-end" disabled={newUser === ''} onclick={addUser}
+				<Button classNames="self-end ml-2" disabled={newUser === ''} onclick={addUser}
 					>Add User</Button
 				>
 			{/if}
 		</div>
-		<Button classNames="m-2 self-end" onclick={onclose}>Done</Button>
+		<Button classNames="self-end" onclick={onclose}>Done</Button>
 	</div>
 </Popup>

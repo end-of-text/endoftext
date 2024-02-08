@@ -17,8 +17,8 @@
 		<button
 			class="w-1/2 cursor-default rounded-bl rounded-tl border border-r py-2 text-center {formType ===
 			'login'
-				? 'bg-slate-200 hover:bg-slate-300'
-				: 'bg-slate-50 hover:bg-slate-100'}"
+				? 'bg-neutral-200 hover:bg-neutral-300'
+				: 'bg-neutral-50 hover:bg-neutral-100'}"
 			onclick={() => (formType = 'login')}
 			onkeydown={(event) => {
 				if (event.key === 'Enter') formType = 'login';
@@ -29,8 +29,8 @@
 		<button
 			class="w-1/2 cursor-default rounded-br rounded-tr border py-2 text-center {formType ===
 			'signup'
-				? 'bg-slate-200 hover:bg-slate-300'
-				: 'bg-slate-50 hover:bg-slate-100'}"
+				? 'bg-neutral-200 hover:bg-neutral-300'
+				: 'bg-neutral-50 hover:bg-neutral-100'}"
 			onclick={() => (formType = 'signup')}
 		>
 			Sign up

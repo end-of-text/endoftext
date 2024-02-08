@@ -4,18 +4,18 @@
 
 @layer base {
 	h1 {
-		@apply bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 bg-clip-text text-3xl font-black text-transparent;
+		@apply text-3xl font-black text-rose-400;
 	}
 	h2 {
-		@apply text-xl font-bold text-slate-700;
+		@apply text-xl font-bold text-neutral-700;
 	}
 	input {
-		@apply rounded border border-slate-300 px-2 py-1;
+		@apply rounded border border-neutral-300 px-2 py-1;
 	}
 	textarea {
-		@apply rounded border border-slate-300 px-2 py-1;
+		@apply rounded border border-neutral-300 px-2 py-1;
 	}
 	input[type='submit'] {
-		@apply rounded border border-slate-300 px-2 py-1 transition hover:bg-slate-100;
+		@apply rounded border border-neutral-300 px-2 py-1 transition hover:bg-neutral-100;
 	}
 }

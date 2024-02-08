@@ -17,11 +17,11 @@
 	};
 </script>
 
-<div class="form-widget">
+<div class="mt-2">
 	<p>
-		You are signed in as <span class="ml-2 rounded-full bg-slate-100 px-3 py-1"
-			>{data.session?.user.email}</span
-		>
+		You are signed in as <span class="ml-2 rounded-full bg-neutral-100 px-3 py-1">
+			{data.session?.user.email}
+		</span>
 	</p>
 	<br />
 	<form method="post" action="?/signout" use:enhance={handleSignOut}>

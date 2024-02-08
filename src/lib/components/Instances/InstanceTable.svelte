@@ -35,12 +35,12 @@
 
 <div class="mt-2 w-full grow overflow-auto">
 	<table class="w-full">
-		<thead class="sticky top-0 z-10 bg-slate-200 text-left">
-			<tr class="border-b-2">
-				<th />
-				<th class="w-1/3 rounded-tl px-2 py-1">Input</th>
-				<th class="w-1/3 px-2 py-1">Prediction</th>
-				<th class="w-1/3 px-2 py-1">Label</th>
+		<thead class="sticky top-0 z-10 bg-neutral-50 text-left">
+			<tr class="border-b">
+				<th class="rounded-tl" />
+				<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
+				<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
+				<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
 				<th class="min-w-16 whitespace-nowrap rounded-tr px-2 py-1"></th>
 			</tr>
 		</thead>

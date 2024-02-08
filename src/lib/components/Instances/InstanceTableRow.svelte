@@ -16,13 +16,13 @@
 	let prediction = $derived(getPrediction(prompt, instance.id, instance.input));
 </script>
 
-<tr class="border-b-2">
-	<td class="p-2 align-top"
+<tr class="border-b">
+	<td class="p-3 align-top"
 		><input onclick={() => selectInstance(instance.id)} type="checkbox" /></td
 	>
 	<td
 		contenteditable="plaintext-only"
-		class="box-border p-2 align-top"
+		class="box-border p-3 align-top"
 		bind:innerText={localInstanceInput}
 		onblur={() => {
 			updateInstance({ ...instance, input: localInstanceInput }).then(() => {
@@ -35,7 +35,7 @@
 			}
 		}}
 	/>
-	<td class="p-2 align-top">
+	<td class="p-3 align-top">
 		{#await prediction}
 			Loading...
 		{:then pred}
@@ -44,7 +44,7 @@
 	</td>
 	<td
 		contenteditable="plaintext-only"
-		class="box-border p-2 align-top"
+		class="box-border p-3 align-top"
 		bind:innerText={localInstanceLabel}
 		onblur={() => {
 			updateInstance({ ...instance, label: localInstanceLabel }).then(() => {
@@ -57,9 +57,9 @@
 			}
 		}}
 	/>
-	<td class="flex justify-end p-2">
+	<td class="flex justify-end p-3">
 		<button onclick={() => removeInstance(instance.id)}>
-			<Trash2 class="cursor-pointer transition hover:text-red-600" />
+			<Trash2 class="cursor-pointer  transition hover:text-red-600" />
 		</button>
 	</td>
 </tr>
