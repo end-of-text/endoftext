@@ -42,7 +42,7 @@
 		<div class="flex items-center gap-1">
 			{#if promptWasEdited}
 				<Button
-					classNames="border-blue-400 bg-blue-50 hover:bg-blue-100"
+					classNames="bg-blue-50 hover:bg-blue-100"
 					onclick={() => (editedPrompt = { ...prompt })}
 				>
 					<Undo2 />
@@ -50,9 +50,7 @@
 			{/if}
 			<Button
 				onclick={() => setPrompt()}
-				classNames="w-fit {promptWasEdited
-					? 'border-emerald-600 bg-emerald-50 hover:bg-emerald-100'
-					: 'border'}"
+				classNames="w-fit {promptWasEdited ? 'bg-emerald-50 hover:bg-emerald-100' : 'border'}"
 			>
 				<Save />
 				Save & Run

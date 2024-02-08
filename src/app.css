@@ -7,15 +7,15 @@
 		@apply text-3xl font-black text-rose-400;
 	}
 	h2 {
-		@apply text-xl font-bold text-neutral-700;
+		@apply text-xl font-bold text-gray-700;
 	}
 	input {
-		@apply rounded border border-neutral-300 px-2 py-1;
+		@apply rounded border border-gray-300 px-2 py-1;
 	}
 	textarea {
-		@apply rounded border border-neutral-300 px-2 py-1;
+		@apply rounded border border-gray-300 px-2 py-1;
 	}
 	input[type='submit'] {
-		@apply rounded border border-neutral-300 px-2 py-1 transition hover:bg-neutral-100;
+		@apply rounded border border-gray-300 px-2 py-1 transition hover:bg-gray-100;
 	}
 }

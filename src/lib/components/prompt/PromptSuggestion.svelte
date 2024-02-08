@@ -46,7 +46,7 @@
 				{suggestion.name}
 			</p>
 		</div>
-		<p class="my-1 text-neutral-600">
+		<p class="my-1 text-gray-600">
 			{suggestion.description}
 		</p>
 		{#if suggestion.required_input_type}

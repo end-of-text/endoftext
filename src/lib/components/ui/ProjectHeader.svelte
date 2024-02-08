@@ -16,7 +16,7 @@
 <div class="flex w-full border-b px-6">
 	<div class="flex items-center gap-4">
 		<ScrollText />
-		<span class="my-4 text-xl font-semibold text-neutral-700">{project.name}</span>
+		<span class="my-4 text-xl font-semibold text-gray-700">{project.name}</span>
 	</div>
 	<div class="ml-auto flex items-center gap-4">
 		<a href="/home">

@@ -42,7 +42,9 @@
 		{#if copied}
 			<span class="flex items-center gap-2" in:fade><Check /> Copied!</span>
 		{:else}
-			<span class="flex items-center gap-2" in:fade><Copy /> Copy</span>
+			<span class="flex items-center gap-2 text-gray-500 hover:text-gray-950" in:fade
+				><Copy /> Copy</span
+			>
 		{/if}
 	</button>
 </div>

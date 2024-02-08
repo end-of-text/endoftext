@@ -41,7 +41,7 @@
 				<Spinner />
 			{:then users}
 				{#each users as user (user.id)}
-					<div class="rounded-full bg-neutral-100 px-3 py-1">
+					<div class="rounded-full bg-gray-100 px-3 py-1">
 						{user.email}
 					</div>
 				{/each}
