@@ -8,6 +8,7 @@
 	let { project, onclose } = $props<{ project: Tables<'projects'>; onclose: () => void }>();
 
 	let newUser = $state('');
+	let localProjectName = $state(project.name);
 	let addingUser = $state(false);
 	let userRequest = $state(getProjectUsers(project.id || ''));
 
@@ -36,6 +37,16 @@
 	<div class="flex w-full flex-col justify-center p-2">
 		<div class="flex flex-col items-start gap-2">
 			<h1>Project Settings</h1>
+			<h2 class="mt-4">Project Name</h2>
+			<form class="flex items-center" method="post" action="?/updateName">
+				<input bind:value={localProjectName} class="mr-2 w-64 py-1" type="text" name="name" />
+				<Button
+					classNames="self-end"
+					disabled={localProjectName.length === 0 || localProjectName === project.name}
+				>
+					Update Name
+				</Button>
+			</form>
 			<h2 class="mt-4">Users</h2>
 			{#await userRequest}
 				<Spinner />
@@ -52,9 +63,9 @@
 			{#if addingUser}
 				<Spinner />
 			{:else}
-				<Button classNames="self-end ml-2" disabled={newUser === ''} onclick={addUser}
-					>Add User</Button
-				>
+				<Button classNames="self-end ml-2" disabled={newUser === ''} onclick={addUser}>
+					Add User
+				</Button>
 			{/if}
 		</div>
 		<Button classNames="self-end" onclick={onclose}>Done</Button>

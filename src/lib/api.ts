@@ -36,6 +36,16 @@ export async function deleteInstance(instanceId: number) {
 	});
 }
 
+export async function deleteInstances(instanceIds: number[]) {
+	await fetch(`/api/instances`, {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ instanceIds })
+	});
+}
+
 export async function createInstance(projectId: string) {
 	const res = await fetch(`/api/instance`, {
 		method: 'PUT',

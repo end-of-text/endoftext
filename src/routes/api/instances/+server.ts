@@ -2,6 +2,26 @@ import { generateInstances } from '$lib/server/instances/generateInstances.js';
 import type { Tables } from '$lib/supabase';
 import { error, json } from '@sveltejs/kit';
 
+export async function DELETE({ locals: { getSession, supabase }, request }) {
+	const session = getSession();
+	if (!session) {
+		error(401, 'Forbidden');
+	}
+
+	const requestData = await request.json();
+	const instanceIds = requestData.instanceIds as number[] | undefined;
+	if (!instanceIds) {
+		error(500, 'Invalid data');
+	}
+
+	const res = await supabase.from('instances').delete().in('id', instanceIds);
+	if (res.error) {
+		error(500, res.error.message);
+	}
+
+	return new Response(null, { status: 200 });
+}
+
 export async function POST({ locals: { getSession, supabase }, request }) {
 	const session = getSession();
 	if (!session) {

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { createInstance, deleteInstance, generateInstances } from '$lib/api';
+	import { createInstance, deleteInstance, deleteInstances, generateInstances } from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { PlusCircle, Sparkle, Sparkles } from 'lucide-svelte';
+	import { PlusCircle, Sparkle, Sparkles, Trash2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
@@ -34,11 +34,25 @@
 		{#if selectedInstances.some((d) => d === true)}
 			<button
 				transition:fade={{ duration: 300 }}
-				class="mr-2 text-gray-500 transition-colors hover:text-red-600"
+				class="mr-2 text-gray-500 transition-colors hover:text-gray-900"
 				onclick={() => (selectedInstances = [])}
 			>
 				clear
 			</button>
+			<div transition:fade={{ duration: 300 }}>
+				<Button
+					classNames="text-red-600"
+					onclick={() =>
+						deleteInstances(
+							selectedInstances.map((d, i) => (d ? instances[i].id : -1)).filter((d) => d !== -1)
+						).then(() => {
+							instances = instances.filter((_, i) => !selectedInstances[i]);
+							selectedInstances = [];
+						})}
+				>
+					<Trash2 />
+				</Button>
+			</div>
 			<div transition:fade={{ duration: 300 }}>
 				<Button
 					classNames="text-blue-600"
@@ -88,10 +102,9 @@
 	<table class="w-full">
 		<thead class="sticky top-0 z-10 bg-gray-50 text-left">
 			<tr class="border-b">
-				<th class="rounded-tl" />
-				<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
-				<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
-				<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
+				<th class="w-6 rounded-tl" />
+				<th class="p-3 font-semibold">Input</th>
+				<th class="p-3 font-semibold">Prediction</th>
 				<th class="min-w-16 whitespace-nowrap rounded-tr px-2 py-1"></th>
 			</tr>
 		</thead>

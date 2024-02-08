@@ -11,13 +11,12 @@
 	}>();
 
 	let localInstanceInput = $state(instance.input);
-	let localInstanceLabel = $state(instance.label);
 
 	let prediction = $derived(getPrediction(prompt, instance.id, instance.input));
 </script>
 
 <tr class="border-b align-top text-sm">
-	<td class="p-3 align-top">
+	<td class="w-6 p-3 align-top">
 		<input bind:checked={selected} type="checkbox" />
 	</td>
 	<td
@@ -42,7 +41,7 @@
 			{pred}
 		{/await}
 	</td>
-	<td
+	<!-- <td
 		contenteditable="plaintext-only"
 		class="box-border p-3"
 		bind:innerText={localInstanceLabel}
@@ -56,7 +55,7 @@
 				event.currentTarget.blur();
 			}
 		}}
-	/>
+	/> -->
 	<td class="flex justify-end p-3">
 		<button onclick={() => removeInstance(instance.id)}>
 			<Trash2 class="cursor-pointer transition hover:text-red-600" />

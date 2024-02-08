@@ -8,9 +8,9 @@
 <div class="mx-auto mt-10 flex min-h-0 w-full max-w-4xl grow gap-2">
 	<div class="flex w-1/6 flex-col gap-4">
 		<a
-			class="flex gap-2 rounded p-2 text-gray-500 transition hover:text-gray-950 {$page.url
+			class="flex gap-2 rounded p-2 text-gray-500 transition hover:text-gray-900 {$page.url
 				.pathname === '/home'
-				? 'text-gray-950'
+				? 'text-gray-900'
 				: ''}"
 			href="/home"
 		>
@@ -18,9 +18,9 @@
 			All Prompts
 		</a>
 		<a
-			class="flex gap-2 rounded p-2 text-gray-500 transition hover:text-gray-950 {$page.url
+			class="flex gap-2 rounded p-2 text-gray-500 transition hover:text-gray-900 {$page.url
 				.pathname === '/home/account'
-				? 'text-gray-950'
+				? 'text-gray-900'
 				: ''}"
 			href="/home/account"
 		>
