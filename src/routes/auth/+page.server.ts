@@ -78,14 +78,6 @@ export const actions = {
 			});
 		}
 
-		const res = await supabase.from('users').insert([{ id: data.user?.id, email: email }]);
-
-		if (res.error) {
-			return fail(500, {
-				error: 'Server error. Please try again later.'
-			});
-		}
-
 		return { success: true };
 	}
 };
