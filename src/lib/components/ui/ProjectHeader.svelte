@@ -15,7 +15,7 @@
 {/if}
 <div class="flex w-full items-center border-b px-6">
 	<a href="/home">
-		<img class="mr-8 h-6" src="/logo.png" alt="logo" />
+		<img class="mr-8 h-5" src="/logo.png" alt="logo" />
 	</a>
 	<div class="flex items-center gap-2">
 		<ScrollText />
