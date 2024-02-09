@@ -13,7 +13,29 @@
 
 <div class="mx-auto my-auto h-1/2 w-60">
 	<h1>log in or sign up</h1>
-	<div class="my-2 flex w-full">
+	<div class="my-2">
+		<div
+			id="g_id_onload"
+			data-client_id="801995829541-kfg0pk8ae81bct6bg1b7sghedfnci17l.apps.googleusercontent.com"
+			data-context="signin"
+			data-ux_mode="popup"
+			data-login_uri="app.endoftext.app/auth?/loginWithGoogle"
+			data-auto_prompt="false"
+		></div>
+
+		<div
+			class="g_id_signin"
+			data-type="standard"
+			data-shape="rectangular"
+			data-theme="outline"
+			data-text="signin_with"
+			data-size="large"
+			data-logo_alignment="left"
+			data-width="300px"
+		></div>
+	</div>
+	<p class="mb-2 text-center italic">or</p>
+	<div class="mb-2 flex w-full">
 		<button
 			class="w-1/2 cursor-default rounded-bl rounded-tl border border-r py-2 text-center {formType ===
 			'login'

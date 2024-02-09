@@ -16,6 +16,11 @@ export const actions = {
 		}
 		redirect(303, '/home');
 	},
+	loginWithGoogle: async ({ request, locals: { supabase } }) => {
+		supabase.auth.signInWithOAuth({
+			provider: 'google'
+		});
+	},
 
 	signup: async ({ request, url, locals: { supabase } }) => {
 		const formData = await request.formData();
