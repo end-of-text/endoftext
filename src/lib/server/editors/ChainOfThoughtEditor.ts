@@ -17,18 +17,19 @@ export class ChainOfThoughtEditor extends PromptEditor {
 		if (prompt.responseFormat !== 'text') {
 			return false;
 		}
+		const systemPrompt = `You are an AI prompt writing critiquer. You decide whether a prompt should implement chain-of-thought reasoning. 
+
+### Guidelines
+* First, decide if the prompt already implements chain-of-thought reasoning. For example, it might include "think step-by-step". If so, return false.
+* If the prompt doesn't implement chain-of-thought reasoning, decide if it should or not. Only prompts for complex reasoning tasks such as arithmetic, commonsense reasoning, and symbolic reasoning tasks require chain-of-thought prompting. If the prompt is one of these, return true.
+						
+### Output
+Return the output in JSON with the key "output" that is either true or false.`;
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: `You are an AI prompt writing critiquer. You decide whether a prompt should implement chain-of-thought reasoning. 
-
-						### Guidelines
-						* First, decide if the prompt already implements chain-of-thought reasoning. For example, it might include "think step-by-step". If so, return false.
-						* If the prompt doesn't implement chain-of-thought reasoning, decide if it should or not. Only prompts for complex reasoning tasks such as arithmetic, commonsense reasoning, and symbolic reasoning tasks require chain-of-thought prompting. If the prompt is one of these, return true.
-						
-						### Output
-						Return the output in JSON with the key "output" that is either true or false.`
+					content: systemPrompt
 				},
 				{
 					role: 'user',

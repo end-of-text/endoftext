@@ -8,9 +8,10 @@
 	import { fade } from 'svelte/transition';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
-	let { instances, prompt } = $props<{
+	let { instances, prompt, project } = $props<{
 		instances: Tables<'instances'>[];
 		prompt: Tables<'prompts'>;
+		project: Tables<'projects'>;
 	}>();
 
 	let selectedInstances = $state<boolean[]>([]);
@@ -102,10 +103,19 @@
 	<table class="w-full">
 		<thead class="sticky top-0 z-10 bg-gray-50 text-left">
 			<tr class="border-b">
-				<th class="w-6 rounded-tl" />
-				<th class="p-3 font-semibold">Input</th>
-				<th class="p-3 font-semibold">Prediction</th>
-				<th class="w-12 whitespace-nowrap rounded-tr px-2 py-1"></th>
+				{#if project.show_labels}
+					<th class="rounded-tl" />
+					<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
+					<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
+					<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
+					<th class="whitespace-nowrap px-2 py-2">Metric</th>
+					<th class="min-w-12 whitespace-nowrap rounded-tr" />
+				{:else}
+					<th class="w-6 rounded-tl" />
+					<th class="p-3 font-semibold">Input</th>
+					<th class="p-3 font-semibold">Prediction</th>
+					<th class="min-w-12 whitespace-nowrap rounded-tr" />
+				{/if}
 			</tr>
 		</thead>
 		<tbody>
@@ -114,6 +124,7 @@
 					bind:instance
 					bind:selected={selectedInstances[i]}
 					{prompt}
+					{project}
 					{removeInstance}
 				/>
 			{/each}

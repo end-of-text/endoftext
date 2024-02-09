@@ -11,7 +11,7 @@
 </script>
 
 {#if showSettings}
-	<ProjectSettingsPopup {project} onclose={() => (showSettings = false)} />
+	<ProjectSettingsPopup bind:project onclose={() => (showSettings = false)} />
 {/if}
 <div class="flex w-full border-b px-6">
 	<div class="flex items-center gap-4">

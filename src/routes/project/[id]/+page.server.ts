@@ -18,7 +18,7 @@ export async function load({ locals: { supabase, getSession }, params }) {
 
 	const instancesReq = supabase
 		.from('instances')
-		.select('id, input, label')
+		.select('*')
 		.eq('project_id', params.id)
 		.order('id', { ascending: true });
 

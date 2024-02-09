@@ -19,20 +19,20 @@ export class JSONDescriptionEditor extends PromptEditor {
 			return false;
 		}
 
+		const systemPrompt = `### Task
+You are an AI prompt writing critiquer. Your task is to determine if a prompt specifies the format of the desired JSON output. 
+
+### Instructions
+Check whether the prompt includes a description of the desired JSON format. This can be an example or a specification but it needs to clearly outline the JSON structure of the answer. If it does, return false.
+   
+### Output
+Return the output in JSON with the key "output" that is either true or false.`;
+
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: `### Task
-						You are an AI prompt writing critiquer. Given a prompt by a user, you decide whether the prompt specifies the format of the desired JSON outuput.
-						
-						### Instructions
-						1. Check whether the prompt includes a description of the desired JSON format. This can be an example or a specification but it needs to clearly outline the JSON structure of the answer. If it does, return false.
-						2. If the prompt does not include a description of the desired JSON format, return true.
-
-						### Output
-						Return the output in JSON with the key "output" that is either true or false.
-						`
+					content: systemPrompt
 				},
 				{
 					role: 'user',
