@@ -14,26 +14,27 @@ export class SeparateInstructionEditor extends PromptEditor {
 	}
 
 	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+		const systemPrompt = `You are an AI prompt writing critiquer. You decide if a prompt could be split into a task instruction and other information.
+
+### Guidelines
+1. Check whether it makes sense to separate the task instruction from the rest of the prompt. For example, if there is only a task instruction and no other information, return false.
+2. If the task instruction is already clearly separated, return false.
+3. If it makes sense to separate the task instruction from the rest of the prompt and the instruction is not already sparated, return true.
+
+### Output
+Return the output in JSON with the key "output" that is either true or false.`;
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: `You are an AI prompt writing critiquer. You decide if a prompt could be split into a task instruction and other information.
-
-						### Guidelines
-						1. Check whether it makes sense to separate the task instruction from the rest of the prompt. For example, if there is only a task instruction and no other information, return false.
-						2. If the task instruction is already clearly separated, return false.
-						3. If it makes sense to separate the task instruction from the rest of the prompt and the instruction is not already sparated, return true.
-
-						### Output
-						Return the output in JSON with the key "output" that is either true or false.`
+					content: systemPrompt
 				},
 				{
 					role: 'user',
 					content: prompt.prompt
 				}
 			],
-			{ json: true }
+			{ json: true, temperature: 0 }
 		);
 
 		if (!res) {
