@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>Logogram</title>
+	<title>endoftext</title>
 	<meta name="description" content="AI-assisted Prompt Editor" />
 </svelte:head>
 

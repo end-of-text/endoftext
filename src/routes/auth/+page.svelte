@@ -8,11 +8,11 @@
 </script>
 
 <svelte:head>
-	<title>User Management</title>
+	<title>endoftext | Log in or sign up</title>
 </svelte:head>
 
 <div class="mx-auto my-auto h-1/2 w-60">
-	<img class="mb-6 w-full" src="/logo.png" alt="logo" />
+	<img class="mb-6 w-full" src="/logo.svg" alt="logo" />
 	<div class="my-2 flex w-full">
 		<button
 			class="w-1/2 cursor-default rounded-bl rounded-tl border border-r py-2 text-center {formType ===

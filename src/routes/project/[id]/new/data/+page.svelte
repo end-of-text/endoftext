@@ -22,7 +22,7 @@
 	<form class="flex flex-col items-start gap-2" method="POST" use:enhance>
 		<div class="flex w-full items-center justify-between">
 			<p class="mb-2 text-gray-500">2 / 2</p>
-			<img src="/logo.png" alt="logo" class="h-4" />
+			<img src="/logo.svg" alt="logo" class="h-4" />
 		</div>
 		<h1>Example Inputs</h1>
 		<div class="mb-2 flex flex-col gap-2">
