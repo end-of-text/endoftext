@@ -1,5 +1,5 @@
 <article class="prose p-10">
-	endoftext
+	<p>endoftext</p>
 	<h1>Terms and Conditions</h1>
 	<h2>Introduction</h2>
 	<h3>1.1 Purpose Statement:</h3>
@@ -114,7 +114,7 @@
 
 	<h3>8.2</h3>
 	<p>
-		Jurisdiction Clause:  The governing law for disputes is the law of California, USA, providing
+		Jurisdiction Clause: The governing law for disputes is the law of California, USA, providing
 		legal clarity and setting expectations for users. By using our services, you acknowledge that
 		you have read and agreed to these Terms and Conditions.
 	</p>

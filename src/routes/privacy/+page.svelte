@@ -1,4 +1,4 @@
-<article class="prose lg:prose-xl m-10 w-screen">
+<article class="prose m-10 w-screen lg:prose-xl">
 	<h1>Privacy Policy</h1>
 	<p>Last updated: February 09, 2024</p>
 	<p>
