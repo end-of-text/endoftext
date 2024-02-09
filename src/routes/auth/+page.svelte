@@ -12,7 +12,7 @@
 </svelte:head>
 
 <div class="mx-auto my-auto h-1/2 w-60">
-	<img class="mb-6 w-full" src="/logo.svg" alt="logo" />
+	<img class="mb-10 w-full" src="/logo.svg" alt="logo" />
 	<form method="post" action="?/loginWithOauth" use:enhance>
 		<button
 			class="my-2 flex w-full items-center rounded border py-2 text-center transition hover:shadow"
@@ -41,7 +41,7 @@
 			<p class="w-full">Sign in with GitHub</p>
 		</button>
 	</form>
-	<p class="mb-2 text-center italic">or</p>
+	<p class="mb-4 mt-2 text-center italic">or</p>
 	<div class="my-2 flex w-full">
 		<button
 			class="w-1/2 cursor-default rounded-bl rounded-tl border border-r py-2 text-center {formType ===
@@ -78,6 +78,11 @@
 			<Button classNames="ml-auto">Sign up</Button>
 		</form>
 	{/if}
+	<p class="mt-6 text-center text-sm italic text-gray-400">
+		By signing up you agree to our <br /><a href="/tos" class="text-gray-500 hover:text-gray-600"
+			>terms of service</a
+		>
+	</p>
 	{#if form?.success}
 		<p>check email for confirmation.</p>
 	{:else if form?.error}
