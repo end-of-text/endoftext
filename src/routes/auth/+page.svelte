@@ -34,6 +34,9 @@
 			data-width="300px"
 		></div>
 	</div>
+	<form class="flex flex-col gap-2" method="post" action="?/loginWithGithub" use:enhance>
+		<button>Sign in with GitHub</button>
+	</form>
 	<p class="mb-2 text-center italic">or</p>
 	<div class="mb-2 flex w-full">
 		<button

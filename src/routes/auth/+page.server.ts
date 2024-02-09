@@ -16,12 +16,32 @@ export const actions = {
 		}
 		redirect(303, '/home');
 	},
-	loginWithGoogle: async ({ request, locals: { supabase } }) => {
-		supabase.auth.signInWithOAuth({
-			provider: 'google'
+	loginWithGoogle: async ({ url, locals: { supabase } }) => {
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				redirectTo: `${url.origin}/auth/callback`
+			}
 		});
+		if (error) {
+			return fail(500, { message: 'Server error. Try again later.', success: false });
+		} else {
+			redirect(303, data.url);
+		}
 	},
-
+	loginWithGithub: async ({ url, locals: { supabase } }) => {
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider: 'github',
+			options: {
+				redirectTo: `${url.origin}/auth/callback`
+			}
+		});
+		if (error) {
+			return fail(500, { message: 'Server error. Try again later.', success: false });
+		} else {
+			redirect(303, data.url);
+		}
+	},
 	signup: async ({ request, url, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
