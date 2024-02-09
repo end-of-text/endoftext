@@ -1,6 +1,14 @@
 import { AuthApiError } from '@supabase/supabase-js';
 import { fail, redirect } from '@sveltejs/kit';
 
+export const load = async ({ locals: { getSession } }) => {
+	const session = await getSession();
+
+	if (session) {
+		redirect(303, '/home');
+	}
+};
+
 export const actions = {
 	login: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
@@ -16,9 +24,14 @@ export const actions = {
 		}
 		redirect(303, '/home');
 	},
-	loginWithGoogle: async ({ url, locals: { supabase } }) => {
+	loginWithOauth: async ({ url, locals: { supabase }, request }) => {
+		const formData = await request.formData();
+		const provider = formData.get('provider') as 'google' | 'github' | undefined;
+		if (!provider) {
+			return fail(400, { message: 'Invalid provider', success: false });
+		}
 		const { data, error } = await supabase.auth.signInWithOAuth({
-			provider: 'google',
+			provider,
 			options: {
 				redirectTo: `${url.origin}/auth/callback`
 			}
@@ -29,19 +42,7 @@ export const actions = {
 			redirect(303, data.url);
 		}
 	},
-	loginWithGithub: async ({ url, locals: { supabase } }) => {
-		const { data, error } = await supabase.auth.signInWithOAuth({
-			provider: 'github',
-			options: {
-				redirectTo: `${url.origin}/auth/callback`
-			}
-		});
-		if (error) {
-			return fail(500, { message: 'Server error. Try again later.', success: false });
-		} else {
-			redirect(303, data.url);
-		}
-	},
+
 	signup: async ({ request, url, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
