@@ -13,8 +13,11 @@
 {#if showSettings}
 	<ProjectSettingsPopup bind:project onclose={() => (showSettings = false)} />
 {/if}
-<div class="flex w-full border-b px-6">
-	<div class="flex items-center gap-4">
+<div class="flex w-full items-center border-b px-6">
+	<a href="/home">
+		<img class="mr-8 h-5" src="/logo.svg" alt="logo" />
+	</a>
+	<div class="flex items-center gap-2">
 		<ScrollText />
 		<span class="my-4 text-xl font-semibold text-gray-700">{project.name}</span>
 	</div>

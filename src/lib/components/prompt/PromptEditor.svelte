@@ -19,7 +19,7 @@
 <div class="flex flex-col">
 	<div
 		contenteditable="plaintext-only"
-		class="mt-2 min-h-24 overflow-hidden rounded border bg-white bg-opacity-90 p-2 text-sm shadow"
+		class="mt-2 min-h-24 rounded border bg-white bg-opacity-90 p-2 text-sm shadow"
 		role="textbox"
 		aria-multiline="true"
 		tabindex="0"

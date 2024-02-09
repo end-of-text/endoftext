@@ -36,7 +36,7 @@ Return the output in JSON with the key "output" that is either true or false.`;
 					content: prompt.prompt
 				}
 			],
-			{ json: true }
+			{ json: true, temperature: 0 }
 		);
 
 		if (!res) {

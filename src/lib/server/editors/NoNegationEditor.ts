@@ -14,21 +14,26 @@ export class NoNegationEditor extends PromptEditor {
 	}
 
 	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+		const systemPrompt = `### Task
+You are an AI prompt writing critiquer. Your task is to determine if a prompt tells a model what **not** to instead of what it should do. 
+	
+### Instructions
+Check whether the prompt tells a model what it should **not** do. If it does, return true.
+	 
+### Output
+Return the output in JSON with the key "output" that is either true or false.`;
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content:
-						'You are an AI prompt writing critiquer. Given the following prompt, you return JSON with the key `output` that is either true if the prompt matches the user description or false otherwise.'
+					content: systemPrompt
 				},
 				{
 					role: 'user',
-					content:
-						'Prompts should not instruct the model about undesirable behavior. Does this prompt tell the model to not behave in a certain way?\n\nprompt: ' +
-						prompt.prompt
+					content: prompt.prompt
 				}
 			],
-			{ json: true }
+			{ json: true, temperature: 0 }
 		);
 
 		if (!res) {

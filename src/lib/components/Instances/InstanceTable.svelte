@@ -99,7 +99,7 @@
 		</Button>
 	</div>
 </div>
-<div class="mt-4 w-full grow overflow-auto">
+<div class="my-4 w-full grow overflow-auto">
 	<table class="w-full">
 		<thead class="sticky top-0 z-10 bg-gray-50 text-left">
 			<tr class="border-b">

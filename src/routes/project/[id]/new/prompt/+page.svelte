@@ -12,7 +12,10 @@
 <div class="flex h-full flex-col items-center justify-center">
 	<form class="flex flex-col items-start" method="POST" use:enhance>
 		<div class="mb-4 flex max-w-xl flex-col gap-2">
-			<p class="mb-2 text-gray-500">1 / 2</p>
+			<div class="flex items-center justify-between">
+				<p class="mb-2 text-gray-500">1 / 2</p>
+				<img src="/logo.svg" alt="logo" class="h-4" />
+			</div>
 			<h1>Initial Prompt</h1>
 			<p>
 				Create your initial prompt and give it a name. This is the system prompt passed to the LLM.
