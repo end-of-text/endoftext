@@ -108,7 +108,7 @@
 					<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
 					<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
 					<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
-					<th class="whitespace-nowrap px-2 py-2">Metric</th>
+					<th class="whitespace-nowrap px-2 py-2">chrf</th>
 					<th class="min-w-12 whitespace-nowrap rounded-tr" />
 				{:else}
 					<th class="w-6 rounded-tl" />

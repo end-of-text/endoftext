@@ -28,7 +28,7 @@
 		bind:innerText={localInstanceInput}
 		onblur={() => {
 			updateInstance({ ...instance, input: localInstanceInput }).then(() => {
-				instance.input = localInstanceInput;
+				instance = { ...instance, input: localInstanceInput };
 			});
 		}}
 		onkeydown={(event) => {
@@ -44,7 +44,7 @@
 			bind:innerText={localInstanceLabel}
 			onblur={() => {
 				updateInstance({ ...instance, label: localInstanceLabel }).then(() => {
-					instance.label = localInstanceLabel;
+					instance = { ...instance, label: localInstanceLabel };
 				});
 			}}
 			onkeydown={(event) => {
@@ -61,7 +61,7 @@
 			{pred?.prediction}
 		{/await}
 	</td>
-	{#if project.show_labels}
+	{#if project.show_labels && instance.label}
 		<td class="p-3">
 			{#await metric}
 				Loading...
