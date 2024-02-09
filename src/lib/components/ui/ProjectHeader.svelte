@@ -11,7 +11,7 @@
 </script>
 
 {#if showSettings}
-	<ProjectSettingsPopup {project} onclose={() => (showSettings = false)} />
+	<ProjectSettingsPopup bind:project onclose={() => (showSettings = false)} />
 {/if}
 <div class="flex w-full items-center border-b px-6">
 	<a href="/home">

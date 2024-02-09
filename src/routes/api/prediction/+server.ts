@@ -19,14 +19,14 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 
 	const cacheRes = await supabase
 		.from('predictions')
-		.select('prediction')
+		.select('*')
 		.eq('prompt_id', prompt.id)
 		.eq('instance_id', instanceId);
 
 	if (cacheRes.error) {
 		error(500, cacheRes.error.message);
 	} else if (cacheRes.data && cacheRes.data.length > 0) {
-		return json({ output: cacheRes.data[0].prediction });
+		return json({ prediction: cacheRes.data[0] });
 	}
 
 	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
@@ -42,15 +42,18 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		}
 	);
 
-	const res = await supabase.from('predictions').insert({
-		instance_id: instanceId,
-		prompt_id: prompt.id,
-		prediction: prediction
-	});
+	const res = await supabase
+		.from('predictions')
+		.insert({
+			instance_id: instanceId,
+			prompt_id: prompt.id,
+			prediction: prediction
+		})
+		.select();
 
 	if (res.error) {
 		error(500, res.error.message);
 	}
 
-	return json({ output: prediction });
+	return json({ prediction: res.data[0] });
 }

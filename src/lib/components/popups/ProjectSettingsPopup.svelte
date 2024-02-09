@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { addProjectUser, getProjectUsers, removeProjectUser } from '$lib/api';
+	import {
+		addProjectUser,
+		getProjectUsers,
+		removeProjectUser,
+		toggleProjectLabels
+	} from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
@@ -70,16 +75,26 @@
 					</div>
 				{/each}
 			{/await}
-		</div>
-		<div class="mt-2 flex items-center">
-			<input class="py-1" placeholder="email" bind:value={newUser} />
-			{#if addingUser}
-				<Spinner classNames="pl-2" />
-			{:else}
-				<Button classNames="self-end ml-2" disabled={newUser === ''} onclick={addUser}>
-					Add User
-				</Button>
-			{/if}
+			<div class="mt-2 flex items-center">
+				<input class="py-1" placeholder="email" bind:value={newUser} />
+				{#if addingUser}
+					<Spinner classNames="pl-2" />
+				{:else}
+					<Button classNames="self-end ml-2" disabled={newUser === ''} onclick={addUser}>
+						Add User
+					</Button>
+				{/if}
+			</div>
+			<h2 class="mt-4">Settings</h2>
+			<div class="flex flex-col">
+				<label
+					class="flex flex-row items-center"
+					onchange={() => toggleProjectLabels(project.id, project.show_labels)}
+				>
+					<input type="checkbox" class="mr-2" bind:checked={project.show_labels} />
+					<span>Show Labels</span>
+				</label>
+			</div>
 		</div>
 		<Button classNames="self-end" onclick={onclose}>Done</Button>
 	</div>

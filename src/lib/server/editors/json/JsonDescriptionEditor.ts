@@ -21,10 +21,10 @@ export class JSONDescriptionEditor extends PromptEditor {
 
 		const systemPrompt = `### Task
 You are an AI prompt writing critiquer. Your task is to determine if a prompt specifies the format of the desired JSON output. 
-	
+
 ### Instructions
 Check whether the prompt includes a description of the desired JSON format. This can be an example or a specification but it needs to clearly outline the JSON structure of the answer. If it does, return false.
-	 
+   
 ### Output
 Return the output in JSON with the key "output" that is either true or false.`;
 

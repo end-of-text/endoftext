@@ -4,9 +4,9 @@ export async function getPrediction(
 	prompt: Tables<'prompts'>,
 	instanceId: number,
 	input: string
-): Promise<string> {
+): Promise<Tables<'predictions'> | undefined> {
 	if (input === '') {
-		return '';
+		return undefined;
 	}
 
 	const response = await fetch(`/api/prediction`, {
@@ -17,7 +17,7 @@ export async function getPrediction(
 		body: JSON.stringify({ prompt, instanceId, input })
 	});
 	const res = await response.json();
-	return res.output as string;
+	return res.prediction as Tables<'predictions'>;
 }
 
 export async function updateInstance(instance: Tables<'instances'>) {
@@ -171,5 +171,15 @@ export async function removeProjectUser(projectId: string, userId: string): Prom
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({ userId })
+	});
+}
+
+export async function toggleProjectLabels(projectId: string, showLabels: boolean): Promise<void> {
+	await fetch(`/api/project/${projectId}/labels`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ showLabels })
 	});
 }
