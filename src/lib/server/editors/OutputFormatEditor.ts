@@ -43,7 +43,7 @@ export class OutputFormatEditor extends PromptEditor {
 						prompt.prompt
 				}
 			],
-			{ json: true }
+			{ json: true, temperature: 0 }
 		);
 
 		if (!res) {

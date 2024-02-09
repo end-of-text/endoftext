@@ -35,7 +35,7 @@ export class ChainOfThoughtEditor extends PromptEditor {
 					content: prompt.prompt
 				}
 			],
-			{ json: true }
+			{ json: true, temperature: 0 }
 		);
 
 		if (!res) {
