@@ -7,25 +7,27 @@
 
 <div class="mx-auto mt-10 flex min-h-0 w-full max-w-4xl grow gap-2">
 	<div class="flex w-1/6 flex-col">
-		<img class="mb-3 ml-3 mr-2 mt-3" src="/logo.svg" alt="logo" />
+		<a href="/home" class="my-3 ml-3 mr-2">
+			<img src="/logo.svg" alt="logo" />
+		</a>
 		<a
-			class="flex gap-2 rounded p-2 text-gray-500 transition hover:text-gray-900 {$page.url
+			class="flex gap-2 rounded p-2 text-gray-500 transition-all hover:text-gray-900 {$page.url
 				.pathname === '/home'
 				? 'text-gray-900'
 				: ''}"
 			href="/home"
 		>
-			<Home />
+			<Home class="h-5 w-5" />
 			All Prompts
 		</a>
 		<a
-			class="flex gap-2 rounded p-2 text-gray-500 transition hover:text-gray-900 {$page.url
+			class="flex gap-2 rounded p-2 text-gray-500 transition-all hover:text-gray-900 {$page.url
 				.pathname === '/home/account'
 				? 'text-gray-900'
 				: ''}"
 			href="/home/account"
 		>
-			<User2 />
+			<User2 class="h-5 w-5" />
 			Account
 		</a>
 	</div>

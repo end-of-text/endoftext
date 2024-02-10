@@ -1,62 +1,81 @@
 <script lang="ts">
-	import PromptOptions from '$lib/components/options/PromptOptions.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { ChevronDown, ChevronUp, Save, Undo2 } from 'lucide-svelte';
+	import { Check, Copy, Save, Undo2 } from 'lucide-svelte';
+	import { fade } from 'svelte/transition';
 
-	let { prompt, editedPrompt, showOptions, setPrompt } = $props<{
+	let { prompt, editedPrompt, setPrompt } = $props<{
 		prompt: Tables<'prompts'>;
 		editedPrompt: Tables<'prompts'>;
-		showOptions: boolean;
 		setPrompt: () => void;
 	}>();
 
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
+
+	let promptCopied = $state(false);
+	let promptHovered = $state(false);
+
+	function copyPrompt() {
+		navigator.clipboard.writeText(prompt.prompt);
+		promptCopied = true;
+		setTimeout(() => {
+			promptCopied = false;
+		}, 3000);
+	}
 </script>
 
 <div class="flex flex-col">
 	<div
-		contenteditable="plaintext-only"
-		class="mt-2 min-h-24 rounded border bg-white bg-opacity-90 p-2 text-sm shadow"
-		role="textbox"
-		aria-multiline="true"
+		class="relative mt-2 cursor-text"
+		onmouseenter={() => (promptHovered = true)}
+		onmouseleave={() => (promptHovered = false)}
+		role="button"
 		tabindex="0"
-		bind:innerText={editedPrompt.prompt}
-		onkeydown={(e) => {
-			if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-				setPrompt();
-			}
-		}}
-	/>
-	<div class="mt-3 flex items-center justify-between gap-2">
-		<Button onclick={() => (showOptions = !showOptions)}>
-			<span class="text-black">Model Options</span>
-			{#if showOptions}
-				<ChevronUp />
+	>
+		<div
+			contenteditable="plaintext-only"
+			class="min-h-24 rounded border bg-white bg-opacity-90 py-2 pl-2 pr-6 text-sm shadow"
+			role="textbox"
+			aria-multiline="true"
+			tabindex="0"
+			bind:innerText={editedPrompt.prompt}
+			onkeydown={(e) => {
+				if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+					setPrompt();
+				}
+			}}
+		/>
+		<button
+			onclick={copyPrompt}
+			class="absolute right-1 top-1 p-1 transition-all {promptHovered
+				? 'opacity-100'
+				: 'opacity-30'} {promptCopied ? 'text-emerald-600' : ''}"
+		>
+			{#if promptCopied}
+				<span class="flex items-center gap-2" in:fade><Check class="h-5 w-5" /> Copied!</span>
 			{:else}
-				<ChevronDown />
+				<span class="group flex items-center gap-2 text-gray-500 hover:text-gray-900" in:fade>
+					<Copy class="h-5 w-5" />
+				</span>
 			{/if}
-		</Button>
-		<div class="flex items-center gap-1">
-			{#if promptWasEdited}
-				<Button onclick={() => (editedPrompt = { ...prompt })} classNames="text-gray-500">
-					<Undo2 />
-				</Button>
-			{/if}
-			<Button
-				onclick={() => setPrompt()}
-				disabled={!promptWasEdited}
-				classNames="w-fit text-blue-500"
-				title="Save & Run"
-				tooltipText="Save this as a new prompt and run it for your example instances."
-			>
-				<Save class="transition" />
-			</Button>
-		</div>
+		</button>
 	</div>
-	{#if showOptions}
-		<PromptOptions bind:prompt={editedPrompt} />
-	{/if}
+	<div class="ml-auto mt-3 flex items-center gap-1">
+		{#if promptWasEdited}
+			<Button onclick={() => (editedPrompt = { ...prompt })} classNames="text-gray-500">
+				<Undo2 class="h-5 w-5" />
+			</Button>
+		{/if}
+		<Button
+			onclick={() => setPrompt()}
+			disabled={!promptWasEdited}
+			classNames=" w-fit text-blue-500"
+			title="Save & Run"
+			tooltipText="Save this as a new prompt and run it for your example instances."
+		>
+			<Save class="h-5 w-5 transition-all" />
+		</Button>
+	</div>
 </div>

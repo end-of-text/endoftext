@@ -33,14 +33,13 @@
 			<Spinner />
 		{/if}
 		{#if selectedInstances.some((d) => d === true)}
-			<button
-				transition:fade={{ duration: 300 }}
-				class="mr-2 text-gray-500 transition-colors hover:text-gray-900"
-				onclick={() => (selectedInstances = [])}
-			>
-				clear
-			</button>
-			<div transition:fade={{ duration: 300 }}>
+			<div class="flex items-center gap-2" transition:fade={{ duration: 300 }}>
+				<button
+					class="mr-2 text-gray-500 transition-colors hover:text-gray-900"
+					onclick={() => (selectedInstances = [])}
+				>
+					clear
+				</button>
 				<Button
 					classNames="text-red-600"
 					onclick={() =>
@@ -51,12 +50,10 @@
 							selectedInstances = [];
 						})}
 				>
-					<Trash2 />
+					<Trash2 class="h-5 w-5" />
 				</Button>
-			</div>
-			<div transition:fade={{ duration: 300 }}>
 				<Button
-					classNames="text-blue-600"
+					classNames="text-yellow-400"
 					title="Generate Similar"
 					onclick={() => {
 						generatingInstances = true;
@@ -71,7 +68,7 @@
 						});
 					}}
 				>
-					<Sparkles />
+					<Sparkles class="h-5 w-5" />
 				</Button>
 			</div>
 		{/if}
@@ -86,7 +83,7 @@
 			title="Generate"
 			classNames="text-yellow-400"
 		>
-			<Sparkle class="transition" />
+			<Sparkle class="h-5 w-5 transition" />
 		</Button>
 		<Button
 			onclick={() => {
@@ -95,7 +92,7 @@
 			title="Add"
 			classNames="text-green-600"
 		>
-			<PlusCircle class="transition" />
+			<PlusCircle class="h-5 w-5 transition" />
 		</Button>
 	</div>
 </div>

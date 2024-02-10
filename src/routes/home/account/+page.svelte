@@ -25,6 +25,8 @@
 	</p>
 	<br />
 	<form method="post" action="?/signout" use:enhance={handleSignOut}>
-		<Button disabled={loading}><LogOut /> Sign Out</Button>
+		<Button disabled={loading} title="Sign Out">
+			<LogOut class="h-5 w-5" />
+		</Button>
 	</form>
 </div>

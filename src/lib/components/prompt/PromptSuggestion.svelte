@@ -36,11 +36,11 @@
 	<div class="flex flex-col">
 		<div class="flex items-center gap-2">
 			{#if suggestion.type === EditorType.ERROR}
-				<ShieldX class="text-red-600" />
+				<ShieldX class="h-5 w-5 text-red-600" />
 			{:else if suggestion.type === EditorType.ENHANCEMENT}
-				<Lightbulb class="text-green-600" />
+				<Lightbulb class="h-5 w-5 text-green-600" />
 			{:else if suggestion.type === EditorType.OPTIMIZATION}
-				<ShieldPlus class="text-blue-600" />
+				<ShieldPlus class="h-5 w-5 text-blue-600" />
 			{/if}
 			<p class="font-semibold">
 				{suggestion.name}
@@ -55,7 +55,7 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="flex min-w-20 items-center justify-center">
+	<div class="flex items-center justify-center">
 		{#if applyingSuggestion}
 			<Spinner />
 		{:else}
