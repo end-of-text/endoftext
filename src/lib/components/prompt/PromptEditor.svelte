@@ -28,7 +28,7 @@
 
 <div class="flex flex-col">
 	<div
-		class="relative mt-2"
+		class="relative mt-2 cursor-text"
 		onmouseenter={() => (promptHovered = true)}
 		onmouseleave={() => (promptHovered = false)}
 		role="button"
@@ -36,7 +36,7 @@
 	>
 		<div
 			contenteditable="plaintext-only"
-			class="min-h-24 rounded border bg-white bg-opacity-90 p-2 text-sm shadow"
+			class="min-h-24 rounded border bg-white bg-opacity-90 py-2 pl-2 pr-6 text-sm shadow"
 			role="textbox"
 			aria-multiline="true"
 			tabindex="0"
@@ -49,7 +49,7 @@
 		/>
 		<button
 			onclick={copyPrompt}
-			class="absolute right-2 top-2 p-1 transition-all {promptHovered
+			class="absolute right-1 top-1 p-1 transition-all {promptHovered
 				? 'opacity-100'
 				: 'opacity-30'} {promptCopied ? 'text-emerald-600' : ''}"
 		>

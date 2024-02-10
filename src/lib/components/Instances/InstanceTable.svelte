@@ -33,7 +33,7 @@
 			<Spinner />
 		{/if}
 		{#if selectedInstances.some((d) => d === true)}
-			<div class="flex items-center gap-2" transition:fade>
+			<div class="flex items-center gap-2" transition:fade={{ duration: 300 }}>
 				<button
 					class="mr-2 text-gray-500 transition-colors hover:text-gray-900"
 					onclick={() => (selectedInstances = [])}

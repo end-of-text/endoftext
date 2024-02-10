@@ -31,7 +31,7 @@
 	<td
 		class="py-3 pl-3 align-top transition-all {rowHovered || selected
 			? 'opacity-100'
-			: 'opacity-0'}"
+			: 'opacity-20'}"
 	>
 		<input bind:checked={selected} type="checkbox" />
 	</td>
