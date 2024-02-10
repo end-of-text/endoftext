@@ -42,7 +42,7 @@
 						bind:value={instance}
 					/>
 					<Trash2
-						class="cursor-pointer transition hover:text-red-600"
+						class="h-5 w-5 cursor-pointer transition-all hover:text-red-600"
 						onclick={() => instances?.splice(i, 1)}
 					/>
 				</div>

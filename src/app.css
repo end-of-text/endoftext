@@ -16,6 +16,6 @@
 		@apply rounded border border-gray-300 px-2 py-1;
 	}
 	input[type='submit'] {
-		@apply rounded border border-gray-300 px-2 py-1 transition hover:bg-gray-100;
+		@apply rounded border border-gray-300 px-2 py-1 transition-all hover:bg-gray-100;
 	}
 }

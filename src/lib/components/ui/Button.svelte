@@ -23,7 +23,7 @@
 
 <button
 	class={twMerge(
-		'flex gap-2 rounded border px-3 py-1.5 transition-all hover:shadow disabled:bg-gray-50 disabled:text-gray-500 disabled:hover:shadow-none',
+		'flex h-9 items-center gap-2 rounded border px-3 transition-all hover:shadow disabled:bg-gray-50 disabled:text-gray-500 disabled:hover:shadow-none',
 		classNames
 	)}
 	{disabled}

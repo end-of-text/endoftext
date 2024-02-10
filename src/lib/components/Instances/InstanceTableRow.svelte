@@ -13,13 +13,26 @@
 
 	let localInstanceInput = $state(instance.input);
 	let localInstanceLabel = $state(instance.label);
+	let rowHovered = $state(false);
 
 	let prediction = $derived(getPrediction(prompt, instance.id, instance.input));
 	let metric = $derived(project.show_labels ? getMetric(instance, prediction) : undefined);
 </script>
 
-<tr class="border-b align-top text-sm">
-	<td class="w-6 p-3 align-top">
+<tr
+	class="border-b align-top text-sm"
+	onmouseenter={() => {
+		rowHovered = true;
+	}}
+	onmouseleave={() => {
+		rowHovered = false;
+	}}
+>
+	<td
+		class="py-3 pl-3 align-top transition-all {rowHovered || selected
+			? 'opacity-100'
+			: 'opacity-0'}"
+	>
 		<input bind:checked={selected} type="checkbox" />
 	</td>
 	<td
@@ -74,7 +87,7 @@
 	{/if}
 	<td class="flex justify-end p-3">
 		<button onclick={() => removeInstance(instance.id)}>
-			<Trash2 class="cursor-pointer transition hover:text-red-600" />
+			<Trash2 class="h-5 w-5 cursor-pointer transition-all hover:text-red-600" />
 		</button>
 	</td>
 </tr>

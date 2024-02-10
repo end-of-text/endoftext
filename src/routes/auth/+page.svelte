@@ -15,7 +15,7 @@
 	<img class="mb-10 w-full" src="/logo.svg" alt="logo" />
 	<form method="post" action="?/loginWithOauth" use:enhance>
 		<button
-			class="my-2 flex w-full items-center rounded border py-2 text-center transition hover:shadow"
+			class="my-2 flex w-full items-center rounded border py-2 text-center transition-all hover:shadow"
 			name="provider"
 			value="google"
 		>
@@ -28,7 +28,7 @@
 			<p class="w-full">Sign in with Google</p>
 		</button>
 		<button
-			class="my-2 flex w-full items-center rounded border py-2 text-center transition hover:shadow"
+			class="my-2 flex w-full items-center rounded border py-2 text-center transition-all hover:shadow"
 			name="provider"
 			value="github"
 		>

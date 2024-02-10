@@ -69,7 +69,7 @@
 						{user.email}
 						{#if index > 0}
 							<button onclick={() => removeUser(user.id)}>
-								<X class="cursor-pointer transition hover:text-red-600" />
+								<X class="h-5 w-5 cursor-pointer transition-all hover:text-red-600" />
 							</button>
 						{/if}
 					</div>
