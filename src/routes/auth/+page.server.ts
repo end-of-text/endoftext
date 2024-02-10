@@ -1,6 +1,14 @@
 import { AuthApiError } from '@supabase/supabase-js';
 import { fail, redirect } from '@sveltejs/kit';
 
+export const load = async ({ locals: { getSession } }) => {
+	const session = await getSession();
+
+	if (session) {
+		redirect(303, '/home');
+	}
+};
+
 export const actions = {
 	login: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
@@ -15,6 +23,24 @@ export const actions = {
 			return fail(500, { message: 'Server error. Try again later.', success: false, email });
 		}
 		redirect(303, '/home');
+	},
+	loginWithOauth: async ({ url, locals: { supabase }, request }) => {
+		const formData = await request.formData();
+		const provider = formData.get('provider') as 'google' | 'github' | undefined;
+		if (!provider) {
+			return fail(400, { message: 'Invalid provider', success: false });
+		}
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider,
+			options: {
+				redirectTo: `${url.origin}/auth/callback`
+			}
+		});
+		if (error) {
+			return fail(500, { message: 'Server error. Try again later.', success: false });
+		} else {
+			redirect(303, data.url);
+		}
 	},
 
 	signup: async ({ request, url, locals: { supabase } }) => {
@@ -49,14 +75,6 @@ export const actions = {
 				email: email,
 				invalid: true,
 				message: 'User already exists'
-			});
-		}
-
-		const res = await supabase.from('users').insert([{ id: data.user?.id, email: email }]);
-
-		if (res.error) {
-			return fail(500, {
-				error: 'Server error. Please try again later.'
 			});
 		}
 
