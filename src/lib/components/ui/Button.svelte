@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tooltip } from '$lib/tooltip.svelte.ts';
 	import type { Snippet } from 'svelte';
 	import type { MouseEventHandler } from 'svelte/elements';
 	import { twMerge } from 'tailwind-merge';
@@ -8,13 +9,15 @@
 		title = '',
 		onclick = () => {},
 		disabled = false,
-		classNames = ''
+		classNames = '',
+		tooltipText = ''
 	} = $props<{
 		children: Snippet;
 		title?: string;
 		onclick?: MouseEventHandler<HTMLButtonElement>;
 		disabled?: boolean;
 		classNames?: string;
+		tooltipText?: string;
 	}>();
 </script>
 
@@ -25,6 +28,7 @@
 	)}
 	{disabled}
 	{onclick}
+	use:tooltip={{ text: tooltipText }}
 >
 	{@render children()}
 	{#if title}

@@ -50,6 +50,7 @@
 				disabled={!promptWasEdited}
 				classNames="w-fit text-blue-500"
 				title="Save & Run"
+				tooltipText="Save this as a new prompt and run it for your example instances."
 			>
 				<Save class="transition" />
 			</Button>
