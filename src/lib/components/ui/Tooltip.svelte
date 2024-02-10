@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tooltipState } from '$lib/tooltip.svelte.ts';
+	import { tooltipState } from '$lib/tooltip.svelte';
 	import { fade } from 'svelte/transition';
 
 	let windowWidth = $state(0);

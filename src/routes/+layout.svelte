@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
 	import Tooltip from '$lib/components/ui/Tooltip.svelte';
-	import { tooltipState } from '$lib/tooltip.svelte.ts';
+	import { tooltipState } from '$lib/tooltip.svelte';
 	import '../app.css';
 
 	let { children } = $props();

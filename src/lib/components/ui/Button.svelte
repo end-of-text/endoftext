@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { tooltip } from '$lib/tooltip.svelte.ts';
+	import { tooltip } from '$lib/tooltip.svelte';
 	import type { Snippet } from 'svelte';
 	import type { MouseEventHandler } from 'svelte/elements';
 	import { twMerge } from 'tailwind-merge';
