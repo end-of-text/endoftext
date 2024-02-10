@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { OPENAI_API_KEY } from '$env/static/private';
 import { OpenAILLM } from '$lib/server/llms/openai';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
@@ -29,7 +29,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		return json({ prediction: cacheRes.data[0] });
 	}
 
-	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
+	const openai = new OpenAILLM(OPENAI_API_KEY || '');
 	const prediction = await openai.generate(
 		[
 			{ role: 'system', content: prompt.prompt },
