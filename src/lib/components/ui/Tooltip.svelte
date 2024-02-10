@@ -23,14 +23,14 @@
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
 {#if tooltipState.tooltip.hover && tooltipState.tooltip.text !== undefined}
 	<div
-		class="bg-yellowish-light text-grey fixed z-30 my-4 flex rounded p-1 text-sm shadow"
+		class="fixed z-30 my-4 flex rounded bg-gray-700 p-1 text-xs text-white shadow"
 		{style}
 		out:fade
 		in:fade={{ delay: 1000 }}
 		bind:offsetWidth={tooltipWidth}
 		bind:offsetHeight={tooltipHeight}
 	>
-		<div class="break-word flex flex-col p-2">
+		<div class="break-word flex flex-col p-1">
 			{tooltipState.tooltip.text}
 		</div>
 	</div>
