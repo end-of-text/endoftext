@@ -1,8 +1,9 @@
 import type { Tables } from '$lib/supabase';
+import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
-	const session = getSession();
+	const session = await getSession();
 	if (!session) {
 		error(401, 'Forbidden');
 	}
@@ -22,5 +23,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, res.error.message);
 	}
 
+	track('Prompt Saved', { user_id: session.user.email });
 	return json(res.data[0]);
 }

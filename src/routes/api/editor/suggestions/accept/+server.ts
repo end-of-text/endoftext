@@ -2,6 +2,7 @@ import { OPENAI_API_KEY } from '$env/static/private';
 import { editors } from '$lib/server/editors/editors.js';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import type { Tables } from '$lib/supabase.js';
+import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request, locals: { supabase, getSession } }) {
@@ -47,5 +48,6 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	const llm = new OpenAILLM(OPENAI_API_KEY || '');
 	const newPrompt = await editor.apply(prompt, llm, instanceRes.data, userInput);
 
+	track('Suggestion Accepted', { user_id: session.user.email, suggestion_type: editor.type });
 	return json({ prompt: newPrompt });
 }

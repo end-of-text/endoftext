@@ -1,7 +1,8 @@
+import { track } from '@amplitude/analytics-node';
 import { error } from '@sveltejs/kit';
 
 export async function DELETE({ params, locals: { supabase, getSession } }) {
-	const session = getSession();
+	const session = await getSession();
 	if (!session) {
 		error(401, 'Forbidden');
 	}
@@ -11,5 +12,6 @@ export async function DELETE({ params, locals: { supabase, getSession } }) {
 	if (res.error) {
 		error(500, res.error.message);
 	}
+	track('Instances Deleted', { user_id: session.user.email, number: 1 });
 	return new Response(null, { status: 200 });
 }

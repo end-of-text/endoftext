@@ -8,6 +8,6 @@ export async function load({ locals: { getSession } }) {
 	}
 
 	return {
-		userId: session.user.id
+		userId: session.user.email
 	};
 }
