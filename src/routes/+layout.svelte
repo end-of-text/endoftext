@@ -1,11 +1,20 @@
 <script lang="ts">
+	import { browser, dev } from '$app/environment';
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
 	import Tooltip from '$lib/components/ui/Tooltip.svelte';
 	import { tooltipState } from '$lib/tooltip.svelte';
+	import * as amplitude from '@amplitude/analytics-browser';
 	import '../app.css';
 
 	let { children } = $props();
+
+	if (browser && PUBLIC_AMPLITUDE_API_KEY && !dev) {
+		amplitude.init(PUBLIC_AMPLITUDE_API_KEY, {
+			defaultTracking: true
+		});
+	}
 
 	onNavigate(() => {
 		tooltipState.set({
