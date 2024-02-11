@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { OPENAI_API_KEY } from '$env/static/private';
 import { editors } from '$lib/server/editors/editors.js';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import type { Tables } from '$lib/supabase.js';
@@ -44,7 +44,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		return json({ prompt: prompt });
 	}
 
-	const llm = new OpenAILLM(env.OPENAI_API_KEY || '');
+	const llm = new OpenAILLM(OPENAI_API_KEY || '');
 	const newPrompt = await editor.apply(prompt, llm, instanceRes.data, userInput);
 
 	return json({ prompt: newPrompt });

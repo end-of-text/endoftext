@@ -133,6 +133,13 @@ export type Database = {
 						foreignKeyName: 'projects_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
+						referencedRelation: 'user_subscription';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'projects_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
 					}
@@ -251,6 +258,13 @@ export type Database = {
 						foreignKeyName: 'user_project_user_id_fkey';
 						columns: ['user_id'];
 						isOneToOne: false;
+						referencedRelation: 'user_subscription';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'user_project_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
 						referencedRelation: 'users';
 						referencedColumns: ['id'];
 					}
@@ -284,7 +298,22 @@ export type Database = {
 			};
 		};
 		Views: {
-			[_ in never]: never;
+			user_subscription: {
+				Row: {
+					id: string | null;
+					status: string | null;
+					stripe_id: string | null;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'users_id_fkey';
+						columns: ['id'];
+						isOneToOne: true;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 		};
 		Functions: {
 			[_ in never]: never;
