@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
+	import * as amplitude from '@amplitude/analytics-browser';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { LogOut } from 'lucide-svelte';
 
@@ -10,6 +11,8 @@
 
 	const handleSignOut: SubmitFunction = () => {
 		loading = true;
+		amplitude.setUserId(undefined);
+
 		return async ({ update }) => {
 			loading = false;
 			update();
