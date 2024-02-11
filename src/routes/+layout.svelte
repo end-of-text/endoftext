@@ -16,8 +16,11 @@
 </script>
 
 <svelte:head>
-	<title>endoftext</title>
-	<meta name="description" content="AI-assisted Prompt Editor" />
+	<title>endoftext | AI-powered prompt editor</title>
+	<meta
+		name="description"
+		content="Take the guesswork out of prompt engineering with prompt suggestions, smart re-writing, and synthetic data generation. endoftext is an AI-powered prompt writing assistant that helps you quickly improve your prompts."
+	/>
 </svelte:head>
 
 <main class="flex h-screen w-screen">
