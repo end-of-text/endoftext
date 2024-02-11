@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/private';
+import { OPENAI_API_KEY } from '$env/static/private';
 import { OpenAILLM } from '$lib/server/llms/openai';
 import type { Tables } from '$lib/supabase';
 
@@ -7,7 +7,7 @@ export async function generateInstances(
 	instances: Tables<'instances'>[],
 	count: number
 ) {
-	const openai = new OpenAILLM(env.OPENAI_API_KEY || '');
+	const openai = new OpenAILLM(OPENAI_API_KEY || '');
 	const cleanedPrompt = await openai.generate([
 		{
 			role: 'system',
