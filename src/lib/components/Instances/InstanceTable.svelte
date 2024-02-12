@@ -123,8 +123,8 @@
 					<th class="min-w-12 whitespace-nowrap rounded-tr" />
 				{:else}
 					<th class="w-6 rounded-tl" />
-					<th class="p-3 font-semibold">Input</th>
-					<th class="p-3 font-semibold">Prediction</th>
+					<th class="w-1/2 p-3 font-semibold">Input</th>
+					<th class="w-1/2 p-3 font-semibold">Prediction</th>
 					<th class="min-w-12 whitespace-nowrap rounded-tr" />
 				{/if}
 			</tr>
