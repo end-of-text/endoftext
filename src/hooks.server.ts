@@ -1,5 +1,7 @@
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '$env/static/private';
+import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
 import type { Database } from '$lib/supabase';
+import * as amplitude from '@amplitude/analytics-node';
 import { createServerClient } from '@supabase/ssr';
 
 export const handle = async ({ event, resolve }) => {
@@ -27,6 +29,8 @@ export const handle = async ({ event, resolve }) => {
 
 		return session;
 	};
+
+	amplitude.init(PUBLIC_AMPLITUDE_API_KEY);
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {

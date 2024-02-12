@@ -1,3 +1,4 @@
+import { track } from '@amplitude/analytics-node';
 import type { EmailOtpType } from '@supabase/supabase-js';
 import { fail, redirect } from '@sveltejs/kit';
 
@@ -27,6 +28,7 @@ export const GET = async (event) => {
 		}
 
 		if (!error) {
+			track('Signup');
 			redirect(303, `/${next.slice(1)}`);
 		}
 	}

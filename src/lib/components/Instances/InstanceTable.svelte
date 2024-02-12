@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { createInstance, deleteInstance, deleteInstances, generateInstances } from '$lib/api';
+	import {
+		createInstance,
+		deleteInstance,
+		deleteInstances,
+		generateInstances,
+		updateInstance
+	} from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
@@ -35,6 +41,14 @@
 			1
 		);
 		deleteInstance(id);
+	}
+
+	function changeInstance(instance: Tables<'instances'>) {
+		const index = instances.findIndex((i) => i.id === instance.id);
+		if (index !== -1) {
+			instances[index] = instance;
+		}
+		updateInstance(instance);
 	}
 </script>
 
@@ -130,8 +144,8 @@
 					<th class="min-w-12 whitespace-nowrap rounded-tr" />
 				{:else}
 					<th class="w-6 rounded-tl" />
-					<th class="p-3 font-semibold">Input</th>
-					<th class="p-3 font-semibold">Prediction</th>
+					<th class="w-1/2 p-3 font-semibold">Input</th>
+					<th class="w-1/2 p-3 font-semibold">Prediction</th>
 					<th class="min-w-12 whitespace-nowrap rounded-tr" />
 				{/if}
 			</tr>
@@ -145,6 +159,7 @@
 					{prompt}
 					{project}
 					{removeInstance}
+					{changeInstance}
 				/>
 			{/each}
 		</tbody>

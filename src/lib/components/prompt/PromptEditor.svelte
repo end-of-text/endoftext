@@ -54,7 +54,9 @@
 				: 'opacity-30'} {promptCopied ? 'text-emerald-600' : ''}"
 		>
 			{#if promptCopied}
-				<span class="flex items-center gap-2" in:fade><Check class="h-5 w-5" /> Copied!</span>
+				<span class="flex items-center gap-2" in:fade>
+					<Check class="h-5 w-5" />
+				</span>
 			{:else}
 				<span class="group flex items-center gap-2 text-gray-500 hover:text-gray-900" in:fade>
 					<Copy class="h-5 w-5" />

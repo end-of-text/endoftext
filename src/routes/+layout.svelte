@@ -10,7 +10,7 @@
 
 	let { children } = $props();
 
-	if (browser && PUBLIC_AMPLITUDE_API_KEY && !dev) {
+	if (browser && !dev) {
 		amplitude.init(PUBLIC_AMPLITUDE_API_KEY, {
 			defaultTracking: true
 		});

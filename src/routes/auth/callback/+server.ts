@@ -1,3 +1,4 @@
+import { track } from '@amplitude/analytics-node';
 import { error, redirect } from '@sveltejs/kit';
 
 export const GET = async ({ url, locals: { supabase, getSession } }) => {
@@ -20,5 +21,6 @@ export const GET = async ({ url, locals: { supabase, getSession } }) => {
 		error(500, err.message);
 	}
 
+	track('Signup');
 	redirect(303, '/home');
 };

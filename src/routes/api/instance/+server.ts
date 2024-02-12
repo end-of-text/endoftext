@@ -1,4 +1,5 @@
 import type { Tables } from '$lib/supabase.js';
+import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function PATCH({ locals: { supabase, getSession }, request }) {
@@ -36,7 +37,7 @@ export async function PATCH({ locals: { supabase, getSession }, request }) {
 }
 
 export async function PUT({ locals: { supabase, getSession }, request }) {
-	const session = getSession();
+	const session = await getSession();
 	if (!session) {
 		error(401, 'Forbidden');
 	}
@@ -57,6 +58,7 @@ export async function PUT({ locals: { supabase, getSession }, request }) {
 	if (res.error) {
 		error(500, res.error.message);
 	} else {
+		track('Instance Created', { user_id: session.user.id });
 		return json(res.data);
 	}
 }

@@ -1,3 +1,4 @@
+import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function GET({ params, locals: { supabase, getSession } }) {
@@ -26,7 +27,7 @@ export async function GET({ params, locals: { supabase, getSession } }) {
 }
 
 export async function POST({ params, request, locals: { supabase, getSession } }) {
-	const session = getSession();
+	const session = await getSession();
 	if (!session) {
 		error(401, 'Forbidden');
 	}
@@ -51,11 +52,12 @@ export async function POST({ params, request, locals: { supabase, getSession } }
 	if (res.error) {
 		error(500, res.error.message);
 	}
+	track('User Added to Project', { user_id: session.user.id });
 	return json(res.data);
 }
 
 export async function DELETE({ params, request, locals: { supabase, getSession } }) {
-	const session = getSession();
+	const session = await getSession();
 	if (!session) {
 		error(401, 'Forbidden');
 	}
@@ -72,5 +74,7 @@ export async function DELETE({ params, request, locals: { supabase, getSession }
 	if (res.error) {
 		error(500, res.error.message);
 	}
+
+	track('User Removed from Project', { user_id: session.user.id });
 	return json(res.data);
 }

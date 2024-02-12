@@ -1,16 +1,18 @@
 <script lang="ts">
-	import { getMetric, getPrediction, updateInstance } from '$lib/api';
+	import { getMetric, getPrediction } from '$lib/api';
 	import type { Tables } from '$lib/supabase';
 	import { Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, metricValues, selected, project, removeInstance } = $props<{
-		instance: Tables<'instances'>;
-		prompt: Tables<'prompts'>;
-		project: Tables<'projects'>;
-		metricValues: Record<string, Promise<Tables<'metrics'> | undefined>>;
-		selected: boolean;
-		removeInstance: (id: number) => void;
-	}>();
+	let { instance, prompt, metricValues, selected, project, removeInstance, changeInstance } =
+		$props<{
+			instance: Tables<'instances'>;
+			prompt: Tables<'prompts'>;
+			project: Tables<'projects'>;
+			metricValues: Record<string, Promise<Tables<'metrics'> | undefined>>;
+			selected: boolean;
+			removeInstance: (id: number) => void;
+			changeInstance: (instance: Tables<'instances'>) => void;
+		}>();
 
 	let localInstanceInput = $state(instance.input);
 	let localInstanceLabel = $state(instance.label);
@@ -48,11 +50,7 @@
 		contenteditable="plaintext-only"
 		class="box-border p-3"
 		bind:innerText={localInstanceInput}
-		onblur={() => {
-			updateInstance({ ...instance, input: localInstanceInput }).then(() => {
-				instance = { ...instance, input: localInstanceInput };
-			});
-		}}
+		onblur={() => changeInstance({ ...instance, input: localInstanceInput })}
 		onkeydown={(event) => {
 			if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
 				event.currentTarget.blur();
@@ -64,11 +62,7 @@
 			contenteditable="plaintext-only"
 			class="box-border p-3"
 			bind:innerText={localInstanceLabel}
-			onblur={() => {
-				updateInstance({ ...instance, label: localInstanceLabel }).then(() => {
-					instance = { ...instance, label: localInstanceLabel };
-				});
-			}}
+			onblur={() => changeInstance({ ...instance, label: localInstanceLabel })}
 			onkeydown={(event) => {
 				if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
 					event.currentTarget.blur();
