@@ -15,9 +15,7 @@
 	<div class="flex min-h-0 grow">
 		<PromptBar bind:prompt projectId={project.id || ''} />
 		<div class="flex grow flex-col px-6 pt-4">
-			{#if data.instances}
-				<InstanceTable bind:instances {project} {prompt} />
-			{/if}
+			<InstanceTable bind:instances {project} {prompt} />
 		</div>
 	</div>
 </div>
