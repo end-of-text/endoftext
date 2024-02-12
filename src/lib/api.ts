@@ -71,6 +71,7 @@ export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'p
 }
 
 export async function getMetric(
+	prompt: Tables<'prompts'>,
 	instance: Tables<'instances'>,
 	predictionPromise: Promise<Tables<'predictions'> | undefined>
 ): Promise<Tables<'metrics'> | undefined> {
@@ -85,6 +86,7 @@ export async function getMetric(
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
+			prompt: prompt,
 			instance: instance,
 			prediction: prediction
 		})

@@ -3,10 +3,11 @@
 	import type { Tables } from '$lib/supabase';
 	import { Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, selected, project, removeInstance } = $props<{
+	let { instance, prompt, metricValues, selected, project, removeInstance } = $props<{
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
 		project: Tables<'projects'>;
+		metricValues: Record<string, Promise<Tables<'metrics'> | undefined>>;
 		selected: boolean;
 		removeInstance: (id: number) => void;
 	}>();
@@ -16,7 +17,15 @@
 	let rowHovered = $state(false);
 
 	let prediction = $derived(getPrediction(prompt, instance.id, instance.input));
-	let metric = $derived(project.show_labels ? getMetric(instance, prediction) : undefined);
+	let metric = $derived(getMetric(prompt, instance, prediction));
+
+	$effect(() => {
+		updateMetric(metric);
+	});
+
+	function updateMetric(metric: Promise<Tables<'metrics'> | undefined>) {
+		metricValues[instance.id] = metric;
+	}
 </script>
 
 <tr

@@ -19,6 +19,11 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, 'Invalid prediction data');
 	}
 
+	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
+	if (!prompt) {
+		error(500, 'Invalid project data');
+	}
+
 	const fetchRes = await supabase
 		.from('metrics')
 		.select('id, prediction_id, metric_name, metric')
@@ -28,7 +33,16 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		return json(fetchRes.data[0]);
 	}
 
-	const metric = chrfMetric(instance.label!, prediction.prediction);
+	let metric: number;
+	if (prompt.responseFormat === 'json') {
+		metric = chrfMetric(
+			// Normalize JSON so that formatting is not an issue.
+			JSON.stringify(JSON.parse(instance.label!)),
+			JSON.stringify(JSON.parse(prediction.prediction))
+		);
+	} else {
+		metric = chrfMetric(instance.label!, prediction.prediction);
+	}
 	const insertRes = await supabase
 		.from('metrics')
 		.insert({
