@@ -19,7 +19,7 @@ export const load = async ({ locals: { supabase, getSession } }) => {
 		error(500, err.message);
 	}
 
-	return { userId: session.user.id, subscription };
+	return { userEmail: session.user.email, subscription };
 };
 
 export const actions = {
