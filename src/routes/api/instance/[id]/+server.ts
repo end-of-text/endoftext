@@ -12,6 +12,6 @@ export async function DELETE({ params, locals: { supabase, getSession } }) {
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	track('Instances Deleted', { user_id: session.user.email, number: 1 });
+	track('Instances Deleted', { user_id: session.user.id, number: 1 });
 	return new Response(null, { status: 200 });
 }

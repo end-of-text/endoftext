@@ -30,9 +30,7 @@ export const handle = async ({ event, resolve }) => {
 		return session;
 	};
 
-	if (PUBLIC_AMPLITUDE_API_KEY) {
-		amplitude.init(PUBLIC_AMPLITUDE_API_KEY);
-	}
+	amplitude.init(PUBLIC_AMPLITUDE_API_KEY);
 
 	return resolve(event, {
 		filterSerializedResponseHeaders(name) {

@@ -52,7 +52,7 @@ export async function POST({ params, request, locals: { supabase, getSession } }
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	track('User Added to Project', { user_id: session.user.email });
+	track('User Added to Project', { user_id: session.user.id });
 	return json(res.data);
 }
 
@@ -75,6 +75,6 @@ export async function DELETE({ params, request, locals: { supabase, getSession }
 		error(500, res.error.message);
 	}
 
-	track('User Removed from Project', { user_id: session.user.email });
+	track('User Removed from Project', { user_id: session.user.id });
 	return json(res.data);
 }

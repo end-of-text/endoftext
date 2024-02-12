@@ -1,4 +1,3 @@
-import { track } from '@amplitude/analytics-node';
 import { AuthApiError } from '@supabase/supabase-js';
 import { fail, redirect } from '@sveltejs/kit';
 
@@ -79,7 +78,6 @@ export const actions = {
 			});
 		}
 
-		track('Signup');
 		return { success: true };
 	}
 };

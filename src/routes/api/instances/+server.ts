@@ -20,7 +20,7 @@ export async function DELETE({ locals: { getSession, supabase }, request }) {
 		error(500, res.error.message);
 	}
 
-	track('Instances Deleted', { user_id: session.user.email, number: instanceIds.length });
+	track('Instances Deleted', { user_id: session.user.id, number: instanceIds.length });
 	return new Response(null, { status: 200 });
 }
 
@@ -57,6 +57,6 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	track('Instances Generated', { user_id: session.user.email, number: count });
+	track('Instances Generated', { user_id: session.user.id, number: count });
 	return json({ instances: res.data });
 }

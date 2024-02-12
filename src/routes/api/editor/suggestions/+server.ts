@@ -67,8 +67,8 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 				.select();
 			if (insertRes.data && insertRes.data.length > 0) {
 				track('Suggestion Created', {
-					user_id: session.user.email,
-					suggestion_type: result.editor.type
+					user_id: session.user.id,
+					suggestion_name: result.editor.name
 				});
 				suggestions.push(insertRes.data[0]);
 			}
