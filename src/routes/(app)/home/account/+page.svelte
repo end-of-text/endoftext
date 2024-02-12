@@ -23,7 +23,7 @@
 <div class="mt-2">
 	<p>
 		You are signed in as <span class="ml-2 rounded-full bg-gray-100 px-3 py-1">
-			{data.session?.user.email}
+			{data.userEmail}
 		</span>
 	</p>
 	<br />
