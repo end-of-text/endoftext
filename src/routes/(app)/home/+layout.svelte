@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import HelpButton from '$lib/components/ui/HelpButton.svelte';
 	import { Home, User2 } from 'lucide-svelte';
 
 	const { children } = $props();
@@ -30,10 +31,13 @@
 			<User2 class="h-5 w-5" />
 			Account
 		</a>
-		<div
-			class="pointer-events-none mt-2 w-fit rounded-md bg-blue-50 px-4 py-1 text-sm font-medium text-blue-500"
-		>
-			Beta
+		<div class="mt-2 flex items-center gap-2">
+			<div
+				class="pointer-events-none w-fit rounded-md bg-blue-50 px-4 py-1 text-sm font-medium text-blue-500"
+			>
+				Beta
+			</div>
+			<HelpButton />
 		</div>
 	</div>
 	<div class="w-5/6 border-l pl-6">
