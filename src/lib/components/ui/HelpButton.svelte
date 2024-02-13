@@ -30,7 +30,7 @@
 			<div class="flex flex-col gap-2 p-2">
 				<button
 					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-500 transition-all hover:text-black"
-					onclick={(e) => {
+					onclick={() => {
 						window.open('https://github.com/end-of-text/endoftext/issues', '_blank');
 						showOptions = false;
 					}}
@@ -40,7 +40,7 @@
 				</button>
 				<button
 					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-500 transition-all hover:text-black"
-					onclick={(e) => {
+					onclick={() => {
 						location.href = 'mailto:help@endoftext.app';
 						showOptions = false;
 					}}
