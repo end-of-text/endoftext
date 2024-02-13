@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { getMetric, getPrediction } from '$lib/api';
 	import type { Tables } from '$lib/supabase';
 	import { Trash2 } from 'lucide-svelte';
@@ -18,7 +19,7 @@
 	let localInstanceLabel = $state(instance.label);
 	let rowHovered = $state(false);
 
-	let prediction = $derived(getPrediction(prompt, instance.id, instance.input));
+	let prediction = $derived(getPrediction(prompt, instance.id, instance.input, browser));
 	let metric = $derived(getMetric(prompt, instance, prediction));
 
 	$effect(() => {
@@ -77,15 +78,17 @@
 			{pred?.prediction}
 		{/await}
 	</td>
-	{#if project.show_labels && instance.label}
+	{#if project.show_labels}
 		<td class="p-3">
-			{#await metric}
-				Loading...
-			{:then metric}
-				{#if metric}
-					{(Math.round(metric.metric * 100) / 100).toFixed(2)}
-				{/if}
-			{/await}
+			{#if instance.label}
+				{#await metric}
+					Loading...
+				{:then metric}
+					{#if metric}
+						{(Math.round(metric.metric * 100) / 100).toFixed(2)}
+					{/if}
+				{/await}
+			{/if}
 		</td>
 	{/if}
 	<td class="flex justify-end p-3">

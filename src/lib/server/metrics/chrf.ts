@@ -58,18 +58,22 @@ function ngramMatches(
 	const totalRefNgramCount: Record<number, number> = {};
 	const totalHypNgramCount: Record<number, number> = {};
 
-	for (const order in refNgrams) {
-		for (const ngram in hypNgrams[order]) {
-			totalHypNgramCount[order] = (totalHypNgramCount[order] || 0) + hypNgrams[order][ngram];
+	// Get the intersection of keys between refNgrams and hypNgrams
+	const allKeys = new Set([...Object.keys(refNgrams)].filter((key) => key in hypNgrams));
+
+	for (const order of allKeys) {
+		const numKey = parseInt(order);
+		for (const ngram in hypNgrams[numKey]) {
+			totalHypNgramCount[numKey] = (totalHypNgramCount[numKey] || 0) + hypNgrams[numKey][ngram];
 		}
 
-		for (const ngram in refNgrams[order]) {
-			totalRefNgramCount[order] = (totalRefNgramCount[order] || 0) + refNgrams[order][ngram];
+		for (const ngram in refNgrams[numKey]) {
+			totalRefNgramCount[numKey] = (totalRefNgramCount[numKey] || 0) + refNgrams[numKey][ngram];
 
-			if (ngram in hypNgrams[order]) {
-				matchingNgramCount[order] =
-					(matchingNgramCount[order] || 0) +
-					Math.min(refNgrams[order][ngram], hypNgrams[order][ngram]);
+			if (ngram in hypNgrams[numKey]) {
+				matchingNgramCount[numKey] =
+					(matchingNgramCount[numKey] || 0) +
+					Math.min(refNgrams[numKey][ngram], hypNgrams[numKey][ngram]);
 			}
 		}
 	}
