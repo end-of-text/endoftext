@@ -16,14 +16,14 @@ export class JSONDescriptionEditor extends PromptEditor {
 
 	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
 		if (prompt.responseFormat !== 'json' || !prompt.prompt.toLowerCase().includes('json')) {
-			return false;
+			return true;
 		}
 
 		const systemPrompt = `### Role
 You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt specifies the desired JSON format. All prompts you get are supposed to produce a JSON output.
 		
 ### Instruction
-Go through the following steps one by one. If either applies, return false.
+Go through the following steps one by one. If either applies, return true.
 1. The prompt includes an example output that outlines the desired JSON format.
 2. The prompt contains a JSON specification that details the desired JSON format.
 3. The prompt contains a textual explanation of how the JSON output should be structured.
@@ -46,13 +46,13 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		);
 
 		if (!res) {
-			return false;
+			return true;
 		}
 
 		try {
 			return JSON.parse(res).output;
 		} catch (e) {
-			return false;
+			return true;
 		}
 	}
 

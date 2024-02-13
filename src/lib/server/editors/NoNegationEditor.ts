@@ -18,7 +18,8 @@ export class NoNegationEditor extends PromptEditor {
 You are an AI prompt writing critiquer. Your task is to determine if a prompt tells a model what **not** to instead of what it should do. 
 	
 ### Instructions
-Check whether the prompt tells a model what it should **not** do. If it does, return true.
+* If the prompt only tells the model what it should do, return true.
+* If the prompt instead tells the model what it should **not** do, return false.
 	 
 ### Output
 Return the output in JSON with the key "output" that is either true or false.`;
@@ -37,14 +38,14 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		);
 
 		if (!res) {
-			return false;
+			return true;
 		}
 
 		try {
 			const resJSON = JSON.parse(res);
 			return resJSON.output;
 		} catch (e) {
-			return false;
+			return true;
 		}
 	}
 

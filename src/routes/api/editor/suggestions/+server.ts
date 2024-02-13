@@ -46,14 +46,14 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	const llm = new OpenAILLM(OPENAI_API_KEY || '');
 	const results = await Promise.all(
 		editors.map(async (e) => {
-			const applicable = await e.filter(selectedPrompt, llm, instanceRes.data);
-			return { applicable, editor: e };
+			const satisfied = await e.filter(selectedPrompt, llm, instanceRes.data);
+			return { satisfied, editor: e };
 		})
 	);
 
 	const suggestions: Tables<'suggestions'>[] = [];
 	for (const result of results) {
-		if (result.applicable) {
+		if (!result.satisfied) {
 			const insertRes = await supabase
 				.from('suggestions')
 				.insert({

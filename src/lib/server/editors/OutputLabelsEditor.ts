@@ -3,11 +3,11 @@ import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { PromptEditor } from './editor';
 
-export class OutputFormatEditor extends PromptEditor {
+export class OutputLabelsEditor extends PromptEditor {
 	constructor() {
 		super(
-			'OutputFormat',
-			'Output Format',
+			'OutputLabels',
+			'Output and Labels',
 			'Change the prompt so model outputs follow the label structure.',
 			EditorType.ERROR
 		);
@@ -25,7 +25,7 @@ export class OutputFormatEditor extends PromptEditor {
 	): Promise<boolean> {
 		const filteredPredictions = instancePredictions.filter((i) => i.label !== '');
 		if (filteredPredictions.length === 0) {
-			return false;
+			return true;
 		}
 		const labels = filteredPredictions.map((i) => i.label).slice(0, 10);
 
@@ -47,14 +47,14 @@ export class OutputFormatEditor extends PromptEditor {
 		);
 
 		if (!res) {
-			return false;
+			return true;
 		}
 
 		try {
 			const resJSON = JSON.parse(res);
 			return resJSON.output;
 		} catch (e) {
-			return false;
+			return true;
 		}
 	}
 

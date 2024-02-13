@@ -19,7 +19,7 @@ export class ShortenEditor extends PromptEditor {
 		}[]
 	): Promise<boolean> {
 		if (instancePredictions.length === 0) {
-			return false;
+			return true;
 		}
 
 		const labelLengths = [];
@@ -34,9 +34,9 @@ export class ShortenEditor extends PromptEditor {
 			predictionLengths.reduce((sum, length) => sum + length, 0) / predictionLengths.length;
 
 		if (averageLabelLength * 1.3 < averagePredictionLenth) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
