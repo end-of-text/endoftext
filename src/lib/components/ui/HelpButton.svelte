@@ -1,29 +1,25 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { clickOutside } from '$lib/clickOutside';
-	import { tooltip } from '$lib/tooltip.svelte';
 	import { Bug, HelpCircle, Mail } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
 	let showOptions = $state(false);
 </script>
 
-<div class="relative">
+<div class="relative" use:clickOutside={() => (showOptions = false)}>
 	<button
 		class="flex cursor-pointer items-center justify-center transition"
-		use:tooltip={{ text: 'Get help with endoftext.' }}
-		on:click={() => (showOptions = !showOptions)}
+		onclick={() => (showOptions = !showOptions)}
 	>
-		<HelpCircle class="h-5 w-5 text-black transition-all  hover:text-blue-500" />
+		<HelpCircle class="h-5 w-5 text-gray-500 transition-all  hover:text-blue-500" />
 	</button>
 
 	{#if showOptions}
 		<div
 			class="absolute right-0 top-6 z-50 rounded border border-gray-300 bg-white"
 			transition:fade={{ duration: 100 }}
-			use:clickOutside={() => (showOptions = !showOptions)}
-			on:click={(e) => e.stopPropagation()}
-			on:keydown={(e) => {
+			onclick={(e) => e.stopPropagation()}
+			onkeydown={(e) => {
 				if (e.key === 'Escape') {
 					showOptions = false;
 				}
@@ -31,13 +27,11 @@
 			role="button"
 			tabindex="0"
 		>
-			<div style="padding: 7px 0px 7px 0px;">
+			<div class="flex flex-col gap-2 p-2">
 				<button
-					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-400 transition-all hover:text-black"
-					on:keydown={() => ({})}
-					on:click={(e) => {
-						e.stopPropagation();
-						if (browser) window.open('https://github.com/end-of-text/endoftext/issues', '_blank');
+					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-500 transition-all hover:text-black"
+					onclick={(e) => {
+						window.open('https://github.com/end-of-text/endoftext/issues', '_blank');
 						showOptions = false;
 					}}
 				>
@@ -45,11 +39,9 @@
 					<span class="whitespace-nowrap text-sm">Report an Issue</span>
 				</button>
 				<button
-					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-400 transition-all hover:text-black"
-					on:keydown={() => ({})}
-					on:click={(e) => {
-						e.stopPropagation();
-						if (browser) location.href = 'mailto:hello@zenoml.com';
+					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-500 transition-all hover:text-black"
+					onclick={(e) => {
+						location.href = 'mailto:help@endoftext.app';
 						showOptions = false;
 					}}
 				>

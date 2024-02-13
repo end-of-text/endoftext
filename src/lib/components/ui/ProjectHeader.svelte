@@ -21,7 +21,7 @@
 	<div class="flex items-center gap-2">
 		<span class="my-4 text-xl font-semibold text-gray-700">{project.name}</span>
 	</div>
-	<div class="ml-auto flex items-center gap-4">
+	<div class="ml-auto flex items-center gap-3">
 		<div
 			class="pointer-events-none rounded-md bg-blue-50 px-4 py-1 text-sm font-medium text-blue-500"
 		>
