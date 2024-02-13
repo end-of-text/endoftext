@@ -2,6 +2,7 @@
 	import ProjectSettingsPopup from '$lib/components/popups/ProjectSettingsPopup.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { Settings } from 'lucide-svelte';
+	import HelpButton from './HelpButton.svelte';
 
 	let { project } = $props<{
 		project: Tables<'projects'>;
@@ -26,6 +27,7 @@
 		>
 			Beta
 		</div>
+		<HelpButton />
 		<button onclick={() => (showSettings = true)}>
 			<Settings class="h-5 w-5 cursor-pointer transition-all hover:text-blue-600" />
 		</button>
