@@ -13,14 +13,20 @@ export const GET = async ({ url, locals: { supabase, getSession } }) => {
 		error(500, 'Error creating user');
 	}
 
-	const { error: err } = await supabase
-		.from('users')
-		.insert({ id: session.user?.id, email: session.user?.email });
+	const userResponse = await supabase.from('users').select('id').eq('id', session.user?.id);
 
-	if (err) {
-		error(500, err.message);
+	if (userResponse.error) {
+		error(500, userResponse.error.message);
+	} else if (userResponse.data.length === 0) {
+		const { error: err } = await supabase
+			.from('users')
+			.insert({ id: session.user?.id, email: session.user?.email });
+
+		if (err) {
+			error(500, err.message);
+		}
+		track('Signup');
 	}
 
-	track('Signup');
 	redirect(303, '/home');
 };
