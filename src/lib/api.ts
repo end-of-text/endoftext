@@ -3,9 +3,10 @@ import type { Tables } from './supabase';
 export async function getPrediction(
 	prompt: Tables<'prompts'>,
 	instanceId: number,
-	input: string
+	input: string,
+	browser: boolean
 ): Promise<Tables<'predictions'> | undefined> {
-	if (input === '') {
+	if (input === '' || !browser) {
 		return undefined;
 	}
 
@@ -76,7 +77,7 @@ export async function getMetric(
 	predictionPromise: Promise<Tables<'predictions'> | undefined>
 ): Promise<Tables<'metrics'> | undefined> {
 	const prediction = await predictionPromise;
-	if (instance.label === undefined || prediction === undefined) {
+	if (instance.label === null || instance.label === undefined || prediction === undefined) {
 		return;
 	}
 
