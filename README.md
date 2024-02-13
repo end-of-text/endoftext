@@ -1,4 +1,6 @@
-# Zeno Synth - Synthetic Data Generation for AI fine-tuning and evaluation
+# endoftext
+
+AI-powered prompt editor.
 
 ## Generating Supabase Types
 
