@@ -48,4 +48,9 @@
 <main class="flex h-screen w-screen">
 	<Tooltip />
 	{@render children()}
+	<div
+		class="pointer-events-none absolute bottom-4 right-4 rounded-full border border-blue-500 bg-white px-2 py-1 text-xs text-blue-500"
+	>
+		beta
+	</div>
 </main>
