@@ -15,14 +15,14 @@ export class JSONInstructionEditor extends PromptEditor {
 
 	async filter(prompt: Tables<'prompts'>): Promise<boolean> {
 		if (prompt.responseFormat !== 'json') {
-			return false;
+			return true;
 		}
 
 		if (prompt.prompt.toLowerCase().includes('json')) {
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 
 	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {

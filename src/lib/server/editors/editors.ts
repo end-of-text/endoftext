@@ -1,7 +1,8 @@
 import { ChainOfThoughtEditor } from './ChainOfThoughtEditor';
 import { LongerEditor } from './LongerEditor';
 import { NoNegationEditor } from './NoNegationEditor';
-import { OutputFormatEditor } from './OutputFormatEditor';
+import { OutputDescriptionEditor } from './OutputDescriptionEditor';
+import { OutputLabelsEditor } from './OutputLabelsEditor';
 import { SeparateInstructionEditor } from './SeparateInstructionEditor';
 import { ShortenEditor } from './ShortenEditor';
 import { JSONInstructionEditor } from './json/JSONInstructionEditor';
@@ -13,7 +14,8 @@ export const editors = [
 	new SeparateInstructionEditor(),
 	new ShortenEditor(),
 	new LongerEditor(),
-	new OutputFormatEditor(),
+	new OutputLabelsEditor(),
 	new JSONInstructionEditor(),
-	new JSONDescriptionEditor()
+	new JSONDescriptionEditor(),
+	new OutputDescriptionEditor()
 ];

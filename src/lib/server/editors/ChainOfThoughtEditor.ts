@@ -15,16 +15,17 @@ export class ChainOfThoughtEditor extends PromptEditor {
 
 	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
 		if (prompt.responseFormat !== 'text') {
-			return false;
+			return true;
 		}
 		const systemPrompt = `You are an AI prompt writing critiquer. You decide whether a prompt should implement chain-of-thought reasoning. 
 
 ### Guidelines
-* First, decide if the prompt already implements chain-of-thought reasoning. For example, it might include "think step-by-step". If so, return false.
-* If the prompt doesn't implement chain-of-thought reasoning, decide if it should or not. Only prompts for complex reasoning tasks such as arithmetic, commonsense reasoning, and symbolic reasoning tasks require chain-of-thought prompting. If the prompt is one of these, return true.
+* First, decide if the prompt already implements chain-of-thought reasoning. For example, it might include "think step-by-step". If so, return true.
+* If the prompt doesn't implement chain-of-thought reasoning, decide if it should or not. Only prompts for complex reasoning tasks such as arithmetic, commonsense reasoning, and symbolic reasoning tasks require chain-of-thought prompting. If the prompt is one of these, return false.
 						
 ### Output
-Return the output in JSON with the key "output" that is either true or false.`;
+Return JSON with the following format:
+{"output": boolean}`;
 		const res = await llm.generate(
 			[
 				{
@@ -40,13 +41,13 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		);
 
 		if (!res) {
-			return false;
+			return true;
 		}
 
 		try {
 			return JSON.parse(res).output;
 		} catch (e) {
-			return false;
+			return true;
 		}
 	}
 
