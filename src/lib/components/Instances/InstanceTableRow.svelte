@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { getMetric, getPrediction, updateInstance } from '$lib/api';
+	import autosize from '$lib/autosize';
 	import type { Tables } from '$lib/supabase';
+	import { tooltip } from '$lib/tooltip.svelte';
 	import { ArrowRight, Trash2 } from 'lucide-svelte';
 
 	let { instance, prompt, metricValues, selected, project, removeInstance } = $props<{
@@ -16,6 +18,9 @@
 	let localInstanceInput = $state(instance.input);
 	let localInstanceLabel = $state(instance.label);
 	let rowHovered = $state(false);
+	let inputArea: HTMLTextAreaElement | undefined = $state(undefined);
+	let labelArea: HTMLTextAreaElement | undefined = $state(undefined);
+	let predictionArea: HTMLTextAreaElement | undefined = $state(undefined);
 
 	let prediction = $derived(getPrediction(prompt, instance.id, instance.input, browser));
 	let metric = $derived(getMetric(prompt, instance.label, prediction));
@@ -35,50 +40,51 @@
 	onmouseleave={() => (rowHovered = false)}
 >
 	<td
-		class="py-3 pl-3 align-top transition-all {rowHovered || selected
+		class=": py-3 pl-3 align-top transition-all {rowHovered || selected
 			? 'opacity-100'
 			: 'opacity-20'}"
 	>
 		<input bind:checked={selected} type="checkbox" />
 	</td>
-	<td
-		contenteditable="plaintext-only"
-		class="box-border p-3"
-		bind:innerText={localInstanceInput}
-		onblur={() => {
-			instance.input = localInstanceInput;
-			updateInstance({ ...instance, input: localInstanceInput });
-		}}
-		onkeydown={(event) => {
-			if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
-				event.currentTarget.blur();
-			}
-		}}
-	/>
-
-	<td class="p-3">
+	<td class="h-full p-2">
+		<textarea
+			bind:this={inputArea}
+			use:autosize
+			class="box-border w-full border-none"
+			bind:value={localInstanceInput}
+			onblur={() => {
+				instance.input = localInstanceInput;
+				updateInstance({ ...instance, input: localInstanceInput });
+				inputArea && autosize(inputArea);
+				labelArea && autosize(labelArea);
+				predictionArea && autosize(predictionArea);
+			}}
+			onkeydown={(event) => {
+				if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
+					event.currentTarget.blur();
+				}
+			}}
+		/>
+	</td>
+	<td class="h-full p-2">
 		{#await prediction}
 			Loading...
 		{:then pred}
-			{pred?.prediction}
+			<textarea
+				bind:this={predictionArea}
+				use:autosize
+				class="box-border w-full border-none"
+				value={pred?.prediction}
+				disabled
+			/>
 		{/await}
 	</td>
 	{#if project.show_labels}
-		<td class="relative h-full">
-			<button
-				class="absolute -ml-4 mt-2 hidden rounded border bg-white p-1 text-green-600 transition hover:shadow group-hover:flex"
-				onclick={() =>
-					prediction.then((p) => {
-						instance.label = p?.prediction || '';
-						localInstanceLabel = instance.label;
-						updateInstance({ ...instance, label: localInstanceLabel });
-					})}
-			>
-				<ArrowRight class="h-4" />
-			</button>
-			<input
-				contenteditable="plaintext-only"
-				class="ml-3 box-border h-full border-none p-3"
+		<td class="relative h-full p-2">
+			<textarea
+				bind:this={labelArea}
+				use:autosize
+				class="box-border w-full border-none"
 				bind:value={localInstanceLabel}
 				onblur={() => {
 					instance.label = localInstanceLabel;
@@ -90,9 +96,22 @@
 					}
 				}}
 			/>
+			<button
+				class="absolute -left-8 top-3 hidden rounded bg-white p-1 text-gray-500 opacity-20 transition hover:opacity-100 group-hover:flex"
+				onclick={() =>
+					prediction.then((p) => {
+						console.log(p?.prediction || '');
+						localInstanceLabel = p?.prediction || '';
+						updateInstance({ ...instance, label: localInstanceLabel });
+						inputArea && autosize(inputArea);
+						labelArea && autosize(labelArea);
+						predictionArea && autosize(predictionArea);
+					})}
+				use:tooltip={{ text: 'Use prediction as instance label' }}
+			>
+				<ArrowRight class="h-4" />
+			</button>
 		</td>
-	{/if}
-	{#if project.show_labels}
 		<td class="p-3">
 			{#if instance.label}
 				{#await metric}

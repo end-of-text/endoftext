@@ -117,7 +117,7 @@
 					<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
 					<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
 					<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
-					<th class="flex items-center gap-2 whitespace-nowrap px-2 py-2">
+					<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
 						<span>chrf</span>
 						{#await averageMetric(metricValues)}
 							<Spinner />

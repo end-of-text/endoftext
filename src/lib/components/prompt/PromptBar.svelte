@@ -27,7 +27,7 @@
 	}
 </script>
 
-<div class="flex h-full w-1/3 min-w-[300px] flex-col border-r px-6 py-4">
+<div class="flex h-full w-[450px] shrink-0 flex-col border-r px-6 py-4">
 	<div class="mb-2 flex items-end justify-between">
 		<h1>Prompt</h1>
 		<button
