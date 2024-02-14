@@ -84,7 +84,6 @@ export class SingleInstructionEditor extends PromptEditor {
 		results = results.map((res) => JSON.parse(res)['output']);
 
 		const sentencesToEdit = sentences.filter((_, i) => results[i]);
-		console.log(sentencesToEdit);
 
 		const requests2 = sentencesToEdit.map((sentence) =>
 			llm.generate([
