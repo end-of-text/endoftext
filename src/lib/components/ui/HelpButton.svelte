@@ -11,7 +11,7 @@
 		class="flex cursor-pointer items-center justify-center transition"
 		onclick={() => (showOptions = !showOptions)}
 	>
-		<HelpCircle class="hover:text-primary h-5 w-5  transition-all" />
+		<HelpCircle class="h-5 w-5 transition-all  hover:text-primary" />
 	</button>
 
 	{#if showOptions}

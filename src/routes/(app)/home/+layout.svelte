@@ -33,7 +33,7 @@
 		</a>
 		<div class="ml-2 mt-2 flex items-center gap-2">
 			<div
-				class="text-primary pointer-events-none w-fit rounded-md bg-rose-50 px-4 py-1 text-sm font-bold"
+				class="pointer-events-none w-fit rounded-md bg-rose-50 px-4 py-1 text-sm font-bold text-primary"
 			>
 				Beta
 			</div>
