@@ -6,8 +6,9 @@
 	import { untrack } from 'svelte';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
-	let { prompt, editPrompt } = $props<{
+	let { prompt, hoveredSuggestion, editPrompt } = $props<{
 		prompt: Tables<'prompts'>;
+		hoveredSuggestion: Tables<'suggestions'> | null;
 		editPrompt: (suggestion: string) => void;
 	}>();
 
@@ -55,7 +56,12 @@
 				No suggestions
 			{:else}
 				{#each suggestions as suggestion (suggestion.id)}
-					<PromptSuggestion {prompt} {suggestion} {editPrompt} />
+					<div
+						onmouseover={() => (hoveredSuggestion = suggestion)}
+						onmouseleave={() => (hoveredSuggestion = null)}
+					>
+						<PromptSuggestion {prompt} {suggestion} {editPrompt} />
+					</div>
 				{/each}
 			{/if}
 		{/await}

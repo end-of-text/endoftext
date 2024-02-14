@@ -4,8 +4,9 @@
 	import { Check, Copy, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
-	let { prompt, editedPrompt, setPrompt } = $props<{
+	let { prompt, hoveredSuggestion, editedPrompt, setPrompt } = $props<{
 		prompt: Tables<'prompts'>;
+		hoveredSuggestion: Tables<'suggestions'> | null;
 		editedPrompt: Tables<'prompts'>;
 		setPrompt: () => void;
 	}>();
@@ -13,6 +14,7 @@
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
+	let hoveredUnderline = $derived(getPromptUnderlines(hoveredSuggestion, promptWasEdited));
 
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
@@ -24,6 +26,26 @@
 			promptCopied = false;
 		}, 3000);
 	}
+
+	function getPromptUnderlines(suggestion: Tables<'suggestions'> | null, promptWasEdited: boolean) {
+		if (promptWasEdited || !suggestion || !suggestion.target_spans) return null;
+		const targets: number[][] = suggestion.target_spans.reduce(
+			(acc: number[][], val, i) => (
+				i % 2 === 0 ? acc.push([val]) : acc[acc.length - 1].push(val), acc
+			),
+			[]
+		);
+
+		let result = '';
+		let lastIndex = 0;
+		targets.forEach((span, i) => {
+			result += prompt.prompt.slice(lastIndex, span[0]);
+			result += `<span class="underline decoration-red-500 decoration-2">${prompt.prompt.slice(span[0], span[1])}</span>`;
+			lastIndex = span[1];
+		});
+		result += prompt.prompt.slice(lastIndex);
+		return result;
+	}
 </script>
 
 <div class="flex max-h-[50%] min-h-0 flex-col">
@@ -34,19 +56,30 @@
 		role="button"
 		tabindex="0"
 	>
-		<div
-			contenteditable="plaintext-only"
-			class="h-full min-h-24 overflow-y-auto rounded border bg-white bg-opacity-90 py-2 pl-2 pr-6 text-sm shadow"
-			role="textbox"
-			aria-multiline="true"
-			tabindex="0"
-			bind:innerText={editedPrompt.prompt}
-			onkeydown={(e) => {
-				if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-					setPrompt();
-				}
-			}}
-		/>
+		<div class="relative">
+			<div
+				contenteditable="plaintext-only"
+				class="relative h-full min-h-24 overflow-y-auto rounded border bg-white bg-opacity-90 py-2 pl-2 pr-6 text-sm shadow"
+				role="textbox"
+				aria-multiline="true"
+				tabindex="0"
+				bind:innerText={editedPrompt.prompt}
+				onkeydown={(e) => {
+					if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+						setPrompt();
+					}
+				}}
+			/>
+			{#if hoveredUnderline}
+				<div
+					class="user-select-none pointer-events-none absolute left-0 top-0 h-full min-h-24 w-full overflow-y-auto rounded border py-2 pl-2 pr-6 text-sm text-transparent shadow"
+					aria-hidden="true"
+					transition:fade={{ duration: 200 }}
+				>
+					{@html hoveredUnderline}
+				</div>
+			{/if}
+		</div>
 		<button
 			onclick={copyPrompt}
 			class="absolute right-1 top-1 rounded bg-white p-1 transition-all {promptHovered
