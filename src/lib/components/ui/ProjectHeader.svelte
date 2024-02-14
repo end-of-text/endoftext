@@ -22,14 +22,12 @@
 		<span class="my-4 text-xl font-semibold text-gray-700">{project.name}</span>
 	</div>
 	<div class="ml-auto flex items-center gap-3">
-		<div
-			class="pointer-events-none rounded-md bg-blue-50 px-4 py-1 text-sm font-medium text-blue-500"
-		>
+		<div class="pointer-events-none rounded-md bg-rose-50 px-4 py-1 text-sm font-bold text-primary">
 			Beta
 		</div>
 		<HelpButton />
 		<button onclick={() => (showSettings = true)}>
-			<Settings class="h-5 w-5 cursor-pointer transition-all hover:text-blue-600" />
+			<Settings class="h-5 w-5 cursor-pointer transition-all hover:text-primary" />
 		</button>
 	</div>
 </div>
