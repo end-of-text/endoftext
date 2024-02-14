@@ -49,7 +49,11 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		}
 	}
 
-	async rewritePrompt(prompt: Tables<'prompts'>, targetSpans: number[], llm: LLM): Promise<string> {
+	async rewritePrompt(
+		prompt: Tables<'prompts'>,
+		targetSpans: number[][],
+		llm: LLM
+	): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',

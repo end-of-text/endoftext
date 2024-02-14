@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import {
-		createInstance,
-		deleteInstance,
-		deleteInstances,
-		generateInstances,
-		updateInstance
-	} from '$lib/api';
+	import { createInstance, deleteInstance, deleteInstances, generateInstances } from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
@@ -41,14 +35,6 @@
 			1
 		);
 		deleteInstance(id);
-	}
-
-	function changeInstance(instance: Tables<'instances'>) {
-		const index = instances.findIndex((i) => i.id === instance.id);
-		if (index !== -1) {
-			instances[index] = instance;
-		}
-		updateInstance(instance);
 	}
 </script>
 
@@ -129,9 +115,9 @@
 				{#if project.show_labels}
 					<th class="rounded-tl" />
 					<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
-					<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
 					<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
-					<th class="flex items-center gap-2 whitespace-nowrap px-2 py-2">
+					<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
+					<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
 						<span>chrf</span>
 						{#await averageMetric(metricValues)}
 							<Spinner />
@@ -159,7 +145,6 @@
 					{prompt}
 					{project}
 					{removeInstance}
-					{changeInstance}
 				/>
 			{/each}
 		</tbody>

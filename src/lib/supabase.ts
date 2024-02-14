@@ -195,7 +195,7 @@ export type Database = {
 					name: string;
 					prompt_id: number;
 					required_input_type: string | null;
-					target_spans: number[] | null;
+					target_spans: number[][] | null;
 					type: string;
 				};
 				Insert: {
@@ -206,7 +206,7 @@ export type Database = {
 					name: string;
 					prompt_id: number;
 					required_input_type?: string | null;
-					target_spans?: number[] | null;
+					target_spans?: number[][] | null;
 					type: string;
 				};
 				Update: {
@@ -217,7 +217,7 @@ export type Database = {
 					name?: string;
 					prompt_id?: number;
 					required_input_type?: string | null;
-					target_spans?: number[] | null;
+					target_spans?: number[][] | null;
 					type?: string;
 				};
 				Relationships: [

@@ -51,7 +51,6 @@ export class NoNegationEditor extends PromptEditor {
 		const regex = /([^.?!]+[.?!])/g; // Regex to match sentences including the punctuation
 
 		let phrases = [...prompt.prompt.matchAll(regex)].map((match) => {
-			console.log(match);
 			return {
 				phrase: match[0].trim(), // The matched sentence
 				start: match.index || 0, // The start index of the match in the original string
@@ -104,27 +103,19 @@ export class NoNegationEditor extends PromptEditor {
 		);
 
 		if (phrases.some((p) => p.candidateSentence)) {
-			return phrases
-				.filter((p) => p.candidateSentence)
-				.map((p) => [p.start, p.end])
-				.flat();
+			return phrases.filter((p) => p.candidateSentence).map((p) => [p.start, p.end]);
 		} else {
 			return null;
 		}
 	}
 
-	async rewritePrompt(prompt: Tables<'prompts'>, targetSpans: number[], llm: LLM): Promise<string> {
-		// group targetSpans into two-element arrays, simple
-		const targets: number[][] = targetSpans.reduce(
-			(acc: number[][], val, i) => (
-				i % 2 === 0 ? acc.push([val]) : acc[acc.length - 1].push(val), acc
-			),
-			[]
-		);
-
-		// get substrings using targetSpans
+	async rewritePrompt(
+		prompt: Tables<'prompts'>,
+		targetSpans: number[][],
+		llm: LLM
+	): Promise<string> {
 		const rewrittenPhrases = await Promise.all(
-			targets.map(async (span) => {
+			targetSpans.map(async (span) => {
 				const phrase = prompt.prompt.substring(span[0], span[1] + 1);
 				return await llm.generate(
 					[
@@ -148,10 +139,11 @@ export class NoNegationEditor extends PromptEditor {
 				return;
 			}
 			returnPrompt =
-				returnPrompt.slice(0, targets[i][0]) +
+				returnPrompt.slice(0, targetSpans[i][0]) +
 				(' ' + rewrittenPhrase.trim() + (rewrittenPhrase.trim().endsWith('.') ? '' : '.')) +
-				returnPrompt.slice(targets[i][1] + 1);
+				returnPrompt.slice(targetSpans[i][1] + 1);
 		});
+
 		return returnPrompt;
 	}
 }

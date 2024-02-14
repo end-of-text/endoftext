@@ -12,7 +12,6 @@ export const editors = [
 	new SeparateInstructionEditor(),
 	new ShortenEditor(),
 	new LongerEditor(),
-	// new OutputLabelsEditor(),
 	new JSONInstructionEditor(),
 	new JSONDescriptionEditor(),
 	new OutputDescriptionEditor(),

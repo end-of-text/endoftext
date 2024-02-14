@@ -73,11 +73,11 @@ export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'p
 
 export async function getMetric(
 	prompt: Tables<'prompts'>,
-	instance: Tables<'instances'>,
+	label: string | null,
 	predictionPromise: Promise<Tables<'predictions'> | undefined>
 ): Promise<Tables<'metrics'> | undefined> {
 	const prediction = await predictionPromise;
-	if (instance.label === null || instance.label === undefined || prediction === undefined) {
+	if (label === null || label === undefined || prediction === undefined) {
 		return;
 	}
 
@@ -87,9 +87,9 @@ export async function getMetric(
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			prompt: prompt,
-			instance: instance,
-			prediction: prediction
+			prompt,
+			label,
+			prediction
 		})
 	});
 	const jsonResponse = await response.json();
