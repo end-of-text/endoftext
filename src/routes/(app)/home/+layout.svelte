@@ -31,9 +31,9 @@
 			<User2 class="h-5 w-5" />
 			Account
 		</a>
-		<div class="mt-2 flex items-center gap-2">
+		<div class="ml-2 mt-2 flex items-center gap-2">
 			<div
-				class="pointer-events-none w-fit rounded-md bg-blue-50 px-4 py-1 text-sm font-medium text-blue-500"
+				class="text-primary pointer-events-none w-fit rounded-md bg-rose-50 px-4 py-1 text-sm font-bold"
 			>
 				Beta
 			</div>
