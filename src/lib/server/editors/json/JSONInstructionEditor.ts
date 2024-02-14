@@ -13,19 +13,19 @@ export class JSONInstructionEditor extends PromptEditor {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>): Promise<boolean> {
+	async canBeApplied(prompt: Tables<'prompts'>) {
 		if (prompt.responseFormat !== 'json') {
-			return true;
+			return null;
 		}
 
 		if (prompt.prompt.toLowerCase().includes('json')) {
-			return true;
+			return null;
 		}
 
-		return false;
+		return [];
 	}
 
-	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
+	async rewritePrompt(prompt: Tables<'prompts'>, targetSpans: number[], llm: LLM): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',

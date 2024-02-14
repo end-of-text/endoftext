@@ -13,7 +13,7 @@ export class OutputLabelsEditor extends PromptEditor {
 		);
 	}
 
-	async filter(
+	async canBeApplied(
 		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
@@ -22,10 +22,10 @@ export class OutputLabelsEditor extends PromptEditor {
 			label: string;
 			predictions: { prediction: string }[];
 		}[]
-	): Promise<boolean> {
+	) {
 		const filteredPredictions = instancePredictions.filter((i) => i.label !== '');
 		if (filteredPredictions.length === 0) {
-			return true;
+			return null;
 		}
 		const labels = filteredPredictions.map((i) => i.label).slice(0, 10);
 
@@ -47,19 +47,20 @@ export class OutputLabelsEditor extends PromptEditor {
 		);
 
 		if (!res) {
-			return true;
+			return null;
 		}
 
 		try {
 			const resJSON = JSON.parse(res);
-			return resJSON.output;
+			return resJSON.output ? [] : null;
 		} catch (e) {
-			return true;
+			return null;
 		}
 	}
 
-	async apply(
+	async rewritePrompt(
 		prompt: Tables<'prompts'>,
+		targetSpans: number[],
 		llm: LLM,
 		instancePredictions: {
 			id: number;

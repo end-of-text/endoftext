@@ -8,7 +8,7 @@ export class LongerEditor extends PromptEditor {
 		super('Longer', 'Longer', 'Make the predictions of the model longer.', EditorType.ERROR);
 	}
 
-	async filter(
+	async canBeApplied(
 		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
@@ -17,9 +17,9 @@ export class LongerEditor extends PromptEditor {
 			label: string;
 			predictions: { prediction: string }[];
 		}[]
-	): Promise<boolean> {
+	) {
 		if (instancePredictions.length === 0) {
-			return true;
+			return null;
 		}
 
 		const labelLengths = [];
@@ -34,12 +34,12 @@ export class LongerEditor extends PromptEditor {
 			predictionLengths.reduce((sum, length) => sum + length, 0) / predictionLengths.length;
 
 		if (averagePredictionLenth * 1.3 < averageLabelLength) {
-			return false;
+			return null;
 		}
-		return true;
+		return [];
 	}
 
-	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
+	async rewritePrompt(prompt: Tables<'prompts'>, targetSpans: number[], llm: LLM): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',

@@ -46,7 +46,13 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 	}
 
 	const llm = new OpenAILLM(OPENAI_API_KEY || '');
-	const newPrompt = await editor.apply(prompt, llm, instanceRes.data, userInput);
+	const newPrompt = await editor.rewritePrompt(
+		prompt,
+		suggestion.target_spans || [],
+		llm,
+		instanceRes.data,
+		userInput
+	);
 
 	track('Suggestion Accepted', { user_id: session.user.id, editor_name: editor.name });
 	return json({ prompt: newPrompt });

@@ -29,7 +29,7 @@ export class SingleInstructionEditor extends PromptEditor {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
 		const sentences = prompt.prompt.split('.');
 
 		const requests = sentences.map((sentence) =>
@@ -51,17 +51,17 @@ export class SingleInstructionEditor extends PromptEditor {
 		const results = await Promise.all(requests);
 
 		try {
-			if (results.some((res) => JSON.parse(res)['output'])) {
-				return false;
+			if (results.some((res) => JSON.parse(res || '{}')['output'])) {
+				return [];
 			} else {
-				return true;
+				return null;
 			}
 		} catch (e) {
-			return true;
+			return null;
 		}
 	}
 
-	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
+	async rewritePrompt(prompt: Tables<'prompts'>, targetSpans: number[], llm: LLM): Promise<string> {
 		const sentences = prompt.prompt.split('.');
 
 		const requests = sentences.map((sentence) =>
@@ -81,7 +81,7 @@ export class SingleInstructionEditor extends PromptEditor {
 		);
 
 		let results = await Promise.all(requests);
-		results = results.map((res) => JSON.parse(res)['output']);
+		results = results.map((res) => JSON.parse(res || '{}')['output']);
 
 		const sentencesToEdit = sentences.filter((_, i) => results[i]);
 
