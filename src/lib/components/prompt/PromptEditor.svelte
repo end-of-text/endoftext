@@ -26,7 +26,7 @@
 	}
 </script>
 
-<div class="flex max-h-[50%] min-h-0 flex-col">
+<div class="flex max-h-[50%] min-h-0 shrink-0 flex-col">
 	<div
 		class="relative mt-2 min-h-0 cursor-text"
 		onmouseenter={() => (promptHovered = true)}

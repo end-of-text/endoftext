@@ -1,26 +1,24 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { getMetric, getPrediction } from '$lib/api';
+	import { getMetric, getPrediction, updateInstance } from '$lib/api';
 	import type { Tables } from '$lib/supabase';
-	import { Trash2 } from 'lucide-svelte';
+	import { ArrowRight, Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, metricValues, selected, project, removeInstance, changeInstance } =
-		$props<{
-			instance: Tables<'instances'>;
-			prompt: Tables<'prompts'>;
-			project: Tables<'projects'>;
-			metricValues: Record<string, Promise<Tables<'metrics'> | undefined>>;
-			selected: boolean;
-			removeInstance: (id: number) => void;
-			changeInstance: (instance: Tables<'instances'>) => void;
-		}>();
+	let { instance, prompt, metricValues, selected, project, removeInstance } = $props<{
+		instance: Tables<'instances'>;
+		prompt: Tables<'prompts'>;
+		project: Tables<'projects'>;
+		metricValues: Record<string, Promise<Tables<'metrics'> | undefined>>;
+		selected: boolean;
+		removeInstance: (id: number) => void;
+	}>();
 
 	let localInstanceInput = $state(instance.input);
 	let localInstanceLabel = $state(instance.label);
 	let rowHovered = $state(false);
 
 	let prediction = $derived(getPrediction(prompt, instance.id, instance.input, browser));
-	let metric = $derived(getMetric(prompt, instance, prediction));
+	let metric = $derived(getMetric(prompt, instance.label, prediction));
 
 	$effect(() => {
 		updateMetric(metric);
@@ -32,13 +30,9 @@
 </script>
 
 <tr
-	class="border-b align-top text-sm"
-	onmouseenter={() => {
-		rowHovered = true;
-	}}
-	onmouseleave={() => {
-		rowHovered = false;
-	}}
+	class="group border-b align-top text-sm"
+	onmouseenter={() => (rowHovered = true)}
+	onmouseleave={() => (rowHovered = false)}
 >
 	<td
 		class="py-3 pl-3 align-top transition-all {rowHovered || selected
@@ -51,26 +45,17 @@
 		contenteditable="plaintext-only"
 		class="box-border p-3"
 		bind:innerText={localInstanceInput}
-		onblur={() => changeInstance({ ...instance, input: localInstanceInput })}
+		onblur={() => {
+			instance.input = localInstanceInput;
+			updateInstance({ ...instance, input: localInstanceInput });
+		}}
 		onkeydown={(event) => {
 			if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
 				event.currentTarget.blur();
 			}
 		}}
 	/>
-	{#if project.show_labels}
-		<td
-			contenteditable="plaintext-only"
-			class="box-border p-3"
-			bind:innerText={localInstanceLabel}
-			onblur={() => changeInstance({ ...instance, label: localInstanceLabel })}
-			onkeydown={(event) => {
-				if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
-					event.currentTarget.blur();
-				}
-			}}
-		/>
-	{/if}
+
 	<td class="p-3">
 		{#await prediction}
 			Loading...
@@ -78,6 +63,35 @@
 			{pred?.prediction}
 		{/await}
 	</td>
+	{#if project.show_labels}
+		<td class="relative h-full">
+			<button
+				class="absolute -ml-4 mt-2 hidden rounded border bg-white p-1 text-green-600 transition hover:shadow group-hover:flex"
+				onclick={() =>
+					prediction.then((p) => {
+						instance.label = p?.prediction || '';
+						localInstanceLabel = instance.label;
+						updateInstance({ ...instance, label: localInstanceLabel });
+					})}
+			>
+				<ArrowRight class="h-4" />
+			</button>
+			<input
+				contenteditable="plaintext-only"
+				class="ml-3 box-border h-full border-none p-3"
+				bind:value={localInstanceLabel}
+				onblur={() => {
+					instance.label = localInstanceLabel;
+					updateInstance({ ...instance, label: localInstanceLabel });
+				}}
+				onkeydown={(event) => {
+					if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
+						event.currentTarget.blur();
+					}
+				}}
+			/>
+		</td>
+	{/if}
 	{#if project.show_labels}
 		<td class="p-3">
 			{#if instance.label}
