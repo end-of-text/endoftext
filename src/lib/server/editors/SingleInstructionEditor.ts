@@ -61,7 +61,11 @@ export class SingleInstructionEditor extends PromptEditor {
 		}
 	}
 
-	async rewritePrompt(prompt: Tables<'prompts'>, targetSpans: number[], llm: LLM): Promise<string> {
+	async rewritePrompt(
+		prompt: Tables<'prompts'>,
+		targetSpans: number[][],
+		llm: LLM
+	): Promise<string> {
 		const sentences = prompt.prompt.split('.');
 
 		const requests = sentences.map((sentence) =>

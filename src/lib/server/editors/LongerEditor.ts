@@ -39,7 +39,11 @@ export class LongerEditor extends PromptEditor {
 		return [];
 	}
 
-	async rewritePrompt(prompt: Tables<'prompts'>, targetSpans: number[], llm: LLM): Promise<string> {
+	async rewritePrompt(
+		prompt: Tables<'prompts'>,
+		targetSpans: number[][],
+		llm: LLM
+	): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',

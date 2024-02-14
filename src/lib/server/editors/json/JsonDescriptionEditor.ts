@@ -58,7 +58,7 @@ Return the output in JSON with the key "output" that is either true or false.`;
 
 	async rewritePrompt(
 		prompt: Tables<'prompts'>,
-		targetSpans: number[],
+		targetSpans: number[][],
 		llm: LLM,
 		instancePredictions: {
 			id: number;

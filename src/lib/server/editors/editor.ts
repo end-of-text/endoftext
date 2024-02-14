@@ -37,7 +37,7 @@ export abstract class PromptEditor {
 			label: string;
 			predictions: { prediction: string }[];
 		}[]
-	): Promise<number[] | null>;
+	): Promise<number[][] | null>;
 
 	/** Modify the prompt using the editor.
 	 *
@@ -48,7 +48,7 @@ export abstract class PromptEditor {
 	 */
 	abstract rewritePrompt(
 		prompt: Tables<'prompts'>,
-		targetSpans: number[],
+		targetSpans: number[][],
 		llm: LLM,
 		instancePredictions: {
 			id: number;
