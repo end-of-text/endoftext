@@ -5,6 +5,7 @@ import { OutputDescriptionEditor } from './OutputDescriptionEditor';
 import { OutputLabelsEditor } from './OutputLabelsEditor';
 import { SeparateInstructionEditor } from './SeparateInstructionEditor';
 import { ShortenEditor } from './ShortenEditor';
+import { SingleInstructionEditor } from './SingleInstructionEditor';
 import { JSONInstructionEditor } from './json/JSONInstructionEditor';
 import { JSONDescriptionEditor } from './json/JsonDescriptionEditor';
 
@@ -17,5 +18,6 @@ export const editors = [
 	new OutputLabelsEditor(),
 	new JSONInstructionEditor(),
 	new JSONDescriptionEditor(),
-	new OutputDescriptionEditor()
+	new OutputDescriptionEditor(),
+	new SingleInstructionEditor()
 ];
