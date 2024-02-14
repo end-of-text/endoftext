@@ -59,6 +59,10 @@
 					<div
 						onmouseover={() => (hoveredSuggestion = suggestion)}
 						onmouseleave={() => (hoveredSuggestion = null)}
+						onfocus={() => (hoveredSuggestion = suggestion)}
+						onblur={() => (hoveredSuggestion = null)}
+						role="button"
+						tabindex="0"
 					>
 						<PromptSuggestion {prompt} {suggestion} {editPrompt} />
 					</div>

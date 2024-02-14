@@ -9,7 +9,9 @@ module.exports = {
 	],
 	rules: {
 		// blocked by https://github.com/sveltejs/eslint-plugin-svelte/issues/652
-		'svelte/valid-compile': 'off'
+		'svelte/valid-compile': 'off',
+		'svelte/no-at-html-tags': 'off',
+		'@typescript-eslint/no-unused-vars': 'off'
 	},
 	parser: '@typescript-eslint/parser',
 	plugins: ['@typescript-eslint'],

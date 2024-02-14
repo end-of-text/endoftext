@@ -29,16 +29,10 @@
 
 	function getPromptUnderlines(suggestion: Tables<'suggestions'> | null, promptWasEdited: boolean) {
 		if (promptWasEdited || !suggestion || !suggestion.target_spans) return null;
-		const targets: number[][] = suggestion.target_spans.reduce(
-			(acc: number[][], val, i) => (
-				i % 2 === 0 ? acc.push([val]) : acc[acc.length - 1].push(val), acc
-			),
-			[]
-		);
 
 		let result = '';
 		let lastIndex = 0;
-		targets.forEach((span, i) => {
+		suggestion.target_spans.forEach((span) => {
 			result += prompt.prompt.slice(lastIndex, span[0]);
 			result += `<span class="underline decoration-red-500 decoration-2">${prompt.prompt.slice(span[0], span[1])}</span>`;
 			lastIndex = span[1];
