@@ -9,9 +9,9 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	const requestData = await request.json();
-	const instance = requestData.instance as Tables<'instances'> | undefined;
-	if (!instance) {
-		error(500, 'Invalid instance data');
+	const label = requestData.label as string | undefined;
+	if (!label) {
+		error(500, 'Invalid label');
 	}
 
 	const prediction = requestData.prediction as Tables<'predictions'> | undefined;
@@ -37,11 +37,11 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	if (prompt.responseFormat === 'json') {
 		metric = chrfMetric(
 			// Normalize JSON so that formatting is not an issue.
-			JSON.stringify(JSON.parse(instance.label!)),
+			JSON.stringify(JSON.parse(label)),
 			JSON.stringify(JSON.parse(prediction.prediction))
 		);
 	} else {
-		metric = chrfMetric(instance.label!, prediction.prediction);
+		metric = chrfMetric(label, prediction.prediction);
 	}
 	const insertRes = await supabase
 		.from('metrics')
