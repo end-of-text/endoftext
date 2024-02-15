@@ -29,6 +29,10 @@
 			editedPrompt = { ...prompt };
 		});
 	}
+
+	function setHoveredSuggestion(suggestion: Tables<'suggestions'> | null) {
+		hoveredSuggestion = suggestion;
+	}
 </script>
 
 <div class="flex h-full w-[450px] shrink-0 flex-col border-r px-6 py-4">
@@ -51,6 +55,6 @@
 	{/if}
 	<PromptEditor {prompt} {hoveredSuggestion} {setPrompt} bind:suggestionApplied bind:editedPrompt />
 	{#if projectId}
-		<PromptSuggestions {prompt} {editPrompt} bind:hoveredSuggestion />
+		<PromptSuggestions {prompt} {editPrompt} {setHoveredSuggestion} />
 	{/if}
 </div>
