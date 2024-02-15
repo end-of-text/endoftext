@@ -56,6 +56,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, res.error.message);
 	}
 
-	trackEvent('Prediction Generated', undefined, { user_id: session.user.id });
+	trackEvent('Prediction Generated', { user_id: session.user.id });
 	return json({ prediction: res.data[0] });
 }

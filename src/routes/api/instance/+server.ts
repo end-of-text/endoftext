@@ -58,7 +58,7 @@ export async function PUT({ locals: { supabase, getSession }, request }) {
 	if (res.error) {
 		error(500, res.error.message);
 	} else {
-		trackEvent('Instance Created', undefined, { user_id: session.user.id });
+		trackEvent('Instance Created', { user_id: session.user.id });
 		return json(res.data);
 	}
 }

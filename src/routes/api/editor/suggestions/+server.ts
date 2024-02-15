@@ -70,10 +70,10 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 			if (insertRes.data && insertRes.data.length > 0) {
 				trackEvent(
 					'Suggestion Created',
+					{ user_id: session.user.id },
 					{
 						editor_name: result.editor.name
-					},
-					{ user_id: session.user.id }
+					}
 				);
 				suggestions.push(insertRes.data[0]);
 			}

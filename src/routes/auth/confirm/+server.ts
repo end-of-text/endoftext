@@ -28,7 +28,7 @@ export const GET = async (event) => {
 		}
 
 		if (!error) {
-			trackEvent('Signup', undefined, { user_id: data.user?.id });
+			trackEvent('Signup', { user_id: data.user?.id });
 			redirect(303, `/${next.slice(1)}`);
 		}
 	}

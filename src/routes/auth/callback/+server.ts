@@ -25,7 +25,7 @@ export const GET = async ({ url, locals: { supabase, getSession } }) => {
 		if (err) {
 			error(500, err.message);
 		}
-		trackEvent('Signup', undefined, { user_id: session.user?.id });
+		trackEvent('Signup', { user_id: session.user?.id });
 	}
 
 	redirect(303, '/home');

@@ -23,6 +23,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, res.error.message);
 	}
 
-	trackEvent('New Prompt', { project_id: prompt.project_id }, { user_id: session.user.id });
+	trackEvent('New Prompt', { user_id: session.user.id }, { project_id: prompt.project_id });
 	return json(res.data[0]);
 }

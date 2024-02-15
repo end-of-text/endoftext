@@ -54,6 +54,6 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		userInput
 	);
 
-	trackEvent('Suggestion Accepted', { editor_name: editor.name }, { user_id: session.user.id });
+	trackEvent('Suggestion Accepted', { user_id: session.user.id }, { editor_name: editor.name });
 	return json({ prompt: newPrompt });
 }
