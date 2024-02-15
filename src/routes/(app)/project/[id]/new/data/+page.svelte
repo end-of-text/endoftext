@@ -39,7 +39,8 @@
 						name="instance"
 						class="w-full"
 						placeholder="Enter text here"
-						bind:value={instance}
+						value={instance}
+						onblur={() => (instances[i] = instance)}
 					/>
 					<Trash2
 						class="h-5 w-5 cursor-pointer transition-all hover:text-red-600"
