@@ -2,17 +2,24 @@
 	import type { Tables } from '$lib/supabase';
 	import { slide } from 'svelte/transition';
 
-	let { prompt } = $props<{ prompt: Tables<'prompts'> }>();
+	let { prompt, userStatus } = $props<{
+		prompt: Tables<'prompts'>;
+		userStatus: string;
+	}>();
 </script>
 
 <div class="flex shrink-0 flex-col gap-2 rounded border bg-gray-50 p-2" transition:slide>
 	<div>
 		<label class="mr-2 italic text-gray-500" for="model">model:</label>
-		<select class="rounded border p-1" name="model" bind:value={prompt.model}>
+		<select class="rounded border p-1" name="model" value={prompt.model}>
 			<option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
 			<option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
-			<option value="gpt-4-0125-preview">gpt-4-0125-preview</option>
-			<option value="gpt-4-1106-preview">gpt-4-1106-preview</option>
+			<option disabled={userStatus !== 'active'} value="gpt-4-0125-preview"
+				>gpt-4-0125-preview {userStatus !== 'active' ? '(plus required)' : ''}</option
+			>
+			<option disabled={userStatus !== 'active'} value="gpt-4-1106-preview"
+				>gpt-4-1106-preview {userStatus !== 'active' ? '(plus required)' : ''}</option
+			>
 		</select>
 	</div>
 	<div>

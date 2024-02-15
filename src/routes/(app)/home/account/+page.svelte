@@ -23,17 +23,17 @@
 <div class="mt-2">
 	<p>
 		You are signed in as <span class="ml-2 rounded-full bg-gray-100 px-3 py-1">
-			{data.userEmail}
+			{data.user.email}
 		</span>
 	</p>
 	<br />
 	<h2>Subscription</h2>
-	{#if data.subscription.status === 'active'}
+	{#if data.user.status === 'active'}
 		<p class="py-2">
 			You are currently on the <span class="font-bold text-primary">plus</span> plan
 		</p>
 		<form method="post" action="?/manage" use:enhance>
-			<input type="hidden" name="stripeId" value={data.subscription.stripe_id} />
+			<input type="hidden" name="stripeId" value={data.user.stripeId} />
 			<Button>Manage your Subscription</Button>
 		</form>
 	{:else}

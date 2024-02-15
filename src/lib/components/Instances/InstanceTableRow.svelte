@@ -20,11 +20,23 @@
 	let inputArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let labelArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let predictionArea: HTMLTextAreaElement | undefined = $state(undefined);
-	let prediction = $state(getPrediction(prompt, instance.id, instance.input));
-	let metric = $state(getMetric(prompt, instance.label, prediction));
+	let prediction: Promise<Tables<'predictions'> | undefined> = $state(
+		new Promise((resolve) => resolve(undefined))
+	);
+	let metric: Promise<Tables<'metrics'> | undefined> = $state(
+		new Promise((resolve) => resolve(undefined))
+	);
 
 	$effect(() => {
 		updateMetric(metric);
+	});
+
+	$effect(() => {
+		prediction = getPrediction(prompt, instance.id, localInstanceInput);
+	});
+
+	$effect(() => {
+		metric = getMetric(prompt, localInstanceLabel, prediction);
 	});
 
 	function updateMetric(metric: Promise<Tables<'metrics'> | undefined>) {

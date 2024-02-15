@@ -59,7 +59,7 @@ export async function createInstance(projectId: string) {
 	return json as Tables<'instances'>;
 }
 
-export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'prompts'>> {
+export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'prompts'> | null> {
 	const res = await fetch(`/api/prompt`, {
 		method: 'POST',
 		headers: {
@@ -67,6 +67,11 @@ export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'p
 		},
 		body: JSON.stringify({ prompt })
 	});
+
+	if (!res.ok) {
+		return null;
+	}
+
 	const json = await res.json();
 	return json as Tables<'prompts'>;
 }

@@ -14,6 +14,20 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, 'Invalid prompt data');
 	}
 
+	const { data: prompts, error: promptsError } = await supabase
+		.from('prompts')
+		.select('id, projects(user_id)', { count: 'exact' })
+		.eq('projects.user_id', session.user.id)
+		.gt('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+
+	if (promptsError) {
+		error(500, promptsError.message);
+	}
+
+	if (prompts.length >= 100) {
+		error(403, 'You have reached the maximum number of prompts allowed for the month');
+	}
+
 	const res = await supabase
 		.from('prompts')
 		.insert({ ...prompt, id: undefined, created_at: undefined, parent_prompt_id: prompt.id })

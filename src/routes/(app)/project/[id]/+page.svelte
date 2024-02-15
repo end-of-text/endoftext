@@ -13,7 +13,7 @@
 <div class="flex h-full w-full flex-col">
 	<ProjectHeader bind:project />
 	<div class="flex min-h-0 grow">
-		<PromptBar bind:prompt projectId={project.id || ''} />
+		<PromptBar bind:prompt projectId={project.id || ''} userStatus={data.user.status} />
 		<InstanceTable bind:instances {project} {prompt} />
 	</div>
 </div>
