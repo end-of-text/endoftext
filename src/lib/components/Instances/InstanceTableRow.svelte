@@ -22,8 +22,8 @@
 	let labelArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let predictionArea: HTMLTextAreaElement | undefined = $state(undefined);
 
-	let prediction = $derived(getPrediction(prompt, instance.id, instance.input, browser));
-	let metric = $derived(getMetric(prompt, instance.label, prediction));
+	let prediction = $derived(getPrediction(prompt, instance.id, localInstanceInput, browser));
+	let metric = $derived(getMetric(prompt, localInstanceLabel, prediction));
 
 	$effect(() => {
 		updateMetric(metric);
@@ -51,10 +51,10 @@
 			bind:this={inputArea}
 			use:autosize
 			class="box-border w-full border-none"
-			bind:value={localInstanceInput}
+			value={localInstanceInput}
 			onblur={() => {
-				instance.input = localInstanceInput;
-				updateInstance({ ...instance, input: localInstanceInput });
+				localInstanceInput = inputArea?.value ?? '';
+				updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
 				inputArea && autosize(inputArea);
 				labelArea && autosize(labelArea);
 				predictionArea && autosize(predictionArea);
@@ -85,10 +85,10 @@
 				bind:this={labelArea}
 				use:autosize
 				class="box-border w-full border-none"
-				bind:value={localInstanceLabel}
+				value={localInstanceLabel}
 				onblur={() => {
-					instance.label = localInstanceLabel;
-					updateInstance({ ...instance, label: localInstanceLabel });
+					localInstanceLabel = labelArea?.value ?? '';
+					updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
 				}}
 				onkeydown={(event) => {
 					if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
