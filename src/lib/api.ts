@@ -4,9 +4,9 @@ export async function getPrediction(
 	prompt: Tables<'prompts'>,
 	instanceId: number,
 	input: string,
-	browser: boolean
+	clear: boolean = false
 ): Promise<Tables<'predictions'> | undefined> {
-	if (input === '' || !browser) {
+	if (input === '') {
 		return undefined;
 	}
 
@@ -15,7 +15,7 @@ export async function getPrediction(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ prompt, instanceId, input })
+		body: JSON.stringify({ prompt, instanceId, input, clear })
 	});
 	const res = await response.json();
 	return res.prediction as Tables<'predictions'>;
@@ -74,7 +74,8 @@ export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'p
 export async function getMetric(
 	prompt: Tables<'prompts'>,
 	label: string | null,
-	predictionPromise: Promise<Tables<'predictions'> | undefined>
+	predictionPromise: Promise<Tables<'predictions'> | undefined>,
+	clear: boolean = false
 ): Promise<Tables<'metrics'> | undefined> {
 	const prediction = await predictionPromise;
 	if (label === null || label === undefined || prediction === undefined) {
@@ -89,7 +90,8 @@ export async function getMetric(
 		body: JSON.stringify({
 			prompt,
 			label,
-			prediction
+			prediction,
+			clear
 		})
 	});
 	const jsonResponse = await response.json();
