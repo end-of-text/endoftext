@@ -14,7 +14,7 @@
 {#if showSettings}
 	<ProjectSettingsPopup bind:project onclose={() => (showSettings = false)} />
 {/if}
-<div class="flex w-full items-center border-b px-6">
+<div class="flex w-full shrink-0 items-center border-b px-6">
 	<a href="/home">
 		<img class="h-5 pr-4" src="/logo-small.svg" alt="logo" />
 	</a>

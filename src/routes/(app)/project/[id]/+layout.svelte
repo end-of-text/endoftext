@@ -8,6 +8,6 @@
 	<title>endoftext | {$page.data.project.name}</title>
 </svelte:head>
 
-<div class="flex h-full min-h-0 w-full grow flex-col items-center justify-center">
+<div class="flex h-full w-full flex-col items-center justify-center">
 	{@render children()}
 </div>

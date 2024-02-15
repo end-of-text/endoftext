@@ -26,7 +26,7 @@
 	});
 </script>
 
-<div class="my-4 flex flex-col gap-2">
+<div class="my-4 flex min-h-0 grow flex-col gap-2">
 	<div class="mb-3 flex items-center">
 		<h2>Suggestions</h2>
 		<button
