@@ -29,15 +29,15 @@
 	}
 </script>
 
-<div class="flex max-h-[50%] min-h-0 shrink-0 flex-col">
+<div class="flex max-h-[50%] min-h-min grow flex-col">
 	<div
-		class="relative mt-2 min-h-0 cursor-text"
+		class="flex min-h-24 cursor-text flex-col"
 		onmouseenter={() => (promptHovered = true)}
 		onmouseleave={() => (promptHovered = false)}
 		role="button"
 		tabindex="0"
 	>
-		<div class="relative">
+		<div class="relative min-h-24">
 			<div
 				contenteditable="plaintext-only"
 				class="relative h-full min-h-24 overflow-y-auto rounded border bg-white py-2 pl-2 pr-6 text-sm shadow"
@@ -102,7 +102,7 @@
 			{/if}
 		</button>
 	</div>
-	<div class="ml-auto mt-3 flex items-center gap-1">
+	<div class="ml-auto flex items-center gap-1 pt-3">
 		{#if promptWasEdited}
 			<Button onclick={() => (editedPrompt = { ...prompt })} classNames="text-gray-500">
 				<Undo2 class="h-5 w-5" />

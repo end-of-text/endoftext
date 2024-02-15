@@ -14,8 +14,6 @@
 	<ProjectHeader bind:project />
 	<div class="flex min-h-0 grow">
 		<PromptBar bind:prompt projectId={project.id || ''} />
-		<div class="flex grow flex-col px-6 pt-4">
-			<InstanceTable bind:instances {project} {prompt} />
-		</div>
+		<InstanceTable bind:instances {project} {prompt} />
 	</div>
 </div>
