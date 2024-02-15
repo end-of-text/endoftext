@@ -1,6 +1,6 @@
+import { trackEvent } from '$lib/server/amplitude.js';
 import { generateInstances } from '$lib/server/instances/generateInstances.js';
 import type { Tables } from '$lib/supabase';
-import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function DELETE({ locals: { getSession, supabase }, request }) {
@@ -20,7 +20,7 @@ export async function DELETE({ locals: { getSession, supabase }, request }) {
 		error(500, res.error.message);
 	}
 
-	track('Instances Deleted', { user_id: session.user.id, number: instanceIds.length });
+	trackEvent('Instances Deleted', { user_id: session.user.id }, { number: instanceIds.length });
 	return new Response(null, { status: 200 });
 }
 
@@ -57,6 +57,6 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	track('Instances Generated', { user_id: session.user.id, number: count });
+	trackEvent('Instances Generated', { user_id: session.user.id }, { number: count });
 	return json({ instances: res.data });
 }

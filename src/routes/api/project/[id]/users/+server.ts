@@ -1,4 +1,4 @@
-import { track } from '@amplitude/analytics-node';
+import { trackEvent } from '$lib/server/amplitude.js';
 import { error, json } from '@sveltejs/kit';
 
 export async function GET({ params, locals: { supabase, getSession } }) {
@@ -52,7 +52,7 @@ export async function POST({ params, request, locals: { supabase, getSession } }
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	track('User Added to Project', { user_id: session.user.id });
+	trackEvent('User Added to Project', { user_id: session.user.id });
 	return json(res.data);
 }
 
@@ -75,6 +75,6 @@ export async function DELETE({ params, request, locals: { supabase, getSession }
 		error(500, res.error.message);
 	}
 
-	track('User Removed from Project', { user_id: session.user.id });
+	trackEvent('User Removed from Project', { user_id: session.user.id });
 	return json(res.data);
 }

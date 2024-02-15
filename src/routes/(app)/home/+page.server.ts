@@ -1,4 +1,4 @@
-import { track } from '@amplitude/analytics-node';
+import { trackEvent } from '$lib/server/amplitude.js';
 import { error, redirect } from '@sveltejs/kit';
 
 export async function load({ locals: { supabase, getSession } }) {
@@ -57,7 +57,7 @@ export const actions = {
 				body: "Couldn't create project"
 			};
 		} else {
-			track('Prompt Created', { user_id: session.user.id });
+			trackEvent('Prompt Created', { user_id: session.user.id });
 			redirect(303, '/project/' + res.data[0].id);
 		}
 	}

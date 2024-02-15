@@ -1,8 +1,8 @@
 import { OPENAI_API_KEY } from '$env/static/private';
+import { trackEvent } from '$lib/server/amplitude.js';
 import { editors } from '$lib/server/editors/editors.js';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import type { Tables } from '$lib/supabase.js';
-import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ request, locals: { supabase, getSession } }) {
@@ -54,6 +54,6 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		userInput
 	);
 
-	track('Suggestion Accepted', { user_id: session.user.id, editor_name: editor.name });
+	trackEvent('Suggestion Accepted', { user_id: session.user.id }, { editor_name: editor.name });
 	return json({ prompt: newPrompt });
 }
