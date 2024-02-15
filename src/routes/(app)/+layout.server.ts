@@ -17,7 +17,9 @@ export async function load({ locals: { getSession, supabase } }) {
 	}
 
 	return {
-		userId: session.user.id,
-		subscription
+		user: {
+			id: session.user.id,
+			status: subscription?.status
+		}
 	};
 }

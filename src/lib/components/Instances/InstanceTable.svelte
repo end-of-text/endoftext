@@ -6,6 +6,7 @@
 	import type { Tables } from '$lib/supabase';
 	import { PlusCircle, Sparkle, Sparkles, Trash2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
+	import PaywallPopup from '../popups/PaywallPopup.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
 	let { instances, prompt, project } = $props<{
@@ -17,6 +18,7 @@
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
 	let metricValues = $state<Record<string, Promise<Tables<'metrics'> | undefined>>>({});
+	let showPaywall = $state(false);
 
 	async function averageMetric(
 		values: Record<string, Promise<Tables<'metrics'> | undefined>>
@@ -38,6 +40,9 @@
 	}
 </script>
 
+{#if showPaywall}
+	<PaywallPopup onclose={() => (showPaywall = false)} />
+{/if}
 <div class="flex grow flex-col px-6 pt-4">
 	<div class="flex justify-between">
 		<h1>Test Cases</h1>
@@ -69,6 +74,10 @@
 						classNames="text-yellow-400"
 						title="Generate Similar"
 						onclick={() => {
+							if (instances.length >= 25) {
+								showPaywall = true;
+								return;
+							}
 							generatingInstances = true;
 							generateInstances(
 								prompt,
@@ -87,6 +96,10 @@
 			{/if}
 			<Button
 				onclick={() => {
+					if (instances.length >= 25) {
+						showPaywall = true;
+						return;
+					}
 					generatingInstances = true;
 					generateInstances(prompt, instances, 5).then((r) => {
 						instances = [...instances, ...r];
@@ -100,6 +113,10 @@
 			</Button>
 			<Button
 				onclick={() => {
+					if (instances.length >= 25) {
+						showPaywall = true;
+						return;
+					}
 					createInstance($page.params.id).then((d) => instances.push(d));
 				}}
 				title="Add"

@@ -1,37 +1,25 @@
 <script lang="ts">
 	import type { Tables } from '$lib/supabase';
 	import { slide } from 'svelte/transition';
-	import PaywallPopup from '../popups/PaywallPopup.svelte';
 
-	let { prompt, proUser } = $props<{
+	let { prompt, userStatus } = $props<{
 		prompt: Tables<'prompts'>;
-		proUser: boolean;
+		userStatus: string;
 	}>();
-
-	let showPaywall = $state(false);
 </script>
 
-{#if showPaywall}
-	<PaywallPopup message="You need to pay!" onclose={() => (showPaywall = false)} />
-{/if}
 <div class="flex shrink-0 flex-col gap-2 rounded border bg-gray-50 p-2" transition:slide>
 	<div>
 		<label class="mr-2 italic text-gray-500" for="model">model:</label>
-		<select
-			class="rounded border p-1"
-			name="model"
-			value={prompt.model}
-			onchange={(e) => {
-				const value = e.target?.value ?? '';
-				if (!value.includes('gpt-3') && !proUser) {
-					showPaywall = true;
-				}
-			}}
-		>
+		<select class="rounded border p-1" name="model" value={prompt.model}>
 			<option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
 			<option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
-			<option value="gpt-4-0125-preview">gpt-4-0125-preview</option>
-			<option value="gpt-4-1106-preview">gpt-4-1106-preview</option>
+			<option disabled={userStatus !== 'active'} value="gpt-4-0125-preview"
+				>gpt-4-0125-preview {userStatus !== 'active' ? '(plus required)' : ''}</option
+			>
+			<option disabled={userStatus !== 'active'} value="gpt-4-1106-preview"
+				>gpt-4-1106-preview {userStatus !== 'active' ? '(plus required)' : ''}</option
+			>
 		</select>
 	</div>
 	<div>

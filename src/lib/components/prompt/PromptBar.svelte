@@ -6,10 +6,10 @@
 	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
-	let { prompt, projectId, proUser } = $props<{
+	let { prompt, projectId, userStatus } = $props<{
 		prompt: Tables<'prompts'>;
 		projectId: string;
-		proUser: boolean;
+		userStatus: string;
 	}>();
 
 	let editedPrompt = $state({ ...prompt });
@@ -52,7 +52,7 @@
 		</button>
 	</div>
 	{#if showOptions}
-		<PromptOptions bind:prompt={editedPrompt} {proUser} />
+		<PromptOptions bind:prompt={editedPrompt} {userStatus} />
 	{/if}
 	<PromptEditor {prompt} {hoveredSuggestion} {setPrompt} bind:suggestionApplied bind:editedPrompt />
 	{#if projectId}

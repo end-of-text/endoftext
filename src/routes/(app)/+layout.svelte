@@ -2,7 +2,7 @@
 	import * as amplitude from '@amplitude/analytics-browser';
 
 	let { children, data } = $props();
-	amplitude.setUserId(data.userId);
+	amplitude.setUserId(data.user.id);
 </script>
 
 {@render children()}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Popup from './Popup.svelte';
 
-	let { message, onclose } = $props<{ message: string; onclose: () => void }>();
+	let { onclose } = $props<{ message: string; onclose: () => void }>();
 
 	function submit(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
