@@ -26,7 +26,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 
 	const clear = requestData.clear as boolean;
 
-	console.log('id: ', prediction.id);
 	if (clear) {
 		await supabase.from('metrics').delete().eq('prediction_id', prediction.id);
 	} else {
@@ -41,8 +40,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	let metric: number;
-	console.log('label: ', label);
-	console.log('prediction: ', prediction.prediction);
 	if (prompt.responseFormat === 'json') {
 		try {
 			metric = chrfMetric(
@@ -65,11 +62,9 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		})
 		.select();
 
-	console.log(insertRes);
 	if (insertRes.error) {
 		error(500, insertRes.error.message);
 	} else if (insertRes.data && insertRes.data.length > 0) {
-		console.log(insertRes.data[0]);
 		return json(insertRes.data[0]);
 	} else {
 		error(500, 'Failed to insert metric');
