@@ -13,7 +13,11 @@
 <div class="flex h-full w-full flex-col">
 	<ProjectHeader bind:project />
 	<div class="flex min-h-0 grow">
-		<PromptBar bind:prompt projectId={project.id || ''} />
+		<PromptBar
+			bind:prompt
+			projectId={project.id || ''}
+			proUser={data.subscription.status === 'active'}
+		/>
 		<InstanceTable bind:instances {project} {prompt} />
 	</div>
 </div>
