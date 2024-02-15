@@ -40,7 +40,7 @@
 		<div class="relative">
 			<div
 				contenteditable="plaintext-only"
-				class="relative h-full min-h-24 overflow-y-auto rounded border bg-white bg-opacity-90 py-2 pl-2 pr-6 text-sm shadow"
+				class="relative h-full min-h-24 overflow-y-auto rounded border bg-white py-2 pl-2 pr-6 text-sm shadow"
 				role="textbox"
 				aria-multiline="true"
 				tabindex="0"
@@ -54,7 +54,7 @@
 			/>
 			{#if suggestionApplied || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans)}
 				<div
-					class="user-select-none pointer-events-none absolute left-0 top-0 h-full min-h-24 w-full overflow-y-auto rounded border py-2 pl-2 pr-6 text-sm text-transparent shadow"
+					class="user-select-none pointer-events-none absolute left-0 top-0 h-full min-h-24 w-full overflow-y-auto whitespace-pre-line rounded border py-2 pl-2 pr-6 text-sm text-transparent shadow"
 					aria-hidden="true"
 					transition:fade={{ duration: 200 }}
 				>
@@ -73,7 +73,7 @@
 								span[0]
 							)}
 							<span class="underline decoration-red-500 decoration-2">
-								${prompt.prompt.slice(span[0], span[1])}
+								{prompt.prompt.slice(span[0], span[1])}
 							</span>
 							{#if index === hoveredSuggestion.target_spans.length - 1}
 								<span>
