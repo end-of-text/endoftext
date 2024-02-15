@@ -2,21 +2,50 @@ import { PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
+import { filterSentences, rewriteSentences } from './util';
 
-const filterPrompt = `
-You are an AI prompt writing critiquer. You decide if a given sentence has more than one instruction. If it has more than one instruction you return true, otherwise return false. Return in JSON format with the key "output".
+const instructionPrompt = `
+You are a writing editor. Your job is to decide if a given sentence is an instruction or command.
+If the sentence is an instruction or command, return true. Otherwise, return false.
+Return in JSON format with the key "output".
 
 ## Examples
 Input: Extract the output and return JSON
-Output: { "output": true }
+Output: true
+Input: You are a helpful assistant.
+Output: false
+Input: I will tip you well.
+Output: false
 Input: Do not return errors and always be correct
-Output: { "output": true }
+Output: true
 Input: Always return the correct JSON format
-Output: { "output": false }
+Output: true
+`;
+
+const multipleInstructionPrompt = `
+You are an AI prompt writing critiquer. 
+You decide if a given sentence has more than one instruction. 
+If it has more than one instruction you return true, otherwise return false. 
+Return in JSON format with the key "output".
+
+## Examples
+Input: Extract the output and return JSON
+Output: true 
+Input: Only return pig latin
+Output: false
+Input: Do not return errors and always be correct
+Output: true 
+Input: Always return the correct JSON format
+Output: true 
+Input: DO NOT lie to me.
+Output: false
 `;
 
 const editPrompt = `
-You are a writing assistant. You split up a sentence into one sentence each for each instruction in the original setence.
+You are a writing assistant. 
+You split up a sentence into one sentence each for each instruction in the original setence.
+You MUST return two sentences with no newline and a period at the end of each sentence.
+Ensure the meaning of the two new sentences is the same as the original sentence.
 `;
 
 export class SingleInstructionEditor extends PromptEditor {
@@ -30,35 +59,10 @@ export class SingleInstructionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		const sentences = prompt.prompt.split('.');
-
-		const requests = sentences.map((sentence) =>
-			llm.generate(
-				[
-					{
-						role: 'system',
-						content: filterPrompt
-					},
-					{
-						role: 'user',
-						content: sentence
-					}
-				],
-				{ json: true, temperature: 0 }
-			)
-		);
-
-		const results = await Promise.all(requests);
-
-		try {
-			if (results.some((res) => JSON.parse(res || '{}')['output'])) {
-				return [];
-			} else {
-				return null;
-			}
-		} catch (e) {
-			return null;
-		}
+		return await filterSentences(prompt.prompt, llm, [
+			instructionPrompt,
+			multipleInstructionPrompt
+		]);
 	}
 
 	async rewritePrompt(
@@ -66,43 +70,6 @@ export class SingleInstructionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<string> {
-		const sentences = prompt.prompt.split('.');
-
-		const requests = sentences.map((sentence) =>
-			llm.generate(
-				[
-					{
-						role: 'system',
-						content: filterPrompt
-					},
-					{
-						role: 'user',
-						content: sentence
-					}
-				],
-				{ json: true, temperature: 0 }
-			)
-		);
-
-		let results = await Promise.all(requests);
-		results = results.map((res) => JSON.parse(res || '{}')['output']);
-
-		const sentencesToEdit = sentences.filter((_, i) => results[i]);
-
-		const requests2 = sentencesToEdit.map((sentence) =>
-			llm.generate([
-				{
-					role: 'system',
-					content: editPrompt
-				},
-				{
-					role: 'user',
-					content: sentence
-				}
-			])
-		);
-
-		const results2 = await Promise.all(requests2);
-		return results2.join('. ');
+		return await rewriteSentences(prompt.prompt, targetSpans, llm, editPrompt);
 	}
 }
