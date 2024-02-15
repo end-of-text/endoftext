@@ -26,7 +26,7 @@
 				<li class="list-inside list-disc italic">
 					You are a assistant for helping users with insurance claims.
 				</li>
-				<li class="list-inside list-disc italic">Trangray this text into French.</li>
+				<li class="list-inside list-disc italic">Translate this text into French.</li>
 			</ol>
 			<p>Don't stress, we'll help you refine it later.</p>
 		</div>
