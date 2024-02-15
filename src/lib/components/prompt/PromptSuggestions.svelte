@@ -6,8 +6,9 @@
 	import { untrack } from 'svelte';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
-	let { prompt, editPrompt } = $props<{
+	let { prompt, setHoveredSuggestion, editPrompt } = $props<{
 		prompt: Tables<'prompts'>;
+		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
 		editPrompt: (suggestion: string) => void;
 	}>();
 
@@ -42,7 +43,7 @@
 				<Spinner />
 			{:else}
 				<RefreshCw
-					class="h-5 w-5 cursor-pointer transition-all duration-500 hover:rotate-180 hover:text-blue-500"
+					class="h-5 w-5 cursor-pointer transition-all duration-500 hover:rotate-180 hover:text-blue-600"
 				/>
 			{/if}
 		</button>
@@ -55,7 +56,16 @@
 				No suggestions
 			{:else}
 				{#each suggestions as suggestion (suggestion.id)}
-					<PromptSuggestion {prompt} {suggestion} {editPrompt} />
+					<div
+						onmouseover={() => setHoveredSuggestion(suggestion)}
+						onmouseleave={() => setHoveredSuggestion(null)}
+						onfocus={() => setHoveredSuggestion(suggestion)}
+						onblur={() => setHoveredSuggestion(null)}
+						role="button"
+						tabindex="0"
+					>
+						<PromptSuggestion {prompt} {suggestion} {editPrompt} />
+					</div>
 				{/each}
 			{/if}
 		{/await}
