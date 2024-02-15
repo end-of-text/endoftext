@@ -6,9 +6,9 @@
 	import { untrack } from 'svelte';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
-	let { prompt, hoveredSuggestion, editPrompt } = $props<{
+	let { prompt, setHoveredSuggestion, editPrompt } = $props<{
 		prompt: Tables<'prompts'>;
-		hoveredSuggestion: Tables<'suggestions'> | null;
+		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
 		editPrompt: (suggestion: string) => void;
 	}>();
 
@@ -57,10 +57,10 @@
 			{:else}
 				{#each suggestions as suggestion (suggestion.id)}
 					<div
-						onmouseover={() => (hoveredSuggestion = suggestion)}
-						onmouseleave={() => (hoveredSuggestion = null)}
-						onfocus={() => (hoveredSuggestion = suggestion)}
-						onblur={() => (hoveredSuggestion = null)}
+						onmouseover={() => setHoveredSuggestion(suggestion)}
+						onmouseleave={() => setHoveredSuggestion(null)}
+						onfocus={() => setHoveredSuggestion(suggestion)}
+						onblur={() => setHoveredSuggestion(null)}
 						role="button"
 						tabindex="0"
 					>
