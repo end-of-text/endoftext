@@ -4,10 +4,10 @@
 
 @layer base {
 	h1 {
-		@apply text-3xl font-bold text-gray-700;
+		@apply text-2xl font-bold text-gray-700;
 	}
 	h2 {
-		@apply text-xl font-bold text-gray-700;
+		@apply text-xl font-semibold text-gray-700;
 	}
 	input {
 		@apply rounded border border-gray-300 px-2 py-1;

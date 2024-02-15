@@ -39,7 +39,7 @@
 </script>
 
 <div class="flex grow flex-col px-6 pt-4">
-	<div class="flex grow justify-between">
+	<div class="flex justify-between">
 		<h1>Test Cases</h1>
 		<div class="flex items-center gap-2">
 			{#if generatingInstances}
@@ -109,7 +109,7 @@
 			</Button>
 		</div>
 	</div>
-	<div class="my-4 w-full grow overflow-auto">
+	<div class="mb-4 mt-3 w-full grow overflow-auto">
 		<table class="w-full">
 			<thead class="sticky top-0 z-10 bg-gray-50 text-left">
 				<tr class="border-b">
