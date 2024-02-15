@@ -12,10 +12,12 @@
 	}>();
 
 	let editedPrompt = $state({ ...prompt });
+	let suggestionApplied = $state(false);
 	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
 	let showOptions = $state(false);
 
 	function editPrompt(suggestion: string) {
+		suggestionApplied = true;
 		editedPrompt.prompt = suggestion;
 	}
 
@@ -23,6 +25,7 @@
 		updatePrompt(editedPrompt).then((r) => {
 			prompt = r;
 			showOptions = false;
+			suggestionApplied = false;
 			editedPrompt = { ...prompt };
 		});
 	}
@@ -46,7 +49,7 @@
 	{#if showOptions}
 		<PromptOptions bind:prompt={editedPrompt} />
 	{/if}
-	<PromptEditor {prompt} {hoveredSuggestion} {setPrompt} bind:editedPrompt />
+	<PromptEditor {prompt} {hoveredSuggestion} {setPrompt} bind:suggestionApplied bind:editedPrompt />
 	{#if projectId}
 		<PromptSuggestions {prompt} {editPrompt} bind:hoveredSuggestion />
 	{/if}

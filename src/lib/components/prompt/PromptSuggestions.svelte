@@ -43,7 +43,7 @@
 				<Spinner />
 			{:else}
 				<RefreshCw
-					class="h-5 w-5 cursor-pointer transition-all duration-500 hover:rotate-180 hover:text-blue-500"
+					class="h-5 w-5 cursor-pointer transition-all duration-500 hover:rotate-180 hover:text-blue-600"
 				/>
 			{/if}
 		</button>

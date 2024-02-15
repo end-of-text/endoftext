@@ -1,12 +1,14 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
+	import * as diff from 'diff';
 	import { Check, Copy, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
-	let { prompt, hoveredSuggestion, editedPrompt, setPrompt } = $props<{
+	let { prompt, hoveredSuggestion, suggestionApplied, editedPrompt, setPrompt } = $props<{
 		prompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
+		suggestionApplied: boolean;
 		editedPrompt: Tables<'prompts'>;
 		setPrompt: () => void;
 	}>();
@@ -14,7 +16,9 @@
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
-	let hoveredUnderline = $derived(getPromptUnderlines(hoveredSuggestion, promptWasEdited));
+	let hoveredUnderline = $derived(
+		formatEditedPrompt(hoveredSuggestion, suggestionApplied, promptWasEdited)
+	);
 
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
@@ -27,7 +31,23 @@
 		}, 3000);
 	}
 
-	function getPromptUnderlines(suggestion: Tables<'suggestions'> | null, promptWasEdited: boolean) {
+	function formatEditedPrompt(
+		suggestion: Tables<'suggestions'> | null,
+		applied: boolean,
+		promptWasEdited: boolean
+	) {
+		if (applied) {
+			const diffResult = diff.diffWords(prompt.prompt, editedPrompt.prompt);
+			let result = '';
+			diffResult.forEach((part) => {
+				if (part.added) {
+					result += `<span class="bg-blue-600 opacity-30">${part.value}</span>`;
+				} else if (!part.removed) {
+					result += part.value;
+				}
+			});
+			return result;
+		}
 		if (promptWasEdited || !suggestion || !suggestion.target_spans) return null;
 
 		let result = '';
@@ -59,6 +79,7 @@
 				tabindex="0"
 				bind:innerText={editedPrompt.prompt}
 				onkeydown={(e) => {
+					suggestionApplied = false;
 					if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
 						setPrompt();
 					}
@@ -100,7 +121,7 @@
 		<Button
 			onclick={() => setPrompt()}
 			disabled={!promptWasEdited}
-			classNames=" w-fit text-blue-500"
+			classNames=" w-fit text-blue-600"
 			title="Save & Run"
 			tooltipText="Save this as a new prompt and run it for your example instances."
 		>
