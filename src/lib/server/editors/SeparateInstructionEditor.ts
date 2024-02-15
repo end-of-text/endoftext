@@ -13,7 +13,7 @@ export class SeparateInstructionEditor extends PromptEditor {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
 		const systemPrompt = `You are an AI prompt writing critiquer. You decide if a prompt could be split into a task instruction and other information.
 
 ### Guidelines
@@ -38,18 +38,22 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		);
 
 		if (!res) {
-			return true;
+			return null;
 		}
 
 		try {
 			const resJSON = JSON.parse(res);
-			return resJSON.output;
+			return resJSON.output ? [] : null;
 		} catch (e) {
-			return true;
+			return null;
 		}
 	}
 
-	async apply(prompt: Tables<'prompts'>, llm: LLM): Promise<string> {
+	async rewritePrompt(
+		prompt: Tables<'prompts'>,
+		targetSpans: number[][],
+		llm: LLM
+	): Promise<string> {
 		const res = await llm.generate([
 			{
 				role: 'system',

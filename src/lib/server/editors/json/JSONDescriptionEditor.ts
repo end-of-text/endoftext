@@ -14,9 +14,9 @@ export class JSONDescriptionEditor extends PromptEditor {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
 		if (prompt.responseFormat !== 'json' || !prompt.prompt.toLowerCase().includes('json')) {
-			return true;
+			return null;
 		}
 
 		const systemPrompt = `### Role
@@ -46,18 +46,19 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		);
 
 		if (!res) {
-			return true;
+			return null;
 		}
 
 		try {
-			return JSON.parse(res).output;
+			return JSON.parse(res).output ? [] : null;
 		} catch (e) {
-			return true;
+			return null;
 		}
 	}
 
-	async apply(
+	async rewritePrompt(
 		prompt: Tables<'prompts'>,
+		target_spans: number[][],
 		llm: LLM,
 		instancePredictions: {
 			id: number;

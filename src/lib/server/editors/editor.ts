@@ -19,14 +19,16 @@ export abstract class PromptEditor {
 		public readonly requiredInputType: RequiredInputType | undefined = undefined
 	) {}
 
-	/** Determine if the prompt matches the criteria for this editor.
+	/** Determine if it makes sense to apply the editor to the prompt.
 	 *
 	 * @param prompt the prompt to be checked
 	 * @param llm the language model to be used
 	 * @param instancePredictions instances and predictions associated with the prompt
-	 * @returns true if matches the criteria, false otherwise
+	 * @returns a numeric array with the relevant spans of the prompt to be modified
+	 * 		(an empty array if it's for the full prompt),
+	 * 		or null if the editor should not be applied.
 	 */
-	abstract filter(
+	abstract canBeApplied(
 		prompt: Tables<'prompts'>,
 		llm: LLM,
 		instancePredictions: {
@@ -35,7 +37,7 @@ export abstract class PromptEditor {
 			label: string;
 			predictions: { prediction: string }[];
 		}[]
-	): Promise<boolean>;
+	): Promise<number[][] | null>;
 
 	/** Modify the prompt using the editor.
 	 *
@@ -44,8 +46,9 @@ export abstract class PromptEditor {
 	 * @param instancePredictions instances and predictions associated with the prompt
 	 * @returns the modified prompt
 	 */
-	abstract apply(
+	abstract rewritePrompt(
 		prompt: Tables<'prompts'>,
+		targetSpans: number[][],
 		llm: LLM,
 		instancePredictions: {
 			id: number;

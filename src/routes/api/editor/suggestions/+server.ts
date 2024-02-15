@@ -43,17 +43,18 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	if (instanceRes.data === null) {
 		return json([]);
 	}
+
 	const llm = new OpenAILLM(OPENAI_API_KEY || '');
 	const results = await Promise.all(
-		editors.map(async (e) => {
-			const satisfied = await e.filter(selectedPrompt, llm, instanceRes.data);
-			return { satisfied, editor: e };
+		editors.map(async (editor) => {
+			const canBeApplied = await editor.canBeApplied(selectedPrompt, llm, instanceRes.data);
+			return { canBeApplied, editor };
 		})
 	);
 
 	const suggestions: Tables<'suggestions'>[] = [];
 	for (const result of results) {
-		if (!result.satisfied) {
+		if (result.canBeApplied !== null) {
 			const insertRes = await supabase
 				.from('suggestions')
 				.insert({
@@ -62,7 +63,8 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 					description: result.editor.description,
 					identifier: result.editor.id,
 					type: result.editor.type,
-					required_input_type: result.editor.requiredInputType
+					required_input_type: result.editor.requiredInputType,
+					target_spans: result.canBeApplied
 				})
 				.select();
 			if (insertRes.data && insertRes.data.length > 0) {

@@ -14,9 +14,9 @@ export class OutputDescriptionEditor extends PromptEditor {
 		);
 	}
 
-	async filter(prompt: Tables<'prompts'>, llm: LLM): Promise<boolean> {
+	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
 		if (prompt.responseFormat !== 'text') {
-			return true;
+			return null;
 		}
 		const systemPrompt = `### Task
 You are an AI prompt writing critiquer. Your task is to determine if a prompt clearly specifies the desired output information. 
@@ -41,19 +41,20 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		);
 
 		if (!res) {
-			return true;
+			return null;
 		}
 
 		try {
 			const resJSON = JSON.parse(res);
-			return resJSON.output;
+			return resJSON.output ? [] : null;
 		} catch (e) {
-			return true;
+			return null;
 		}
 	}
 
-	async apply(
+	async rewritePrompt(
 		prompt: Tables<'prompts'>,
+		targetSpans: number[][],
 		llm: LLM,
 		instancePredictions: {
 			id: number;

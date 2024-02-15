@@ -100,7 +100,6 @@
 				class="absolute -left-8 top-3 hidden rounded bg-white p-1 text-gray-500 opacity-20 transition hover:opacity-100 group-hover:flex"
 				onclick={() =>
 					prediction.then((p) => {
-						console.log(p?.prediction || '');
 						localInstanceLabel = p?.prediction || '';
 						updateInstance({ ...instance, label: localInstanceLabel });
 						inputArea && autosize(inputArea);
