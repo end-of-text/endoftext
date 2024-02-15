@@ -41,7 +41,10 @@
 </script>
 
 {#if showPaywall}
-	<PaywallPopup onclose={() => (showPaywall = false)} />
+	<PaywallPopup
+		onclose={() => (showPaywall = false)}
+		message="You are using 25/25 test cases for this project"
+	/>
 {/if}
 <div class="flex grow flex-col px-6 pt-4">
 	<div class="flex justify-between">

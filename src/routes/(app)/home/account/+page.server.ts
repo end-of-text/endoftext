@@ -9,7 +9,13 @@ export const load = async ({ parent, locals: { getSession } }) => {
 	}
 
 	const parentData = await parent();
-	return { userEmail: session.user.email, subscription: parentData.user.status };
+	return {
+		user: {
+			email: session.user.email,
+			status: parentData.user.status,
+			stripeId: parentData.user.stripeId
+		}
+	};
 };
 
 export const actions = {
