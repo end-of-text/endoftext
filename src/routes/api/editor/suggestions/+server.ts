@@ -1,8 +1,8 @@
 import { OPENAI_API_KEY } from '$env/static/private';
+import { trackEvent } from '$lib/server/amplitude.js';
 import { editors } from '$lib/server/editors/editors.js';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import type { Tables } from '$lib/supabase.js';
-import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
@@ -68,10 +68,13 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 				})
 				.select();
 			if (insertRes.data && insertRes.data.length > 0) {
-				track('Suggestion Created', {
-					user_id: session.user.id,
-					editor_name: result.editor.name
-				});
+				trackEvent(
+					'Suggestion Created',
+					{
+						editor_name: result.editor.name
+					},
+					{ user_id: session.user.id }
+				);
 				suggestions.push(insertRes.data[0]);
 			}
 		}

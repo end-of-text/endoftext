@@ -1,5 +1,5 @@
+import { trackEvent } from '$lib/server/amplitude.js';
 import type { Tables } from '$lib/supabase';
-import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
@@ -23,6 +23,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, res.error.message);
 	}
 
-	track('New Prompt', { user_id: session.user.id, project_id: prompt.project_id });
+	trackEvent('New Prompt', { project_id: prompt.project_id }, { user_id: session.user.id });
 	return json(res.data[0]);
 }

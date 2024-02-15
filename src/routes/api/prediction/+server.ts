@@ -1,7 +1,7 @@
 import { OPENAI_API_KEY } from '$env/static/private';
+import { trackEvent } from '$lib/server/amplitude.js';
 import { OpenAILLM } from '$lib/server/llms/openai';
 import type { Tables } from '$lib/supabase.js';
-import { track } from '@amplitude/analytics-node';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
@@ -56,6 +56,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, res.error.message);
 	}
 
-	track('Prediction Generated', { user_id: session.user.id });
+	trackEvent('Prediction Generated', undefined, { user_id: session.user.id });
 	return json({ prediction: res.data[0] });
 }

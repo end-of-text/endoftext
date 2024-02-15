@@ -1,4 +1,4 @@
-import { track } from '@amplitude/analytics-node';
+import { trackEvent } from '$lib/server/amplitude.js';
 import { error } from '@sveltejs/kit';
 
 export async function DELETE({ params, locals: { supabase, getSession } }) {
@@ -12,6 +12,6 @@ export async function DELETE({ params, locals: { supabase, getSession } }) {
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	track('Instances Deleted', { user_id: session.user.id, number: 1 });
+	trackEvent('Instances Deleted', { number: 1 }, { user_id: session.user.id });
 	return new Response(null, { status: 200 });
 }
