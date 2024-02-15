@@ -1,13 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
-	let { children } = $props();
+	const { children } = $props();
 </script>
 
 <svelte:head>
 	<title>endoftext | {$page.data.project.name}</title>
 </svelte:head>
 
-<div class="flex h-full min-h-0 w-full grow flex-col items-center justify-center">
-	{@render children()}
-</div>
+{@render children()}

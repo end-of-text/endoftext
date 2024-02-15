@@ -25,7 +25,7 @@
 	});
 </script>
 
-<div class="my-4 flex flex-col gap-2">
+<div class="my-4 flex h-full flex-col gap-2">
 	<div class="mb-3 flex items-center">
 		<h2>Suggestions</h2>
 		<button
@@ -47,7 +47,7 @@
 			{/if}
 		</button>
 	</div>
-	<div class="flex flex-col gap-4 overflow-auto">
+	<div class="flex h-full flex-col gap-4 overflow-auto">
 		{#await suggestionsRequest}
 			<Spinner />
 		{:then suggestions}

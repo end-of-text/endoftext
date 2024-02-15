@@ -38,8 +38,8 @@
 	}
 </script>
 
-<div class="flex items-center justify-between">
-	<h1>Data</h1>
+<div class="flex shrink-0 items-center justify-between">
+	<h1>Test Cases</h1>
 	<div class="flex items-center gap-2">
 		{#if generatingInstances}
 			<Spinner />
@@ -108,45 +108,45 @@
 		</Button>
 	</div>
 </div>
-<div class="my-4 w-full grow overflow-auto">
-	<table class="w-full">
-		<thead class="sticky top-0 z-10 bg-gray-50 text-left">
-			<tr class="border-b">
-				{#if project.show_labels}
-					<th class="rounded-tl" />
-					<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
-					<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
-					<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
-					<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
-						<span>chrf</span>
-						{#await averageMetric(metricValues)}
-							<Spinner />
-						{:then metric}
-							{#if metric !== undefined}
-								<span class="text-sm font-normal text-black opacity-40">({metric.toFixed(2)})</span>
-							{/if}
-						{/await}
-					</th>
-					<th class="min-w-12 whitespace-nowrap rounded-tr" />
-				{:else}
-					<th class="w-6 rounded-tl" />
-					<th class="w-1/2 p-3 font-semibold">Input</th>
-					<th class="w-1/2 p-3 font-semibold">Prediction</th>
-					<th class="min-w-12 whitespace-nowrap rounded-tr" />
-				{/if}
-			</tr>
-		</thead>
-		<tbody>
-			{#each instances as instance, i (instance.id)}
-				<InstanceTableRow
-					bind:instance
-					bind:metricValues
-					bind:selected={selectedInstances[i]}
-					{prompt}
-					{project}
-					{removeInstance}
-				/>
-			{/each}
-		</tbody>
-	</table>
-</div>
+<table class="my-4 w-full grow overflow-auto">
+	<thead class="sticky top-0 z-10 bg-gray-50 text-left">
+		<tr class="border-b">
+			{#if project.show_labels}
+				<th class="rounded-tl" />
+				<th class="w-1/3 px-2 py-2 font-medium text-gray-700">Input</th>
+				<th class="w-1/3 px-2 py-2 font-medium text-gray-700">Prediction</th>
+				<th class="w-1/3 px-2 py-2 font-medium text-gray-700">Label</th>
+				<th
+					class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2 font-medium text-gray-700"
+				>
+					<span>chrf</span>
+					{#await averageMetric(metricValues)}
+						<Spinner />
+					{:then metric}
+						{#if metric !== undefined}
+							<span class="text-sm font-normal text-black opacity-40">({metric.toFixed(2)})</span>
+						{/if}
+					{/await}
+				</th>
+				<th class="min-w-12 whitespace-nowrap rounded-tr" />
+			{:else}
+				<th class="w-6 rounded-tl" />
+				<th class="w-1/2 p-3 font-medium text-gray-700">Input</th>
+				<th class="w-1/2 p-3 font-medium text-gray-700">Prediction</th>
+				<th class="min-w-12 whitespace-nowrap rounded-tr" />
+			{/if}
+		</tr>
+	</thead>
+	<tbody>
+		{#each instances as instance, i (instance.id)}
+			<InstanceTableRow
+				bind:instance
+				bind:metricValues
+				bind:selected={selectedInstances[i]}
+				{prompt}
+				{project}
+				{removeInstance}
+			/>
+		{/each}
+	</tbody>
+</table>

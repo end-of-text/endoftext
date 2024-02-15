@@ -45,7 +45,7 @@
 	<meta property="og:image:height" content="630" />
 </svelte:head>
 
-<main class="flex h-screen w-screen">
+<main class="h-full w-full">
 	<Tooltip />
 	{@render children()}
 </main>

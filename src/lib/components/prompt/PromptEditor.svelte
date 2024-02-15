@@ -26,9 +26,9 @@
 	}
 </script>
 
-<div class="flex max-h-[50%] min-h-0 flex-col">
+<div class="flex h-full flex-col">
 	<div
-		class="relative mt-2 min-h-0 cursor-text"
+		class="relative mt-2 h-full cursor-text"
 		onmouseenter={() => (promptHovered = true)}
 		onmouseleave={() => (promptHovered = false)}
 		role="button"

@@ -6,7 +6,7 @@
 	const { children } = $props();
 </script>
 
-<div class="mx-auto mt-10 flex min-h-0 w-full max-w-4xl grow gap-2">
+<div class="mx-auto mt-10 flex h-full max-w-4xl justify-center gap-2">
 	<div class="flex w-1/6 flex-col">
 		<a href="/home" class="my-3 ml-3 mr-2">
 			<img src="/logo.svg" alt="logo" />
