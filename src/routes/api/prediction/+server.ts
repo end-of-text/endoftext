@@ -14,20 +14,29 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
 	const instanceId = requestData.instanceId as number | undefined;
 	const input = requestData.input as string | undefined;
+	const clear = requestData.clear as boolean;
 	if (!prompt || !instanceId || !input) {
 		error(500, 'Invalid data');
 	}
 
-	const cacheRes = await supabase
-		.from('predictions')
-		.select('*')
-		.eq('prompt_id', prompt.id)
-		.eq('instance_id', instanceId);
+	if (clear) {
+		await supabase
+			.from('predictions')
+			.delete()
+			.eq('prompt_id', prompt.id)
+			.eq('instance_id', instanceId);
+	} else {
+		const cacheRes = await supabase
+			.from('predictions')
+			.select('*')
+			.eq('prompt_id', prompt.id)
+			.eq('instance_id', instanceId);
 
-	if (cacheRes.error) {
-		error(500, cacheRes.error.message);
-	} else if (cacheRes.data && cacheRes.data.length > 0) {
-		return json({ prediction: cacheRes.data[0] });
+		if (cacheRes.error) {
+			error(500, cacheRes.error.message);
+		} else if (cacheRes.data && cacheRes.data.length > 0) {
+			return json({ prediction: cacheRes.data[0] });
+		}
 	}
 
 	const openai = new OpenAILLM(OPENAI_API_KEY || '');

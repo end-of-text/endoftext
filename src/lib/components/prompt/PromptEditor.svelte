@@ -29,7 +29,7 @@
 	}
 </script>
 
-<div class="flex max-h-[50%] min-h-min grow flex-col pt-2">
+<div class="flex max-h-[50%] min-h-min flex-col pt-2">
 	<div
 		class="flex min-h-24 cursor-text flex-col"
 		onmouseenter={() => (promptHovered = true)}

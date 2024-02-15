@@ -63,7 +63,7 @@ export const actions = {
 				mode: 'subscription',
 				line_items: [
 					{
-						price: 'price_1OiK8qFC5aU17b6GNc9gm9Sr',
+						price: 'price_1Ok9RwFC5aU17b6GrbT3sNaS',
 						quantity: 1
 					}
 				],

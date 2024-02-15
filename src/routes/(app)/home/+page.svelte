@@ -16,7 +16,7 @@
 </div>
 {#if data.projects.length === 0}
 	<div class="mt-6">
-		<h2>Welcome to Prompt Optimizer!</h2>
+		<h2>Welcome!</h2>
 		<p>You don't have any prompts, create one to get started.</p>
 	</div>
 {:else}

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import { getMetric, getPrediction, updateInstance } from '$lib/api';
 	import autosize from '$lib/autosize';
 	import type { Tables } from '$lib/supabase';
@@ -21,9 +20,8 @@
 	let inputArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let labelArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let predictionArea: HTMLTextAreaElement | undefined = $state(undefined);
-
-	let prediction = $derived(getPrediction(prompt, instance.id, localInstanceInput, browser));
-	let metric = $derived(getMetric(prompt, localInstanceLabel, prediction));
+	let prediction = $state(getPrediction(prompt, instance.id, instance.input));
+	let metric = $state(getMetric(prompt, instance.label, prediction));
 
 	$effect(() => {
 		updateMetric(metric);
@@ -55,6 +53,8 @@
 			onblur={() => {
 				localInstanceInput = inputArea?.value ?? '';
 				updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
+				prediction = getPrediction(prompt, instance.id, localInstanceInput, true);
+				metric = getMetric(prompt, localInstanceLabel, prediction, true);
 				inputArea && autosize(inputArea);
 				labelArea && autosize(labelArea);
 				predictionArea && autosize(predictionArea);
@@ -89,6 +89,10 @@
 				onblur={() => {
 					localInstanceLabel = labelArea?.value ?? '';
 					updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
+					metric = getMetric(prompt, localInstanceLabel, prediction, true);
+					inputArea && autosize(inputArea);
+					labelArea && autosize(labelArea);
+					predictionArea && autosize(predictionArea);
 				}}
 				onkeydown={(event) => {
 					if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {

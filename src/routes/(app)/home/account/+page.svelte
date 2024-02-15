@@ -29,13 +29,17 @@
 	<br />
 	<h2>Subscription</h2>
 	{#if data.subscription.status === 'active'}
-		<p class="py-2">You are currently on the <span class="text-blue-600">plus</span> plan</p>
+		<p class="py-2">
+			You are currently on the <span class="font-bold text-primary">plus</span> plan
+		</p>
 		<form method="post" action="?/manage" use:enhance>
 			<input type="hidden" name="stripeId" value={data.subscription.stripe_id} />
 			<Button>Manage your Subscription</Button>
 		</form>
 	{:else}
-		<p class="py-2">You are currently on the <span class="text-blue-600">free</span> plan</p>
+		<p class="py-2">
+			You are currently on the <span class="font-bold text-primary">free</span> plan
+		</p>
 		<form method="post" action="?/subscribe" use:enhance>
 			<Button>Upgrade to Plus</Button>
 		</form>
