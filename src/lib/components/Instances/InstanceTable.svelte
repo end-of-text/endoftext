@@ -39,7 +39,7 @@
 </script>
 
 <div class="flex items-center justify-between">
-	<h1>Data</h1>
+	<h1>Test Cases</h1>
 	<div class="flex items-center gap-2">
 		{#if generatingInstances}
 			<Spinner />
