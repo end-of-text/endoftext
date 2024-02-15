@@ -1,3 +1,4 @@
+import { CompressionEditor } from './CompressionEditor';
 import { LongerEditor } from './LongerEditor';
 import { NoNegationEditor } from './NoNegationEditor';
 import { OutputDescriptionEditor } from './OutputDescriptionEditor';
@@ -15,5 +16,6 @@ export const editors = [
 	new JSONInstructionEditor(),
 	new JSONDescriptionEditor(),
 	new OutputDescriptionEditor(),
-	new SingleInstructionEditor()
+	new SingleInstructionEditor(),
+	new CompressionEditor()
 ];

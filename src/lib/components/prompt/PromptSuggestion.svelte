@@ -4,12 +4,12 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
-	import { Lightbulb, ShieldPlus, ShieldX } from 'lucide-svelte';
+	import { Coins, Lightbulb, ShieldX } from 'lucide-svelte';
 
 	const borderMap: { [key: string]: string } = {
 		ERROR: 'border-l-red-600',
 		ENHANCEMENT: 'border-l-green-600',
-		OPTIMIZATION: 'border-l-blue-600'
+		OPTIMIZATION: 'border-l-yellow-400'
 	};
 
 	let { suggestion, prompt, editPrompt } = $props<{
@@ -40,7 +40,7 @@
 			{:else if suggestion.type === EditorType.ENHANCEMENT}
 				<Lightbulb class="h-5 w-5 text-green-600" />
 			{:else if suggestion.type === EditorType.OPTIMIZATION}
-				<ShieldPlus class="h-5 w-5 text-blue-600" />
+				<Coins class="h-5 w-5 text-yellow-400" />
 			{/if}
 			<p class="font-semibold">
 				{suggestion.name}
