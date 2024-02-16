@@ -20,22 +20,6 @@ export async function load({ locals: { supabase, getSession } }) {
 }
 
 export const actions = {
-	delete: async ({ request, locals: { supabase, getSession } }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
-		const formData = await request.formData();
-		const deleteId = formData.get('delete') as string;
-
-		await supabase.from('projects').delete().eq('id', deleteId);
-	},
-
 	create: async ({ locals: { supabase, getSession } }) => {
 		const session = await getSession();
 
