@@ -28,13 +28,13 @@
 			href="/project/{project.id}"
 			class="{browser && !$page.url.href.includes('prompt')
 				? 'underline decoration-primary decoration-2'
-				: ''} hover:text-primary">Overview</a
+				: ''} transition-all hover:text-primary">Overview</a
 		>
 		<a
 			href="/project/{project.id}/prompt"
 			class="{browser && $page.url.href.includes('prompt')
 				? 'underline decoration-primary decoration-2'
-				: ''} hover:text-primary">Prompt</a
+				: ''} transition-all hover:text-primary">Prompt</a
 		>
 	</div>
 	<div class="flex items-center gap-3">
