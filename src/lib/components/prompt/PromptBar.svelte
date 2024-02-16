@@ -66,7 +66,14 @@
 	{#if showOptions}
 		<PromptOptions bind:prompt={editedPrompt} {userStatus} />
 	{/if}
-	<PromptEditor {prompt} {hoveredSuggestion} {setPrompt} bind:suggestionApplied bind:editedPrompt />
+	<PromptEditor
+		{prompt}
+		{hoveredSuggestion}
+		{setPrompt}
+		{editPrompt}
+		bind:suggestionApplied
+		bind:editedPrompt
+	/>
 	{#if projectId}
 		<PromptSuggestions {prompt} {editPrompt} {setHoveredSuggestion} />
 	{/if}

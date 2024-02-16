@@ -1,17 +1,20 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
-	import * as diff from 'diff';
 	import { Check, Copy, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
+	import RewriteBox from './RewriteBox.svelte';
+	import SuggestionOverlay from './SuggestionOverlay.svelte';
 
-	let { prompt, hoveredSuggestion, suggestionApplied, editedPrompt, setPrompt } = $props<{
-		prompt: Tables<'prompts'>;
-		hoveredSuggestion: Tables<'suggestions'> | null;
-		suggestionApplied: boolean;
-		editedPrompt: Tables<'prompts'>;
-		setPrompt: () => void;
-	}>();
+	let { prompt, hoveredSuggestion, suggestionApplied, editedPrompt, setPrompt, editPrompt } =
+		$props<{
+			prompt: Tables<'prompts'>;
+			hoveredSuggestion: Tables<'suggestions'> | null;
+			suggestionApplied: boolean;
+			editedPrompt: Tables<'prompts'>;
+			setPrompt: () => void;
+			editPrompt: (suggestion: string) => void;
+		}>();
 
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
@@ -19,6 +22,7 @@
 
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
+	let selectedText = $state<string | undefined>(undefined);
 
 	function copyPrompt() {
 		navigator.clipboard.writeText(prompt.prompt);
@@ -27,7 +31,29 @@
 			promptCopied = false;
 		}, 3000);
 	}
+
+	function getSelectionHtml() {
+		var selected = '';
+		if (typeof window.getSelection != 'undefined') {
+			var sel = window.getSelection();
+			if (sel && sel.rangeCount) {
+				var container = document.createElement('div');
+				for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+					container.appendChild(sel.getRangeAt(i).cloneContents());
+				}
+				selected = container.innerHTML.replaceAll('<br>', '\n');
+			}
+		}
+
+		if (selected.length > 10 && prompt.prompt.includes(selected)) {
+			selectedText = selected;
+		} else {
+			selectedText = undefined;
+		}
+	}
 </script>
+
+<svelte:window onmouseup={getSelectionHtml} />
 
 <div class="flex max-h-[50%] min-h-min flex-col pt-2">
 	<div
@@ -53,36 +79,10 @@
 				}}
 			/>
 			{#if suggestionApplied || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans)}
-				<div
-					class="user-select-none pointer-events-none absolute left-0 top-0 h-full min-h-24 w-full overflow-y-auto whitespace-pre-line rounded border py-2 pl-2 pr-6 text-sm text-transparent shadow"
-					aria-hidden="true"
-					transition:fade={{ duration: 200 }}
-				>
-					{#if suggestionApplied}
-						{#each diff.diffWords(prompt.prompt, editedPrompt.prompt) as part}
-							{#if part.added}
-								<span class="bg-blue-600 opacity-30">{part.value}</span>
-							{:else if !part.removed}
-								{part.value}
-							{/if}
-						{/each}
-					{:else if hoveredSuggestion && hoveredSuggestion.target_spans}
-						{#each hoveredSuggestion.target_spans as span, index}
-							{prompt.prompt.slice(
-								index === 0 ? 0 : hoveredSuggestion.target_spans[index - 1][1],
-								span[0]
-							)}
-							<span class="underline decoration-red-500 decoration-2">
-								{prompt.prompt.slice(span[0], span[1])}
-							</span>
-							{#if index === hoveredSuggestion.target_spans.length - 1}
-								<span>
-									{prompt.prompt.slice(span[1])}
-								</span>
-							{/if}
-						{/each}
-					{/if}
-				</div>
+				<SuggestionOverlay {prompt} {hoveredSuggestion} {suggestionApplied} {editedPrompt} />
+			{/if}
+			{#if selectedText}
+				<RewriteBox bind:selectedText {prompt} {editPrompt} />
 			{/if}
 			<button
 				onclick={copyPrompt}
