@@ -57,6 +57,7 @@
 			});
 		}}
 		cancel={() => (showDelete = false)}
+		confirmIsDelete
 	/>
 {/if}
 {#if showPaywall}

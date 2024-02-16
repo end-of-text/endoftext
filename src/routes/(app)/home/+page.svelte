@@ -23,6 +23,7 @@
 			deleteId = undefined;
 		}}
 		cancel={() => (deleteId = undefined)}
+		confirmIsDelete
 	/>
 {/if}
 
