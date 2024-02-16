@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { createInstance, deleteInstance, deleteInstances, generateInstances } from '$lib/api';
+	import Confirm from '$lib/components/popups/Confirm.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
@@ -19,6 +20,7 @@
 	let generatingInstances = $state(false);
 	let metricValues = $state<Record<string, Promise<Tables<'metrics'> | undefined>>>({});
 	let showPaywall = $state(false);
+	let showDelete = $state(false);
 
 	async function averageMetric(
 		values: Record<string, Promise<Tables<'metrics'> | undefined>>
@@ -40,6 +42,24 @@
 	}
 </script>
 
+{#if showDelete}
+	<Confirm
+		message={'Are you sure you want to delete these instances?'}
+		confirmText="Delete"
+		cancelText="Cancel"
+		confirm={() => {
+			showDelete = false;
+			deleteInstances(
+				selectedInstances.map((d, i) => (d ? instances[i].id : -1)).filter((d) => d !== -1)
+			).then(() => {
+				instances = instances.filter((_, i) => !selectedInstances[i]);
+				selectedInstances = [];
+			});
+		}}
+		cancel={() => (showDelete = false)}
+		confirmIsDelete
+	/>
+{/if}
 {#if showPaywall}
 	<PaywallPopup
 		onclose={() => (showPaywall = false)}
@@ -61,16 +81,7 @@
 					>
 						clear
 					</button>
-					<Button
-						classNames="text-red-600"
-						onclick={() =>
-							deleteInstances(
-								selectedInstances.map((d, i) => (d ? instances[i].id : -1)).filter((d) => d !== -1)
-							).then(() => {
-								instances = instances.filter((_, i) => !selectedInstances[i]);
-								selectedInstances = [];
-							})}
-					>
+					<Button classNames="text-red-600" onclick={() => (showDelete = true)}>
 						<Trash2 class="h-5 w-5" />
 					</Button>
 					<Button
