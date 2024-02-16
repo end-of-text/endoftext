@@ -6,10 +6,11 @@
 	import { untrack } from 'svelte';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
-	let { prompt, setHoveredSuggestion, editPrompt } = $props<{
+	let { prompt, setHoveredSuggestion, editPrompt, toplevel } = $props<{
 		prompt: Tables<'prompts'>;
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
 		editPrompt: (suggestion: string) => void;
+		toplevel: boolean;
 	}>();
 
 	let gettingSuggestions = $state(false);
@@ -26,9 +27,13 @@
 	});
 </script>
 
-<div class="my-4 flex min-h-0 grow flex-col gap-2">
+<div class="{!toplevel ? 'my-4' : ''} flex min-h-0 grow flex-col gap-2">
 	<div class="mb-3 flex items-center">
-		<h2>Suggestions</h2>
+		{#if toplevel}
+			<h1>Suggestions</h1>
+		{:else}
+			<h2>Suggestions</h2>
+		{/if}
 		<button
 			class="pl-4"
 			onclick={() => {
