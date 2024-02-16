@@ -18,7 +18,7 @@
 		confirmText="Delete"
 		cancelText="Cancel"
 		confirm={() => {
-			deleteProject(deleteId);
+			deleteProject(deleteId ?? '');
 			projects = projects.filter((p) => p.id !== deleteId);
 			deleteId = undefined;
 		}}
