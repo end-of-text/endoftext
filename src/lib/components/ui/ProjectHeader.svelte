@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
-	import { page } from '$app/stores';
 	import ProjectSettingsPopup from '$lib/components/popups/ProjectSettingsPopup.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { Settings } from 'lucide-svelte';
@@ -23,21 +21,7 @@
 	<div class="flex items-center gap-2">
 		<span class="my-4 text-xl font-semibold text-gray-700">{project.name}</span>
 	</div>
-	<div class="ml-auto flex items-end gap-2 pr-8 font-semibold">
-		<a
-			href="/project/{project.id}"
-			class="{browser && !$page.url.href.includes('prompt')
-				? 'underline decoration-primary decoration-2'
-				: ''} transition-all hover:text-primary">Overview</a
-		>
-		<a
-			href="/project/{project.id}/prompt"
-			class="{browser && $page.url.href.includes('prompt')
-				? 'underline decoration-primary decoration-2'
-				: ''} transition-all hover:text-primary">Prompt</a
-		>
-	</div>
-	<div class="flex items-center gap-3">
+	<div class="ml-auto flex items-center gap-3">
 		<div class="pointer-events-none rounded-md bg-rose-50 px-4 py-1 text-sm font-bold text-primary">
 			Beta
 		</div>

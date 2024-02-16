@@ -20,7 +20,11 @@
 	}
 </script>
 
-<div class="flex h-full w-[450px] shrink-0 flex-col border-r px-6 py-4">
+<div
+	class="flex h-full w-[450px] shrink-0 flex-col {children === undefined
+		? 'border-l'
+		: 'border-r'} px-6 py-4"
+>
 	{#if children}
 		{@render children()}
 	{/if}

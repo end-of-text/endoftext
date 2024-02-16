@@ -16,10 +16,20 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		.eq('project_id', params.id)
 		.order('created_at', { ascending: false });
 
-	const [promptsRes, projectRes] = await Promise.all([promptsReq, projectReq]);
+	const instancesReq = await supabase
+		.from('instances')
+		.select('*')
+		.eq('project_id', params.id)
+		.order('id', { ascending: true });
 
-	if (promptsRes.error || projectRes.error) {
-		error(505, { message: 'Failed to get project or prompts' });
+	const [promptsRes, projectRes, instancesRes] = await Promise.all([
+		promptsReq,
+		projectReq,
+		instancesReq
+	]);
+
+	if (promptsRes.error || projectRes.error || instancesRes.error) {
+		error(505, { message: 'Failed to get project, prompts, or instances' });
 	}
 
 	if (promptsRes.data.length === 0) {
@@ -28,6 +38,7 @@ export async function load({ locals: { supabase, getSession }, params }) {
 
 	return {
 		project: projectRes.data[0] as Tables<'projects'>,
-		prompt: promptsRes.data[0] as Tables<'prompts'>
+		prompt: promptsRes.data[0] as Tables<'prompts'>,
+		instances: instancesReq.data as Tables<'instances'>[]
 	};
 }
