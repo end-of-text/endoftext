@@ -36,7 +36,13 @@
 		message="You have reached your monthly limit of 100 prompts."
 	/>
 {/if}
-<PromptBar bind:prompt projectId={data.project.id || ''} userStatus={data.user.status} />
+<PromptBar
+	bind:prompt
+	projectId={data.project.id || ''}
+	userStatus={data.user.status}
+	bind:hoveredSuggestion
+	bind:suggestionApplied
+/>
 <div class="flex w-full flex-col px-6 py-4">
 	<div class="mb-2 flex items-end justify-between">
 		<h1>Prompt</h1>

@@ -39,7 +39,13 @@
 	/>
 {/if}
 
-<PromptBar bind:prompt projectId={data.project.id || ''} userStatus={data.user.status}>
+<PromptBar
+	bind:prompt
+	projectId={data.project.id || ''}
+	userStatus={data.user.status}
+	bind:hoveredSuggestion
+	bind:suggestionApplied
+>
 	<div class="mb-2 flex items-end justify-between">
 		<h1>Prompt</h1>
 		<button
