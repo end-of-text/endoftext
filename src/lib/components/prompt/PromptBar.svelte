@@ -3,24 +3,20 @@
 	import type { Snippet } from 'svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
-	let { prompt, projectId, hoveredSuggestion, suggestionApplied, children } = $props<{
+	let { prompt, projectId, setHoveredSuggestion, setSuggestionApplied, children } = $props<{
 		prompt: Tables<'prompts'>;
 		projectId: string;
 		userStatus: string;
-		hoveredSuggestion: Tables<'suggestions'> | null;
-		suggestionApplied: boolean;
+		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
+		setSuggestionApplied: (applied: boolean) => void;
 		children?: Snippet;
 	}>();
 
 	let editedPrompt = $state({ ...prompt });
 
 	function editPrompt(suggestion: string) {
-		suggestionApplied = true;
+		setSuggestionApplied(true);
 		editedPrompt.prompt = suggestion;
-	}
-
-	function setHoveredSuggestion(suggestion: Tables<'suggestions'> | null) {
-		hoveredSuggestion = suggestion;
 	}
 </script>
 

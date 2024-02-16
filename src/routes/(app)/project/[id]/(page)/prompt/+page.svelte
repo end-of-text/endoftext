@@ -40,8 +40,8 @@
 	bind:prompt
 	projectId={data.project.id || ''}
 	userStatus={data.user.status}
-	bind:hoveredSuggestion
-	bind:suggestionApplied
+	setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
+	setSuggestionApplied={(applied) => (suggestionApplied = applied)}
 />
 <div class="flex w-full flex-col px-6 py-4">
 	<div class="mb-2 flex items-end justify-between">
