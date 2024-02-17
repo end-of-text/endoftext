@@ -2,11 +2,13 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/Button.svelte';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import { Trash2 } from 'lucide-svelte';
 
 	let { data } = $props();
 
 	let instances = $state<string[]>(data.instances || []);
+	let submitted = $state(false);
 
 	data.generatedInstances?.then((res) => {
 		try {
@@ -19,7 +21,16 @@
 </script>
 
 <div class="flex h-full flex-col items-center justify-center">
-	<form class="flex flex-col items-start gap-2" method="POST" use:enhance>
+	<form
+		class="flex flex-col items-start gap-2"
+		method="POST"
+		use:enhance={() => {
+			submitted = true;
+			return async ({ update }) => {
+				update();
+			};
+		}}
+	>
 		<div class="flex w-full items-center justify-between">
 			<p class="mb-2 text-gray-500">2 / 2</p>
 			<img src="/logo.svg" alt="logo" class="h-4" />
@@ -69,7 +80,10 @@
 				Generate
 			</Button>
 		</div>
-		<div class="ml-auto flex gap-2">
+		<div class="ml-auto flex items-center gap-2">
+			{#if submitted}
+			<Spinner />
+			{/if}
 			<Button
 				onclick={(e) => {
 					e.preventDefault();

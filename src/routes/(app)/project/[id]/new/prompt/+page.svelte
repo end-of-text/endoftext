@@ -1,16 +1,27 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
+	import Spinner from '$lib/components/ui/Spinner.svelte';
 
 	let { data } = $props();
 
 	let name = $state(data.project?.name || '');
 	let prompt = $state(data.prompt?.prompt || '');
 	let disabled = $derived(prompt === '');
+	let submitted = $state(false);
 </script>
 
 <div class="flex h-full flex-col items-center justify-center">
-	<form class="flex flex-col items-start" method="POST" use:enhance>
+	<form
+		class="flex flex-col items-start"
+		method="POST"
+		use:enhance={() => {
+			submitted = true;
+			return async ({ update }) => {
+				update();
+			};
+		}}
+	>
 		<div class="mb-4 flex max-w-xl flex-col gap-2">
 			<div class="flex items-center justify-between">
 				<p class="mb-2 text-gray-500">1 / 2</p>
@@ -38,6 +49,11 @@
 			placeholder="Prompt name"
 		/>
 		<textarea placeholder="Prompt" bind:value={prompt} class="mb-4 w-full" rows="5" name="prompt" />
-		<Button classNames="ml-auto" {disabled}>Next</Button>
+		<div class="ml-auto flex items-center gap-2">
+			{#if submitted}
+				<Spinner />
+			{/if}
+			<Button {disabled}>Next</Button>
+		</div>
 	</form>
 </div>
