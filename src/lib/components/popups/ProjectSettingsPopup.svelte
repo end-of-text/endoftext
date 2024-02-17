@@ -78,7 +78,9 @@
 			<div class="mt-2 flex items-center">
 				<input class="py-1" placeholder="email" bind:value={newUser} />
 				{#if addingUser}
-					<Spinner classNames="pl-2" />
+					<div class="pl-2">
+						<Spinner />
+					</div>
 				{:else}
 					<Button classNames="self-end ml-2" disabled={newUser === ''} onclick={addUser}>
 						Add User
