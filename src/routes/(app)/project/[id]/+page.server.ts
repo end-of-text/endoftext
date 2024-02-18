@@ -10,19 +10,19 @@ export async function load({ locals: { supabase }, params }) {
 		.eq('project_id', params.id)
 		.order('created_at', { ascending: false });
 
-	const instancesReq = supabase
+	const instancesReq = await supabase
 		.from('instances')
 		.select('*')
 		.eq('project_id', params.id)
 		.order('id', { ascending: true });
 
-	const [promptsRes, instancesRes, projectRes] = await Promise.all([
+	const [promptsRes, projectRes, instancesRes] = await Promise.all([
 		promptsReq,
-		instancesReq,
-		projectReq
+		projectReq,
+		instancesReq
 	]);
 
-	if (promptsRes.error || instancesRes.error || projectRes.error) {
+	if (promptsRes.error || projectRes.error || instancesRes.error) {
 		error(505, { message: 'Failed to get project, prompts, or instances' });
 	}
 
@@ -33,39 +33,6 @@ export async function load({ locals: { supabase }, params }) {
 	return {
 		project: projectRes.data[0] as Tables<'projects'>,
 		prompt: promptsRes.data[0] as Tables<'prompts'>,
-		instances: instancesRes.data as Tables<'instances'>[]
+		instances: instancesReq.data as Tables<'instances'>[]
 	};
 }
-
-export const actions = {
-	updateName: async ({ request, locals: { supabase }, params }) => {
-		const formData = await request.formData();
-		const name = formData.get('name') as string;
-
-		await supabase.from('projects').update({ name }).eq('id', params.id);
-	},
-	copyPrompt: async ({ params, request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const prompt = JSON.parse(formData.get('prompt') as string) as Tables<'prompts'> | undefined;
-
-		if (prompt) {
-			await supabase
-				.from('prompts')
-				.insert({ prompt: prompt.prompt, project_id: params.id, parent_prompt_id: prompt.id });
-		}
-	},
-	editPrompt: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const newPrompt = formData.get('newPrompt');
-		const promptId = formData.get('promptId');
-
-		if (newPrompt) {
-			await supabase.from('prompts').update({ prompt: newPrompt }).eq('id', promptId);
-		}
-	},
-	deletePrompt: async ({ request, locals: { supabase } }) => {
-		const formData = await request.formData();
-		const promptId = formData.get('promptId');
-		await supabase.from('prompts').delete().eq('id', promptId);
-	}
-};
