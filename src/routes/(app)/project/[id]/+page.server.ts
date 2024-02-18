@@ -1,13 +1,7 @@
 import type { Tables } from '$lib/supabase.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { supabase, getSession }, params }) {
-	const session = getSession();
-
-	if (!session) {
-		error(401, { message: 'Forbidden' });
-	}
-
+export async function load({ locals: { supabase }, params }) {
 	const projectReq = supabase.from('projects').select('*').eq('id', params.id);
 
 	const promptsReq = supabase

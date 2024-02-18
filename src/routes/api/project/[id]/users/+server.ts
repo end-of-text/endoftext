@@ -1,11 +1,7 @@
 import { trackEvent } from '$lib/server/amplitude.js';
 import { error, json } from '@sveltejs/kit';
 
-export async function GET({ params, locals: { supabase, getSession } }) {
-	const session = getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
+export async function GET({ params, locals: { supabase } }) {
 	const ownerRes = await supabase
 		.from('users')
 		.select('*, projects!inner()')
@@ -28,9 +24,6 @@ export async function GET({ params, locals: { supabase, getSession } }) {
 
 export async function POST({ params, request, locals: { supabase, getSession } }) {
 	const session = await getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
 	const requestData = await request.json();
 	const projectId = params.id;
 	const email = requestData.email;
@@ -52,15 +45,12 @@ export async function POST({ params, request, locals: { supabase, getSession } }
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	trackEvent('User Added to Project', { user_id: session.user.id });
+	trackEvent('User Added to Project', { user_id: session?.user.id ?? '' });
 	return json(res.data);
 }
 
 export async function DELETE({ params, request, locals: { supabase, getSession } }) {
 	const session = await getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
 	const requestData = await request.json();
 	const projectId = params.id;
 	const userId = requestData.userId;
@@ -75,6 +65,6 @@ export async function DELETE({ params, request, locals: { supabase, getSession }
 		error(500, res.error.message);
 	}
 
-	trackEvent('User Removed from Project', { user_id: session.user.id });
+	trackEvent('User Removed from Project', { user_id: session?.user.id ?? '' });
 	return json(res.data);
 }

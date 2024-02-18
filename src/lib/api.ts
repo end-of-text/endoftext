@@ -193,3 +193,9 @@ export async function toggleProjectLabels(projectId: string, showLabels: boolean
 		body: JSON.stringify({ showLabels })
 	});
 }
+
+export async function deleteProject(projectId: string): Promise<void> {
+	await fetch(`/api/project/${projectId}`, {
+		method: 'DELETE'
+	});
+}
