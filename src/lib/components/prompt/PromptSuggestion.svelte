@@ -29,7 +29,7 @@
 </script>
 
 <div
-	class="flex items-start justify-between rounded-br rounded-tr border border-l-4 p-3 {borderMap[
+	class="flex items-start justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {borderMap[
 		suggestion.type
 	]}"
 >
