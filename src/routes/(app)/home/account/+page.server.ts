@@ -19,32 +19,24 @@ export const load = async ({ parent, locals: { getSession } }) => {
 };
 
 export const actions = {
-	signout: async ({ locals: { supabase, getSession } }) => {
-		const session = await getSession();
-		if (session) {
-			await supabase.auth.signOut();
-			redirect(303, '/');
-		}
+	signout: async ({ locals: { supabase } }) => {
+		await supabase.auth.signOut();
+		redirect(303, '/');
 	},
-	manage: async ({ request, locals: { getSession } }) => {
-		const session = await getSession();
-		if (session === null) {
-			fail(401, { message: 'Unauthorized' });
+	manage: async ({ request }) => {
+		// get form options
+		const formData = await request.formData();
+		const stripeId = formData.get('stripeId') as string;
+		const stripe = new Stripe(STRIPE_API_KEY);
+
+		const res = await stripe.billingPortal.sessions.create({
+			customer: stripeId
+		});
+
+		if (res.url === null) {
+			fail(500, { message: 'Internal Server Error' });
 		} else {
-			// get form options
-			const formData = await request.formData();
-			const stripeId = formData.get('stripeId') as string;
-			const stripe = new Stripe(STRIPE_API_KEY);
-
-			const res = await stripe.billingPortal.sessions.create({
-				customer: stripeId
-			});
-
-			if (res.url === null) {
-				fail(500, { message: 'Internal Server Error' });
-			} else {
-				redirect(303, res.url);
-			}
+			redirect(303, res.url);
 		}
 	},
 	subscribe: async ({ url, locals: { getSession } }) => {

@@ -6,10 +6,6 @@ import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = await getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
 	const requestData = await request.json();
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
 	const instanceId = requestData.instanceId as number | undefined;
@@ -65,6 +61,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, res.error.message);
 	}
 
-	trackEvent('Prediction Generated', { user_id: session.user.id });
+	trackEvent('Prediction Generated', { user_id: session?.user.id ?? '' });
 	return json({ prediction: res.data[0] });
 }

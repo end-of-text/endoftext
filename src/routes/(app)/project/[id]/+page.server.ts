@@ -1,13 +1,7 @@
 import type { Tables } from '$lib/supabase.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { supabase, getSession }, params }) {
-	const session = getSession();
-
-	if (!session) {
-		error(401, { message: 'Forbidden' });
-	}
-
+export async function load({ locals: { supabase }, params }) {
 	const projectReq = supabase.from('projects').select('*').eq('id', params.id);
 
 	const promptsReq = supabase
@@ -44,31 +38,13 @@ export async function load({ locals: { supabase, getSession }, params }) {
 }
 
 export const actions = {
-	updateName: async ({ request, locals: { supabase, getSession }, params }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
+	updateName: async ({ request, locals: { supabase }, params }) => {
 		const formData = await request.formData();
 		const name = formData.get('name') as string;
 
 		await supabase.from('projects').update({ name }).eq('id', params.id);
 	},
-	copyPrompt: async ({ params, request, locals: { supabase, getSession } }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
+	copyPrompt: async ({ params, request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const prompt = JSON.parse(formData.get('prompt') as string) as Tables<'prompts'> | undefined;
 
@@ -78,16 +54,7 @@ export const actions = {
 				.insert({ prompt: prompt.prompt, project_id: params.id, parent_prompt_id: prompt.id });
 		}
 	},
-	editPrompt: async ({ request, locals: { supabase, getSession } }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
+	editPrompt: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const newPrompt = formData.get('newPrompt');
 		const promptId = formData.get('promptId');
@@ -96,16 +63,7 @@ export const actions = {
 			await supabase.from('prompts').update({ prompt: newPrompt }).eq('id', promptId);
 		}
 	},
-	deletePrompt: async ({ request, locals: { supabase, getSession } }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
+	deletePrompt: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const promptId = formData.get('promptId');
 		await supabase.from('prompts').delete().eq('id', promptId);

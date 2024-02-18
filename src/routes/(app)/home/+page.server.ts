@@ -1,13 +1,7 @@
 import { trackEvent } from '$lib/server/amplitude.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { supabase, getSession } }) {
-	const session = getSession();
-
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
+export async function load({ locals: { supabase } }) {
 	const res = await supabase.from('projects').select('*');
 
 	if (res.error) {
@@ -20,22 +14,6 @@ export async function load({ locals: { supabase, getSession } }) {
 }
 
 export const actions = {
-	delete: async ({ request, locals: { supabase, getSession } }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
-		const formData = await request.formData();
-		const deleteId = formData.get('delete') as string;
-
-		await supabase.from('projects').delete().eq('id', deleteId);
-	},
-
 	create: async ({ locals: { supabase, getSession } }) => {
 		const session = await getSession();
 

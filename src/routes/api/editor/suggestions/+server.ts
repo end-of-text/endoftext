@@ -7,10 +7,6 @@ import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = await getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
 	const requestData = await request.json();
 	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
 	if (!selectedPrompt) {
@@ -70,7 +66,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 			if (insertRes.data && insertRes.data.length > 0) {
 				trackEvent(
 					'Suggestion Created',
-					{ user_id: session.user.id },
+					{ user_id: session?.user.id ?? '' },
 					{
 						editor_name: result.editor.name
 					}

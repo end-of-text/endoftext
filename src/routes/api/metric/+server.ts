@@ -2,12 +2,7 @@ import { chrfMetric } from '$lib/server/metrics/index.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
 
-export async function POST({ locals: { supabase, getSession }, request }) {
-	const session = getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
+export async function POST({ locals: { supabase }, request }) {
 	const requestData = await request.json();
 	const label = requestData.label as string | undefined;
 	if (!label) {

@@ -1,15 +1,6 @@
 import type { Tables } from '$lib/supabase';
 
-export async function load({ params, locals: { getSession, supabase } }) {
-	const session = getSession();
-
-	if (!session) {
-		return {
-			status: 401,
-			body: 'Forbidden'
-		};
-	}
-
+export async function load({ params, locals: { supabase } }) {
 	const { data: projectData, error: projectError } = await supabase
 		.from('projects')
 		.select('*')
