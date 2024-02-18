@@ -8,7 +8,10 @@
 	}>();
 </script>
 
-<div class="flex shrink-0 flex-col gap-2 rounded border bg-gray-50 p-2" transition:slide>
+<div
+	class="flex shrink-0 flex-col items-start gap-2 rounded border bg-gray-50 p-2"
+	transition:slide
+>
 	<div>
 		<label class="mr-2 italic text-gray-500" for="model">model:</label>
 		<select class="rounded border p-1" name="model" value={prompt.model}>
