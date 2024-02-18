@@ -1,16 +1,7 @@
 import { generateInstances } from '$lib/server/instances/generateInstances';
 import { redirect } from '@sveltejs/kit';
 
-export async function load({ parent, locals: { getSession, supabase } }) {
-	const session = getSession();
-
-	if (!session) {
-		return {
-			status: 401,
-			body: 'Forbidden'
-		};
-	}
-
+export async function load({ parent, locals: { supabase } }) {
 	const { prompt } = await parent();
 
 	if (!prompt) {
@@ -41,16 +32,7 @@ export async function load({ parent, locals: { getSession, supabase } }) {
 }
 
 export const actions = {
-	default: async ({ params, request, locals: { supabase, getSession } }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
+	default: async ({ params, request, locals: { supabase } }) => {
 		const formData = await request.formData();
 		const instances = formData.getAll('instance') as string[];
 

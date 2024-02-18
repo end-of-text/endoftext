@@ -1,10 +1,6 @@
 import { error } from '@sveltejs/kit';
 
-export async function POST({ params, request, locals: { supabase, getSession } }) {
-	const session = getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
+export async function POST({ params, request, locals: { supabase } }) {
 	const requestData = await request.json();
 	const showLabels = requestData.showLabels;
 

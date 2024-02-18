@@ -1,16 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
 export const actions = {
-	default: async ({ request, locals: { getSession, supabase }, params }) => {
-		const session = await getSession();
-
-		if (!session) {
-			return {
-				status: 401,
-				body: 'Forbidden'
-			};
-		}
-
+	default: async ({ request, locals: { supabase }, params }) => {
 		const formData = await request.formData();
 		const prompt = formData.get('prompt');
 		const name = formData.get('name');
