@@ -6,11 +6,16 @@
 	import { untrack } from 'svelte';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
-	let { prompt, setHoveredSuggestion, editPrompt, toplevel } = $props<{
+	let {
+		prompt,
+		setHoveredSuggestion,
+		editPrompt,
+		toplevel = false
+	} = $props<{
 		prompt: Tables<'prompts'>;
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
 		editPrompt: (suggestion: string) => void;
-		toplevel: boolean;
+		toplevel?: boolean;
 	}>();
 
 	let gettingSuggestions = $state(false);

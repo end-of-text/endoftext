@@ -1,39 +1,68 @@
 <script lang="ts">
 	import type { Tables } from '$lib/supabase';
-	import type { Snippet } from 'svelte';
+	import { ChevronDown, ChevronUp } from 'lucide-svelte';
+	import PromptOptions from '../options/PromptOptions.svelte';
+	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
-	let { prompt, projectId, setHoveredSuggestion, setSuggestionApplied, children } = $props<{
+	let {
+		prompt,
+		suggestionApplied,
+		userStatus,
+		showOptions,
+		editedPrompt,
+		hoveredSuggestion,
+		projectId,
+		setPromptMaximized,
+		editPrompt,
+		setPrompt
+	} = $props<{
 		prompt: Tables<'prompts'>;
-		projectId: string;
+		suggestionApplied: boolean;
 		userStatus: string;
-		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
-		setSuggestionApplied: (applied: boolean) => void;
-		children?: Snippet;
+		showOptions: boolean;
+		editedPrompt: Tables<'prompts'>;
+		hoveredSuggestion: Tables<'suggestions'> | null;
+		projectId: string | undefined;
+		setPromptMaximized: (maximized: boolean) => void;
+		editPrompt: (suggestion: string) => void;
+		setPrompt: () => void;
 	}>();
-
-	let editedPrompt = $state({ ...prompt });
-
-	function editPrompt(suggestion: string) {
-		setSuggestionApplied(true);
-		editedPrompt.prompt = suggestion;
-	}
 </script>
 
-<div
-	class="flex h-full w-[450px] shrink-0 flex-col {children === undefined
-		? 'border-l'
-		: 'border-r'} px-6 py-4"
->
-	{#if children}
-		{@render children()}
+<div class="flex h-full w-[450px] shrink-0 flex-col border-r px-6 py-4">
+	<div class="mb-2 flex items-end justify-between">
+		<h1>Prompt</h1>
+		<button
+			class="flex items-center gap-1 opacity-40 transition-all hover:opacity-100"
+			onclick={() => (showOptions = !showOptions)}
+		>
+			<span class="text-black">Model Options</span>
+			{#if showOptions}
+				<ChevronUp class="h-5 w-5" />
+			{:else}
+				<ChevronDown class="h-5 w-5" />
+			{/if}
+		</button>
+	</div>
+	{#if showOptions}
+		<PromptOptions bind:prompt={editedPrompt} {userStatus} />
 	{/if}
+	<div class="flex max-h-[50%] min-h-min flex-col pt-2">
+		<PromptEditor
+			{prompt}
+			{hoveredSuggestion}
+			{setPrompt}
+			bind:suggestionApplied
+			bind:editedPrompt
+			{setPromptMaximized}
+		/>
+	</div>
 	{#if projectId}
 		<PromptSuggestions
 			{prompt}
 			{editPrompt}
-			{setHoveredSuggestion}
-			toplevel={children === undefined}
+			setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
 		/>
 	{/if}
 </div>

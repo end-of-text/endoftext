@@ -1,37 +1,34 @@
 <script lang="ts">
-	import { updatePrompt } from '$lib/api';
 	import PromptOptions from '$lib/components/options/PromptOptions.svelte';
-	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
 	import PromptEditor from '$lib/components/prompt/PromptEditor.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { ChevronDown, ChevronUp } from 'lucide-svelte';
+	import PromptSuggestions from '../prompt/PromptSuggestions.svelte';
 	import ViewParent from './ViewParent.svelte';
 
-	let { prompt, userStatus, projectId, setShowPaywall, onclose } = $props<{
+	let {
+		prompt,
+		editedPrompt,
+		userStatus,
+		hoveredSuggestion,
+		suggestionApplied,
+		projectId,
+		onclose,
+		setPrompt,
+		editPrompt
+	} = $props<{
 		prompt: Tables<'prompts'>;
+		editedPrompt: Tables<'prompts'>;
 		userStatus: string;
-		projectId: string;
-		setShowPaywall: (show: boolean) => void;
+		hoveredSuggestion: Tables<'suggestions'> | null;
+		suggestionApplied: boolean;
+		projectId: string | undefined;
 		onclose: () => void;
+		setPrompt: () => void;
+		editPrompt: (suggestion: string) => void;
 	}>();
 
 	let showOptions = $state(false);
-	let editedPrompt = $state({ ...prompt });
-	let suggestionApplied = $state(false);
-	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
-
-	function setPrompt() {
-		updatePrompt(editedPrompt).then((r) => {
-			if (r === null) {
-				setShowPaywall(true);
-				return;
-			}
-			prompt = r;
-			showOptions = false;
-			suggestionApplied = false;
-			editedPrompt = { ...prompt };
-		});
-	}
 </script>
 
 <ViewParent {onclose}>
@@ -56,16 +53,22 @@
 		<PromptEditor
 			{prompt}
 			{hoveredSuggestion}
-			{setPrompt}
+			setPrompt={() => {
+				setPrompt();
+				onclose();
+			}}
 			bind:suggestionApplied
 			bind:editedPrompt
 		/>
 	</div>
-	<PromptBar
-		bind:prompt
-		{projectId}
-		{userStatus}
-		setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
-		setSuggestionApplied={(applied) => (suggestionApplied = applied)}
-	/>
+	<div class="flex h-full w-[450px] shrink-0 flex-col border-l px-6 py-4">
+		{#if projectId}
+			<PromptSuggestions
+				{prompt}
+				{editPrompt}
+				setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
+				toplevel={true}
+			/>
+		{/if}
+	</div>
 </ViewParent>

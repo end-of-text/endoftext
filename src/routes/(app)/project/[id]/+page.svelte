@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { updatePrompt } from '$lib/api';
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
-	import PromptOptions from '$lib/components/options/PromptOptions.svelte';
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
 	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
-	import PromptEditor from '$lib/components/prompt/PromptEditor.svelte';
 	import ProjectHeader from '$lib/components/ui/ProjectHeader.svelte';
 	import PromptView from '$lib/components/views/PromptView.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { ChevronDown, ChevronUp } from 'lucide-svelte';
 
 	let { data } = $props();
 
@@ -21,6 +18,11 @@
 	let showOptions = $state(false);
 	let showPaywall = $state(false);
 	let promptMaximized = $state(false);
+
+	function editPrompt(suggestion: string) {
+		suggestionApplied = true;
+		editedPrompt.prompt = suggestion;
+	}
 
 	function setPrompt() {
 		updatePrompt(editedPrompt).then((r) => {
@@ -44,11 +46,15 @@
 {/if}
 {#if promptMaximized}
 	<PromptView
-		{prompt}
+		bind:prompt
 		userStatus={data.user.status}
-		projectId={data.project.id}
-		setShowPaywall={(show: boolean) => (showPaywall = show)}
 		onclose={() => (promptMaximized = false)}
+		bind:hoveredSuggestion
+		bind:suggestionApplied
+		bind:editedPrompt
+		projectId={data.project.id}
+		{editPrompt}
+		{setPrompt}
 	/>
 {/if}
 
@@ -57,39 +63,16 @@
 	<div class="flex min-h-0 grow">
 		<PromptBar
 			bind:prompt
-			projectId={data.project.id || ''}
 			userStatus={data.user.status}
-			setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
-			setSuggestionApplied={(applied) => (suggestionApplied = applied)}
-		>
-			<div class="mb-2 flex items-end justify-between">
-				<h1>Prompt</h1>
-				<button
-					class="flex items-center gap-1 opacity-40 transition-all hover:opacity-100"
-					onclick={() => (showOptions = !showOptions)}
-				>
-					<span class="text-black">Model Options</span>
-					{#if showOptions}
-						<ChevronUp class="h-5 w-5" />
-					{:else}
-						<ChevronDown class="h-5 w-5" />
-					{/if}
-				</button>
-			</div>
-			{#if showOptions}
-				<PromptOptions bind:prompt={editedPrompt} userStatus={data.user.status} />
-			{/if}
-			<div class="flex max-h-[50%] min-h-min flex-col pt-2">
-				<PromptEditor
-					{prompt}
-					{hoveredSuggestion}
-					{setPrompt}
-					bind:suggestionApplied
-					bind:editedPrompt
-					setPromptMaximized={(maximized: boolean) => (promptMaximized = maximized)}
-				/>
-			</div>
-		</PromptBar>
+			bind:suggestionApplied
+			bind:showOptions
+			bind:editedPrompt
+			bind:hoveredSuggestion
+			projectId={data.project.id}
+			setPromptMaximized={(maximized) => (promptMaximized = maximized)}
+			{editPrompt}
+			{setPrompt}
+		/>
 		<InstanceTable bind:instances project={data.project} {prompt} />
 	</div>
 </div>

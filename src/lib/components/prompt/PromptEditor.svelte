@@ -130,10 +130,10 @@
 		</Button>
 	{/if}
 	<Button
-		onclick={() => setPrompt()}
+		onclick={setPrompt}
 		disabled={!promptWasEdited}
 		classNames=" w-fit text-blue-600"
-		title="Save"
+		title="Save & Run"
 		tooltipText="Save this as a new prompt."
 	>
 		<Save class="h-5 w-5 transition-all" />
