@@ -1,13 +1,7 @@
 import { trackEvent } from '$lib/server/amplitude.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { supabase, getSession } }) {
-	const session = getSession();
-
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
+export async function load({ locals: { supabase } }) {
 	const res = await supabase.from('projects').select('*');
 
 	if (res.error) {
