@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { updatePrompt } from '$lib/api';
+	import { getSuggestions, updatePrompt } from '$lib/api';
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
 	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
 	import ProjectHeader from '$lib/components/ui/ProjectHeader.svelte';
 	import PromptView from '$lib/components/views/PromptView.svelte';
 	import type { Tables } from '$lib/supabase';
+	import { untrack } from 'svelte';
 
 	let { data } = $props();
 
@@ -18,6 +19,8 @@
 	let showOptions = $state(false);
 	let showPaywall = $state(false);
 	let promptMaximized = $state(false);
+	let gettingSuggestions = $state(false);
+	let suggestionsRequest: Tables<'suggestions'>[] | undefined = $state([]);
 
 	function editPrompt(suggestion: string) {
 		suggestionApplied = true;
@@ -36,6 +39,16 @@
 			editedPrompt = { ...prompt };
 		});
 	}
+
+	$effect(() => {
+		untrack(() => (gettingSuggestions = true));
+		getSuggestions(prompt).then((r) => {
+			untrack(() => {
+				suggestionsRequest = r;
+				gettingSuggestions = false;
+			});
+		});
+	});
 </script>
 
 {#if showPaywall}
@@ -52,6 +65,8 @@
 		bind:hoveredSuggestion
 		bind:suggestionApplied
 		bind:editedPrompt
+		bind:gettingSuggestions
+		{suggestionsRequest}
 		projectId={data.project.id}
 		{editPrompt}
 		{setPrompt}
@@ -65,9 +80,11 @@
 			bind:prompt
 			userStatus={data.user.status}
 			bind:suggestionApplied
+			bind:gettingSuggestions
 			bind:showOptions
 			bind:editedPrompt
 			bind:hoveredSuggestion
+			{suggestionsRequest}
 			projectId={data.project.id}
 			setPromptMaximized={(maximized) => (promptMaximized = maximized)}
 			{editPrompt}

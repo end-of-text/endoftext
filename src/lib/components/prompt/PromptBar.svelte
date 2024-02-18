@@ -13,6 +13,8 @@
 		editedPrompt,
 		hoveredSuggestion,
 		projectId,
+		gettingSuggestions,
+		suggestionsRequest,
 		setPromptMaximized,
 		editPrompt,
 		setPrompt
@@ -24,6 +26,8 @@
 		editedPrompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		projectId: string | undefined;
+		gettingSuggestions: boolean;
+		suggestionsRequest: Tables<'suggestions'>[] | undefined;
 		setPromptMaximized: (maximized: boolean) => void;
 		editPrompt: (suggestion: string) => void;
 		setPrompt: () => void;
@@ -62,6 +66,8 @@
 		<PromptSuggestions
 			{prompt}
 			{editPrompt}
+			bind:gettingSuggestions
+			{suggestionsRequest}
 			setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
 		/>
 	{/if}

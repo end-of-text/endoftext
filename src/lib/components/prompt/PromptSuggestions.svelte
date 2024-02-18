@@ -3,33 +3,23 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { RefreshCw } from 'lucide-svelte';
-	import { untrack } from 'svelte';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
 	let {
 		prompt,
 		setHoveredSuggestion,
 		editPrompt,
+		gettingSuggestions,
+		suggestionsRequest,
 		toplevel = false
 	} = $props<{
 		prompt: Tables<'prompts'>;
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
 		editPrompt: (suggestion: string) => void;
+		gettingSuggestions: boolean;
+		suggestionsRequest: Tables<'suggestions'>[] | undefined;
 		toplevel?: boolean;
 	}>();
-
-	let gettingSuggestions = $state(false);
-	let suggestionsRequest: Tables<'suggestions'>[] | undefined = $state([]);
-
-	$effect(() => {
-		untrack(() => (gettingSuggestions = true));
-		getSuggestions(prompt).then((r) => {
-			untrack(() => {
-				suggestionsRequest = r;
-				gettingSuggestions = false;
-			});
-		});
-	});
 </script>
 
 <div class="{!toplevel ? 'my-4' : ''} flex min-h-0 grow flex-col gap-2">
