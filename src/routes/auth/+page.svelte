@@ -1,10 +1,17 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
+	import { onMount } from 'svelte';
 
 	const { form } = $props();
 
 	let formType = $state('login');
+	let redirect = $state('');
+
+	onMount(() => {
+		redirect = new URLSearchParams(location.search).get('redirectto') ?? '';
+		console.log(redirect);
+	});
 </script>
 
 <svelte:head>
@@ -67,6 +74,7 @@
 	</div>
 	{#if formType === 'login'}
 		<form class="flex flex-col gap-2" method="post" action="?/login" use:enhance>
+			<input type="hidden" name="redirect" value={redirect} />
 			<input name="email" placeholder="email" value={form?.email ?? ''} />
 			<input class="mb-2" type="password" name="password" placeholder="password" />
 			<Button classNames="ml-auto">Sign in</Button>
