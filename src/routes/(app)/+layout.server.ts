@@ -3,7 +3,7 @@ import { error, redirect } from '@sveltejs/kit';
 export async function load({ url, locals: { getSession, supabase } }) {
 	const session = await getSession();
 	if (!session) {
-		redirect(303, `/auth?redirectto=${url.pathname}`);
+		redirect(303, `/auth?redirect=${url.pathname}`);
 	}
 
 	const { data: subscription, error: err } = await supabase

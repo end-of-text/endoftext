@@ -9,7 +9,7 @@
 	let redirect = $state('');
 
 	onMount(() => {
-		redirect = new URLSearchParams(location.search).get('redirectto') ?? '';
+		redirect = new URLSearchParams(location.search).get('redirect') ?? '';
 		console.log(redirect);
 	});
 </script>
