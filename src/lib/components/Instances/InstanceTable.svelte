@@ -74,18 +74,19 @@
 {/if}
 <div class="flex grow flex-col px-6 pt-4">
 	<div class="flex justify-between">
-		<div class="flex gap-2">
+		<div class="flex gap-4">
 			<h1>Test Cases</h1>
 			{#if !project.show_labels}
-				<button
-					class="flex cursor-pointer items-center justify-center transition"
+				<Button
+					classNames="text-blue-600"
 					onclick={() => {
 						project.show_labels = true;
 						toggleProjectLabels(project.id, project.show_labels);
 					}}
+					title="Add label column"
 				>
-					<Tag class="h-5 w-5 transition-all  hover:text-primary" />
-				</button>
+					<Tag class="h-5 w-5 transition-all" />
+				</Button>
 			{/if}
 		</div>
 		<div class="flex items-center gap-2">
