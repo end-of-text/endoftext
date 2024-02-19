@@ -1,11 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { createInstance, deleteInstance, deleteInstances, generateInstances } from '$lib/api';
+	import {
+		createInstance,
+		deleteInstance,
+		deleteInstances,
+		generateInstances,
+		toggleProjectLabels
+	} from '$lib/api';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { PlusCircle, Sparkle, Sparkles, Trash2 } from 'lucide-svelte';
+	import { PlusCircle, Sparkle, Sparkles, Tag, Trash2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PaywallPopup from '../popups/PaywallPopup.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
@@ -68,7 +74,20 @@
 {/if}
 <div class="flex grow flex-col px-6 pt-4">
 	<div class="flex justify-between">
-		<h1>Test Cases</h1>
+		<div class="flex gap-2">
+			<h1>Test Cases</h1>
+			{#if !project.show_labels}
+				<button
+					class="flex cursor-pointer items-center justify-center transition"
+					onclick={() => {
+						project.show_labels = true;
+						toggleProjectLabels(project.id, project.show_labels);
+					}}
+				>
+					<Tag class="h-5 w-5 transition-all  hover:text-primary" />
+				</button>
+			{/if}
+		</div>
 		<div class="flex items-center gap-2">
 			{#if generatingInstances}
 				<Spinner />
