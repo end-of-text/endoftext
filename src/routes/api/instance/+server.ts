@@ -18,16 +18,6 @@ export async function PATCH({ locals: { supabase }, request }) {
 		error(500, instanceRes.error.message);
 	}
 
-	const predictionRes = await supabase
-		.from('predictions')
-		.delete()
-		.eq('instance_id', instance.id)
-		.select();
-
-	if (predictionRes.error) {
-		error(500, predictionRes.error.message);
-	}
-
 	return new Response(null, { status: 200 });
 }
 
