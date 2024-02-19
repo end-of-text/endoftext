@@ -15,7 +15,7 @@
 	} = $props<{
 		prompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
-		suggestionApplied: boolean;
+		suggestionApplied: number;
 		editedPrompt: Tables<'prompts'>;
 		setPrompt: () => void;
 		setPromptMaximized?: (maximized: boolean) => void;
@@ -57,19 +57,19 @@
 			tabindex="0"
 			bind:innerText={editedPrompt.prompt}
 			onkeydown={(e) => {
-				suggestionApplied = false;
+				suggestionApplied = -1;
 				if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
 					setPrompt();
 				}
 			}}
 		/>
-		{#if suggestionApplied || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans)}
+		{#if suggestionApplied > -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans)}
 			<div
 				class="user-select-none absolute left-0 top-0 h-full min-h-24 w-full whitespace-pre-line py-2 pl-2 pr-6 text-sm text-transparent"
 				aria-hidden="true"
 				transition:fade={{ duration: 200 }}
 			>
-				{#if suggestionApplied}
+				{#if suggestionApplied > -1}
 					{#each diff.diffWords(prompt.prompt, editedPrompt.prompt) as part}
 						{#if part.added}
 							<span class="bg-blue-600 opacity-30">{part.value}</span>
@@ -145,7 +145,13 @@
 </div>
 <div class="ml-auto flex items-center gap-1 pt-3">
 	{#if promptWasEdited}
-		<Button onclick={() => (editedPrompt = { ...prompt })} classNames="text-gray-500">
+		<Button
+			onclick={() => {
+				editedPrompt = { ...prompt };
+				suggestionApplied = -1;
+			}}
+			classNames="text-gray-500"
+		>
 			<Undo2 class="h-5 w-5" />
 		</Button>
 	{/if}

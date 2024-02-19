@@ -14,22 +14,22 @@
 		hoveredSuggestion,
 		projectId,
 		gettingSuggestions,
-		suggestionsRequest,
+		suggestions,
 		setPromptMaximized,
 		editPrompt,
 		setPrompt
 	} = $props<{
 		prompt: Tables<'prompts'>;
-		suggestionApplied: boolean;
+		suggestionApplied: number;
 		userStatus: string;
 		showOptions: boolean;
 		editedPrompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		projectId: string | undefined;
 		gettingSuggestions: boolean;
-		suggestionsRequest: Tables<'suggestions'>[] | undefined;
+		suggestions: Tables<'suggestions'>[] | undefined;
 		setPromptMaximized: (maximized: boolean) => void;
-		editPrompt: (suggestion: string) => void;
+		editPrompt: (changedPrompt: string, suggestionId: number) => void;
 		setPrompt: () => void;
 	}>();
 </script>
@@ -67,7 +67,8 @@
 			{prompt}
 			{editPrompt}
 			bind:gettingSuggestions
-			{suggestionsRequest}
+			bind:suggestions
+			{suggestionApplied}
 			setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
 		/>
 	{/if}

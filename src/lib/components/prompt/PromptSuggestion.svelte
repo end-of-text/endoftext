@@ -4,7 +4,7 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
-	import { Coins, Lightbulb, ShieldX } from 'lucide-svelte';
+	import { Check, Coins, Lightbulb, ShieldX } from 'lucide-svelte';
 
 	const borderMap: { [key: string]: string } = {
 		ERROR: 'border-l-red-600',
@@ -12,10 +12,16 @@
 		OPTIMIZATION: 'border-l-yellow-400'
 	};
 
-	let { suggestion, prompt, editPrompt } = $props<{
+	let {
+		suggestion,
+		prompt,
+		editPrompt,
+		applied = false
+	} = $props<{
 		suggestion: Tables<'suggestions'>;
 		prompt: Tables<'prompts'>;
-		editPrompt: (suggestion: string) => void;
+		editPrompt: (changedPrompt: string, suggestionId: number) => void;
+		applied?: boolean;
 	}>();
 
 	let applyingSuggestion = $state(false);
@@ -23,7 +29,8 @@
 
 	async function accept() {
 		applyingSuggestion = true;
-		editPrompt(await acceptSuggestion(suggestion, prompt, userInput));
+		const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
+		editPrompt(changedPrompt, suggestion.id);
 		applyingSuggestion = false;
 	}
 </script>
@@ -56,7 +63,9 @@
 		{/if}
 	</div>
 	<div class="flex items-center justify-center">
-		{#if applyingSuggestion}
+		{#if applied}
+			<Check class="h-5 w-5 text-green-600" />
+		{:else if applyingSuggestion}
 			<Spinner />
 		{:else}
 			<Button onclick={accept}>Apply</Button>

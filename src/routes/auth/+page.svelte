@@ -10,7 +10,6 @@
 
 	onMount(() => {
 		redirect = new URLSearchParams(location.search).get('redirect') ?? '';
-		console.log(redirect);
 	});
 </script>
 

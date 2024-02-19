@@ -13,18 +13,18 @@
 	let project = $state(data.project);
 	let instances = $state(data.instances);
 	let prompt = $state(data.prompt);
-	let editedPrompt = $state({ ...prompt });
-	let suggestionApplied = $state(false);
+	let editedPrompt = $state({ ...data.prompt });
+	let suggestionApplied = $state<number>(-1);
 	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
 	let showOptions = $state(false);
 	let showPaywall = $state(false);
 	let promptMaximized = $state(false);
 	let gettingSuggestions = $state(false);
-	let suggestionsRequest: Tables<'suggestions'>[] | undefined = $state([]);
+	let suggestions: Tables<'suggestions'>[] | undefined = $state([]);
 
-	function editPrompt(suggestion: string) {
-		suggestionApplied = true;
-		editedPrompt.prompt = suggestion;
+	function editPrompt(changedPrompt: string, suggestionId: number) {
+		suggestionApplied = suggestionId;
+		editedPrompt.prompt = changedPrompt;
 	}
 
 	function setPrompt() {
@@ -35,16 +35,19 @@
 			}
 			prompt = r;
 			showOptions = false;
-			suggestionApplied = false;
+			suggestionApplied = -1;
 			editedPrompt = { ...prompt };
 		});
 	}
 
 	$effect(() => {
-		untrack(() => (gettingSuggestions = true));
+		untrack(() => {
+			gettingSuggestions = true;
+			suggestions = [];
+		});
 		getSuggestions(prompt).then((r) => {
 			untrack(() => {
-				suggestionsRequest = r;
+				suggestions = r;
 				gettingSuggestions = false;
 			});
 		});
@@ -59,14 +62,14 @@
 {/if}
 {#if promptMaximized}
 	<PromptView
-		bind:prompt
+		{prompt}
 		userStatus={data.user.status}
 		onclose={() => (promptMaximized = false)}
 		bind:hoveredSuggestion
 		bind:suggestionApplied
 		bind:editedPrompt
 		bind:gettingSuggestions
-		{suggestionsRequest}
+		bind:suggestions
 		projectId={data.project.id}
 		{editPrompt}
 		{setPrompt}
@@ -77,14 +80,14 @@
 	<ProjectHeader bind:project />
 	<div class="flex min-h-0 grow">
 		<PromptBar
-			bind:prompt
+			{prompt}
 			userStatus={data.user.status}
 			bind:suggestionApplied
 			bind:gettingSuggestions
 			bind:showOptions
 			bind:editedPrompt
 			bind:hoveredSuggestion
-			{suggestionsRequest}
+			bind:suggestions
 			projectId={data.project.id}
 			setPromptMaximized={(maximized) => (promptMaximized = maximized)}
 			{editPrompt}
