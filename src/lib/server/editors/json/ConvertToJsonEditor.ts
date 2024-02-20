@@ -6,9 +6,9 @@ import { PromptEditor } from '../editor';
 export class ConvertToJSONEditor extends PromptEditor {
 	constructor() {
 		super(
-			'Output JSON',
-			'Output JSON',
-			'Your desired output seems to be very structured. Consider converting it to JSON.',
+			'JSON Output',
+			'JSON Output',
+			'Your prompt is requesting structured information from the model. Consider asking it to return JSON.',
 			EditorType.ENHANCEMENT,
 			RequiredInputType.TEXT
 		);
@@ -71,7 +71,7 @@ Return the output in JSON with the key "output" that is either true or false.`;
 
 ### Instructions
 * You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the propmt should not be changed. 
-* Make sure the desirer format is added somewhere towards the end of the prompt.
+* Make sure the desired format is added somewhere towards the end of the prompt.
 * Only return the new prompt in plain text without any other information or formatting.`;
 		const res = await llm.generate([
 			{
