@@ -90,6 +90,6 @@
 			{editPrompt}
 			{setPrompt}
 		/>
-		<InstanceTable bind:instances project={data.project} {prompt} />
+		<InstanceTable bind:instances bind:project {prompt} />
 	</div>
 </div>
