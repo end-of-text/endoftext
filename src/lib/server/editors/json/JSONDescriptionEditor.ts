@@ -67,7 +67,7 @@ Return the output in JSON with the key "output" that is either true or false.`;
 			predictions: { prediction: string }[];
 		}[],
 		input: string | unknown
-	): Promise<string> {
+	): Promise<Tables<'prompts'>> {
 		const systemPrompt = `You are an AI assistant that rewrites prompts to include a description of the desired JSON format. Users provide a prompt and the desired JSON format. Your task is to append the desired format to the prompt.
 
 ### Instructions
@@ -85,6 +85,6 @@ Return the output in JSON with the key "output" that is either true or false.`;
 			}
 		]);
 
-		return res || prompt.prompt;
+		return { ...prompt, prompt: res || prompt.prompt };
 	}
 }

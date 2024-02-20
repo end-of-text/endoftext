@@ -57,5 +57,5 @@ export abstract class PromptEditor {
 			predictions: { prediction: string }[];
 		}[],
 		input: string | unknown
-	): Promise<string>;
+	): Promise<Tables<'prompts'>>;
 }
