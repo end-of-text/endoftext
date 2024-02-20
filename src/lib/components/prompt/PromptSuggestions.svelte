@@ -15,7 +15,7 @@
 	} = $props<{
 		prompt: Tables<'prompts'>;
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
-		editPrompt: (suggestion: string) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>) => void;
 		gettingSuggestions: boolean;
 		suggestionsRequest: Tables<'suggestions'>[] | undefined;
 		toplevel?: boolean;

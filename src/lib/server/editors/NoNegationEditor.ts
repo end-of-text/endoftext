@@ -63,7 +63,10 @@ export class NoNegationEditor extends PromptEditor {
 		prompt: Tables<'prompts'>,
 		targetSpans: number[][],
 		llm: LLM
-	): Promise<string> {
-		return await rewriteSentences(prompt.prompt, targetSpans, llm, removeNegationPrompt);
+	): Promise<Tables<'prompts'>> {
+		return {
+			...prompt,
+			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, removeNegationPrompt)
+		};
 	}
 }

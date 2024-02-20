@@ -126,7 +126,7 @@ export async function acceptSuggestion(
 	suggestion: Tables<'suggestions'>,
 	prompt: Tables<'prompts'>,
 	userInput: string | undefined
-): Promise<string> {
+): Promise<Tables<'prompts'>> {
 	const res = await fetch(`/api/editor/suggestions/accept`, {
 		method: 'POST',
 		headers: {
@@ -139,7 +139,7 @@ export async function acceptSuggestion(
 		})
 	});
 	const json = await res.json();
-	return json.prompt as string;
+	return json.prompt as Tables<'prompts'>;
 }
 
 export async function generateInstances(
