@@ -16,7 +16,7 @@
 
 	{#if showOptions}
 		<div
-			class="absolute right-0 top-6 z-50 rounded border border-gray-300 bg-white"
+			class="absolute right-0 top-6 z-20 rounded border border-gray-300 bg-white"
 			transition:fade={{ duration: 100 }}
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => {

@@ -6,26 +6,28 @@
 	import { EditorType, RequiredInputType } from '$lib/types';
 	import { Check, Coins, Lightbulb, ShieldX } from 'lucide-svelte';
 
-	const borderMap: { [key: string]: string } = {
-		ERROR: 'border-l-red-600',
-		ENHANCEMENT: 'border-l-green-600',
-		OPTIMIZATION: 'border-l-yellow-400'
-	};
-
 	let {
 		suggestion,
 		prompt,
 		editPrompt,
-		applied = false
+		applied = false,
+		disabled = false
 	} = $props<{
 		suggestion: Tables<'suggestions'>;
 		prompt: Tables<'prompts'>;
 		editPrompt: (changedPrompt: string, suggestionId: number) => void;
 		applied?: boolean;
+		disabled?: boolean;
 	}>();
 
 	let applyingSuggestion = $state(false);
 	let userInput = $state<string | undefined>(undefined);
+
+	const borderMap: { [key: string]: string } = {
+		ERROR: 'border-l-red-600',
+		ENHANCEMENT: 'border-l-green-600',
+		OPTIMIZATION: 'border-l-yellow-400'
+	};
 
 	async function accept() {
 		applyingSuggestion = true;
@@ -36,18 +38,18 @@
 </script>
 
 <div
-	class="flex items-start justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {borderMap[
-		suggestion.type
-	]}"
+	class="flex items-start justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
+		? 'border-l-gray-600'
+		: borderMap[suggestion.type]}"
 >
 	<div class="flex flex-col">
 		<div class="flex items-center gap-2">
 			{#if suggestion.type === EditorType.ERROR}
-				<ShieldX class="h-5 w-5 text-red-600" />
+				<ShieldX class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-red-600'}" />
 			{:else if suggestion.type === EditorType.ENHANCEMENT}
-				<Lightbulb class="h-5 w-5 text-green-600" />
+				<Lightbulb class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-green-600'}" />
 			{:else if suggestion.type === EditorType.OPTIMIZATION}
-				<Coins class="h-5 w-5 text-yellow-400" />
+				<Coins class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-yellow-400'}" />
 			{/if}
 			<p class="font-semibold">
 				{suggestion.name}
@@ -68,7 +70,7 @@
 		{:else if applyingSuggestion}
 			<Spinner />
 		{:else}
-			<Button onclick={accept}>Apply</Button>
+			<Button {disabled} onclick={accept}>Apply</Button>
 		{/if}
 	</div>
 </div>

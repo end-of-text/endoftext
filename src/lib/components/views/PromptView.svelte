@@ -69,6 +69,7 @@
 		{#if projectId}
 			<PromptSuggestions
 				{prompt}
+				{editedPrompt}
 				{suggestionApplied}
 				bind:gettingSuggestions
 				bind:suggestions
