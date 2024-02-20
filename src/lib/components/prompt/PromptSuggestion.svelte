@@ -15,7 +15,7 @@
 	let { suggestion, prompt, editPrompt } = $props<{
 		suggestion: Tables<'suggestions'>;
 		prompt: Tables<'prompts'>;
-		editPrompt: (suggestion: string) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>) => void;
 	}>();
 
 	let applyingSuggestion = $state(false);

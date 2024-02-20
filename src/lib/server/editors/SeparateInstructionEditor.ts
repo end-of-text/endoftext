@@ -53,7 +53,7 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		prompt: Tables<'prompts'>,
 		targetSpans: number[][],
 		llm: LLM
-	): Promise<string> {
+	): Promise<Tables<'prompts'>> {
 		const res = await llm.generate([
 			{
 				role: 'system',
@@ -66,6 +66,6 @@ Return the output in JSON with the key "output" that is either true or false.`;
 			}
 		]);
 
-		return res || prompt.prompt;
+		return { ...prompt, prompt: res || prompt.prompt };
 	}
 }
