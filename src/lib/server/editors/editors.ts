@@ -5,6 +5,7 @@ import { OutputDescriptionEditor } from './OutputDescriptionEditor';
 import { SeparateInstructionEditor } from './SeparateInstructionEditor';
 import { ShortenEditor } from './ShortenEditor';
 import { SingleInstructionEditor } from './SingleInstructionEditor';
+import { ConvertToJSONEditor } from './json/ConvertToJsonEditor';
 import { JSONDescriptionEditor } from './json/JSONDescriptionEditor';
 import { JSONInstructionEditor } from './json/JSONInstructionEditor';
 
@@ -17,5 +18,6 @@ export const editors = [
 	new JSONDescriptionEditor(),
 	new OutputDescriptionEditor(),
 	new SingleInstructionEditor(),
-	new CompressionEditor()
+	new CompressionEditor(),
+	new ConvertToJSONEditor()
 ];
