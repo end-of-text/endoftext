@@ -15,11 +15,9 @@ export class JSONDescriptionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		console.log(prompt, prompt.prompt);
 		if (!prompt.prompt.toLowerCase().includes('json')) {
 			return null;
 		}
-		console.log('what?');
 
 		const systemPrompt = `### Role
 You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt specifies the desired JSON format. If the prompt does not say what the output format should look like, return true. Otherwise return false. 
@@ -53,7 +51,6 @@ Return the output in JSON with the key "output" that is either true or false.`;
 			return null;
 		}
 
-		console.log(res);
 		try {
 			return JSON.parse(res).output ? [] : null;
 		} catch (e) {
