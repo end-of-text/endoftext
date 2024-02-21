@@ -20,7 +20,7 @@
 </script>
 
 <div
-	class="fixed inset-0 z-20 flex items-baseline justify-center bg-gray-200 bg-opacity-60 p-12"
+	class="fixed inset-0 z-50 flex items-baseline justify-center bg-gray-200 bg-opacity-60 p-12"
 	transition:fade={{ duration: 200 }}
 	onclick={cancel}
 	onkeydown={() => undefined}

@@ -14,7 +14,7 @@
 		suggestionApplied,
 		projectId,
 		gettingSuggestions,
-		suggestionsRequest,
+		suggestions,
 		onclose,
 		setPrompt,
 		editPrompt
@@ -23,13 +23,13 @@
 		editedPrompt: Tables<'prompts'>;
 		userStatus: string;
 		hoveredSuggestion: Tables<'suggestions'> | null;
-		suggestionApplied: boolean;
+		suggestionApplied: number;
 		projectId: string | undefined;
 		gettingSuggestions: boolean;
-		suggestionsRequest: Tables<'suggestions'>[] | undefined;
+		suggestions: Tables<'suggestions'>[] | undefined;
 		onclose: () => void;
 		setPrompt: () => void;
-		editPrompt: (newPrompt: Tables<'prompts'>) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 	}>();
 
 	let showOptions = $state(false);
@@ -69,8 +69,10 @@
 		{#if projectId}
 			<PromptSuggestions
 				{prompt}
+				{editedPrompt}
+				{suggestionApplied}
 				bind:gettingSuggestions
-				{suggestionsRequest}
+				bind:suggestions
 				{editPrompt}
 				setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
 				toplevel={true}

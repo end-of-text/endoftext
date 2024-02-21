@@ -17,7 +17,7 @@
 </script>
 
 <div
-	class="absolute inset-0 z-[1000] flex cursor-default items-baseline justify-center bg-gray-200 bg-opacity-60 p-12 text-left"
+	class="absolute inset-0 z-30 flex cursor-default items-baseline justify-center bg-gray-200 bg-opacity-60 p-12 text-left"
 	transition:fade={{ duration: 200 }}
 	onmousedown={onclose}
 	onkeydown={() => undefined}
