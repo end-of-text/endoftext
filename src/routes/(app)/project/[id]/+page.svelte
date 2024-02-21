@@ -22,9 +22,9 @@
 	let gettingSuggestions = $state(false);
 	let suggestions: Tables<'suggestions'>[] | undefined = $state([]);
 
-	function editPrompt(newPrompt: string, suggestionId: number) {
+	function editPrompt(newPrompt: Tables<'prompts'>, suggestionId: number) {
 		suggestionApplied = suggestionId;
-		editedPrompt.prompt = newPrompt;
+		editedPrompt = newPrompt;
 	}
 
 	function setPrompt() {
