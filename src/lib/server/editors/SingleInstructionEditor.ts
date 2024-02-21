@@ -59,10 +59,12 @@ export class SingleInstructionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		return await filterSentences(prompt.prompt, llm, [
-			instructionPrompt,
-			multipleInstructionPrompt
-		]);
+		return await filterSentences(
+			prompt.prompt,
+			llm,
+			[instructionPrompt, multipleInstructionPrompt],
+			(sentence) => sentence.includes(' and ') || sentence.includes(' or ')
+		);
 	}
 
 	async rewritePrompt(

@@ -53,10 +53,12 @@ export class NoNegationEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		return await filterSentences(prompt.prompt, llm, [
-			instructionClassifierPrompt,
-			negationClassifierPrompt
-		]);
+		return await filterSentences(
+			prompt.prompt,
+			llm,
+			[instructionClassifierPrompt, negationClassifierPrompt],
+			(sentence) => ['not', "n't", 'no', 'never'].some((negation) => sentence.includes(negation))
+		);
 	}
 
 	async rewritePrompt(
