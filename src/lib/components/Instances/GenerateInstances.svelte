@@ -60,7 +60,7 @@
 						createInstances(generationInstruction, generationCount, similar);
 					}}
 				>
-					Generate {generationCount} instances
+					Generate {generationCount} instance{generationCount > 1 ? 's' : ''}
 				</Button>
 			</div>
 		</div>
