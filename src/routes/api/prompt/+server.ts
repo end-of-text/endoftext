@@ -24,7 +24,15 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, promptsError.message);
 	}
 
-	if (prompts.length >= 100) {
+	const { data: subscription, error: err } = await supabase
+		.from('user_subscription')
+		.select('status, stripe_id')
+		.eq('id', session.user.id)
+		.single();
+
+	if (err) {
+		error(500, err.message);
+	} else if (prompts.length >= 100 && !subscription.status) {
 		error(403, 'You have reached the maximum number of prompts allowed for the month');
 	}
 
