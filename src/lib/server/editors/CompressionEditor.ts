@@ -28,7 +28,12 @@ export class CompressionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		return await filterSentences(prompt.prompt, llm, [canBeSimplifiedPrompt]);
+		return await filterSentences(
+			prompt.prompt,
+			llm,
+			[canBeSimplifiedPrompt],
+			(sentence) => sentence.split(' ').length > 15
+		);
 	}
 
 	async rewritePrompt(
