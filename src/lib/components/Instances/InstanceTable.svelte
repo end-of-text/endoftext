@@ -11,9 +11,10 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { PlusCircle, Sparkle, Sparkles, Tag, Trash2 } from 'lucide-svelte';
+	import { PlusCircle, Tag, Trash2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PaywallPopup from '../popups/PaywallPopup.svelte';
+	import GenerateInstances from './GenerateInstances.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
 	let { instances, prompt, project } = $props<{
@@ -37,6 +38,21 @@
 			return metrics.reduce((acc, m) => acc + m.metric, 0) / metrics.length;
 		});
 		return result;
+	}
+
+	function createInstances(instruction: string, count: number, generateSimilar: boolean) {
+		generatingInstances = true;
+
+		let passedInstances = instances;
+		if (generateSimilar) {
+			passedInstances = selectedInstances
+				.map((d, i) => (d ? instances[i] : null))
+				.filter((d) => d !== null) as Tables<'instances'>[];
+		}
+		generateInstances(prompt, passedInstances, count, instruction).then((r) => {
+			instances = [...instances, ...r];
+			generatingInstances = false;
+		});
 	}
 
 	function removeInstance(id: number) {
@@ -104,47 +120,10 @@
 					<Button classNames="text-red-600" onclick={() => (showDelete = true)}>
 						<Trash2 class="h-5 w-5" />
 					</Button>
-					<Button
-						classNames="text-yellow-400"
-						title="Generate Similar"
-						onclick={() => {
-							if (instances.length >= 25) {
-								showPaywall = true;
-								return;
-							}
-							generatingInstances = true;
-							generateInstances(
-								prompt,
-								instances.filter((_, i) => selectedInstances[i]),
-								5
-							).then((r) => {
-								instances = [...instances, ...r];
-								selectedInstances = [];
-								generatingInstances = false;
-							});
-						}}
-					>
-						<Sparkles class="h-5 w-5" />
-					</Button>
+					<GenerateInstances {createInstances} similar={true} />
 				</div>
 			{/if}
-			<Button
-				onclick={() => {
-					if (instances.length >= 25) {
-						showPaywall = true;
-						return;
-					}
-					generatingInstances = true;
-					generateInstances(prompt, instances, 5).then((r) => {
-						instances = [...instances, ...r];
-						generatingInstances = false;
-					});
-				}}
-				title="Generate"
-				classNames="text-yellow-400"
-			>
-				<Sparkle class="h-5 w-5 transition" />
-			</Button>
+			<GenerateInstances {createInstances} similar={false} />
 			<Button
 				onclick={() => {
 					if (instances.length >= 25) {

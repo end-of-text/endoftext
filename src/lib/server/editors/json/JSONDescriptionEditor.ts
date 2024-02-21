@@ -15,18 +15,20 @@ export class JSONDescriptionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		if (prompt.responseFormat !== 'json' || !prompt.prompt.toLowerCase().includes('json')) {
+		if (!prompt.prompt.toLowerCase().includes('json')) {
 			return null;
 		}
 
 		const systemPrompt = `### Role
-You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt specifies the desired JSON format. All prompts you get are supposed to produce a JSON output.
-		
-### Instruction
-Go through the following steps one by one. If either applies, return true.
-1. The prompt includes an example output that outlines the desired JSON format.
-2. The prompt contains a JSON specification that details the desired JSON format.
-3. The prompt contains a textual explanation of how the JSON output should be structured.
+You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt specifies the desired JSON format. If the prompt does not say what the output format should look like, return true. Otherwise return false. 
+
+## Examples
+Input: return JSON
+Output: true
+Input: give JSON outputs
+Output: false
+Input: return JSON with the key output and value
+Output: false
 		
 ### Output Format
 Return the output in JSON with the key "output" that is either true or false.`;
@@ -71,7 +73,7 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		const systemPrompt = `You are an AI assistant that rewrites prompts to include a description of the desired JSON format. Users provide a prompt and the desired JSON format. Your task is to append the desired format to the prompt.
 
 ### Instructions
-* You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the propmt should not be changed. 
+* You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the prompt should not be changed. 
 * Make sure the desired format is added somewhere towards the end of the prompt.
 * Only return the new prompt in plain text without any other information or formatting.`;
 		const res = await llm.generate([

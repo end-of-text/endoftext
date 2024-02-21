@@ -29,12 +29,13 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 	const requestData = await request.json();
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
 	const instances = requestData.instances as Tables<'instances'>[] | undefined;
+	const instruction = requestData.instruction as string | undefined;
 	const count = requestData.count as number | undefined;
 	if (!prompt || !instances || !count) {
 		error(500, 'Invalid data');
 	}
 
-	const prediction = await generateInstances(prompt.prompt, instances, 5);
+	const prediction = await generateInstances(prompt.prompt, instances, count, instruction);
 
 	let newInstances: string[] = [];
 	try {
