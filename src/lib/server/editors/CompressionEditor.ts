@@ -35,7 +35,10 @@ export class CompressionEditor extends PromptEditor {
 		prompt: Tables<'prompts'>,
 		targetSpans: number[][],
 		llm: LLM
-	): Promise<string> {
-		return await rewriteSentences(prompt.prompt, targetSpans, llm, simplifyPrompt);
+	): Promise<Tables<'prompts'>> {
+		return {
+			...prompt,
+			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, simplifyPrompt)
+		};
 	}
 }

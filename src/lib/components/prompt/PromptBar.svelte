@@ -29,7 +29,7 @@
 		gettingSuggestions: boolean;
 		suggestions: Tables<'suggestions'>[] | undefined;
 		setPromptMaximized: (maximized: boolean) => void;
-		editPrompt: (changedPrompt: string, suggestionId: number) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		setPrompt: () => void;
 	}>();
 </script>

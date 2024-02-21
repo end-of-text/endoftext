@@ -29,7 +29,7 @@
 		suggestions: Tables<'suggestions'>[] | undefined;
 		onclose: () => void;
 		setPrompt: () => void;
-		editPrompt: (changedPrompt: string, suggestionId: number) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 	}>();
 
 	let showOptions = $state(false);

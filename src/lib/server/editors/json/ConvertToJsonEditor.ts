@@ -3,30 +3,29 @@ import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from '../editor';
 
-export class JSONDescriptionEditor extends PromptEditor {
+export class ConvertToJSONEditor extends PromptEditor {
 	constructor() {
 		super(
-			'JSON Description',
-			'JSON Description',
-			'Include a description of the desired JSON format. This can be an example or a specification.',
+			'JSON Output',
+			'JSON Output',
+			'Your prompt is requesting structured information from the model. Consider asking it to return JSON.',
 			EditorType.ENHANCEMENT,
 			RequiredInputType.TEXT
 		);
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		if (prompt.responseFormat !== 'json' || !prompt.prompt.toLowerCase().includes('json')) {
+		if (prompt.responseFormat === 'json') {
 			return null;
 		}
 
 		const systemPrompt = `### Role
-You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt specifies the desired JSON format. All prompts you get are supposed to produce a JSON output.
+You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt should use JSON as its desired output format.
 		
 ### Instruction
 Go through the following steps one by one. If either applies, return true.
-1. The prompt includes an example output that outlines the desired JSON format.
-2. The prompt contains a JSON specification that details the desired JSON format.
-3. The prompt contains a textual explanation of how the JSON output should be structured.
+1. Check whether the prompt includes a detailed description of the desired information. This can be an example or a description of the desired output but it needs to clearly outline the information contained in the answer. If it does, continue to step 2. Otherwise, return true.
+2. If the desired output is very structured and could be represented as JSON, return false.
 		
 ### Output Format
 Return the output in JSON with the key "output" that is either true or false.`;
@@ -81,10 +80,10 @@ Return the output in JSON with the key "output" that is either true or false.`;
 			},
 			{
 				role: 'user',
-				content: `prompt:\n${prompt.prompt}\n\nDesired JSON format:\n${input}\n\nmodified prompt:`
+				content: `prompt:\n${prompt.prompt}\n\nAnswer with JSON. Desired JSON format:\n${input}\n\nmodified prompt:`
 			}
 		]);
 
-		return { ...prompt, prompt: res || prompt.prompt };
+		return { ...prompt, responseFormat: 'json', prompt: res || prompt.prompt };
 	}
 }

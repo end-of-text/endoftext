@@ -15,7 +15,7 @@
 	} = $props<{
 		suggestion: Tables<'suggestions'>;
 		prompt: Tables<'prompts'>;
-		editPrompt: (changedPrompt: string, suggestionId: number) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		applied?: boolean;
 		disabled?: boolean;
 	}>();

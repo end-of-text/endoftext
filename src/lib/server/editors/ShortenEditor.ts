@@ -43,7 +43,7 @@ export class ShortenEditor extends PromptEditor {
 		prompt: Tables<'prompts'>,
 		targetSpans: number[][],
 		llm: LLM
-	): Promise<string> {
+	): Promise<Tables<'prompts'>> {
 		const res = await llm.generate([
 			{
 				role: 'system',
@@ -56,6 +56,6 @@ export class ShortenEditor extends PromptEditor {
 			}
 		]);
 
-		return res || prompt.prompt;
+		return { ...prompt, prompt: res || prompt.prompt };
 	}
 }

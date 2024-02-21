@@ -15,24 +15,22 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, 'Invalid data');
 	}
 
-	if (clear) {
-		await supabase
-			.from('predictions')
-			.delete()
-			.eq('prompt_id', prompt.id)
-			.eq('instance_id', instanceId);
-	} else {
-		const cacheRes = await supabase
-			.from('predictions')
-			.select('*')
-			.eq('prompt_id', prompt.id)
-			.eq('instance_id', instanceId);
+	const cacheRes = await supabase
+		.from('predictions')
+		.select('*')
+		.eq('prompt_id', prompt.id)
+		.eq('instance_id', instanceId);
 
-		if (cacheRes.error) {
-			error(500, cacheRes.error.message);
-		} else if (cacheRes.data && cacheRes.data.length > 0) {
+	if (cacheRes.error) {
+		error(500, cacheRes.error.message);
+	}
+
+	let id = null;
+	if (cacheRes.data && cacheRes.data.length > 0) {
+		if (!clear) {
 			return json({ prediction: cacheRes.data[0] });
 		}
+		id = cacheRes.data[0].id;
 	}
 
 	const openai = new OpenAILLM(OPENAI_API_KEY || '');
@@ -48,14 +46,13 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		}
 	);
 
-	const res = await supabase
-		.from('predictions')
-		.insert({
-			instance_id: instanceId,
-			prompt_id: prompt.id,
-			prediction: prediction
-		})
-		.select();
+	const data: Record<string, unknown> = {
+		instance_id: instanceId,
+		prompt_id: prompt.id,
+		prediction: prediction
+	};
+	if (id !== null) data.id = id;
+	const res = await supabase.from('predictions').upsert(data).select();
 
 	if (res.error) {
 		error(500, res.error.message);

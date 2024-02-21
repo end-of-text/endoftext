@@ -22,9 +22,9 @@
 	let gettingSuggestions = $state(false);
 	let suggestions: Tables<'suggestions'>[] | undefined = $state([]);
 
-	function editPrompt(changedPrompt: string, suggestionId: number) {
+	function editPrompt(newPrompt: string, suggestionId: number) {
 		suggestionApplied = suggestionId;
-		editedPrompt.prompt = changedPrompt;
+		editedPrompt.prompt = newPrompt;
 	}
 
 	function setPrompt() {
@@ -93,6 +93,6 @@
 			{editPrompt}
 			{setPrompt}
 		/>
-		<InstanceTable bind:instances project={data.project} {prompt} />
+		<InstanceTable bind:instances bind:project {prompt} />
 	</div>
 </div>

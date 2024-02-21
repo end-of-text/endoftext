@@ -20,7 +20,7 @@
 		prompt: Tables<'prompts'>;
 		editedPrompt: Tables<'prompts'>;
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
-		editPrompt: (changedPrompt: string, suggestionId: number) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		gettingSuggestions: boolean;
 		suggestions: Tables<'suggestions'>[] | undefined;
 		suggestionApplied: number;
