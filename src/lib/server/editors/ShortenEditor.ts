@@ -34,28 +34,34 @@ export class ShortenEditor extends PromptEditor {
 			predictionLengths.reduce((sum, length) => sum + length, 0) / predictionLengths.length;
 
 		if (averageLabelLength * 1.3 < averagePredictionLenth) {
-			return null;
+			return [];
 		}
-		return [];
+		return null;
 	}
 
 	async rewritePrompt(
 		prompt: Tables<'prompts'>,
 		targetSpans: number[][],
-		llm: LLM
+		llm: LLM,
+		instancePredictions: {
+			id: number;
+			input: string;
+			label: string;
+			predictions: { prediction: string }[];
+		}[]
 	): Promise<Tables<'prompts'>> {
-		const res = await llm.generate([
-			{
-				role: 'system',
-				content:
-					'You are an AI assistant that rewrites prompts given the specified criteria. Only return the new prompt.'
-			},
-			{
-				role: 'user',
-				content: `Rewrite the prompt so that the answers produced by the model are shorter.\n\nprompt:\n${prompt.prompt}`
-			}
-		]);
+		const labelLengths = [];
+		for (const instance of instancePredictions) {
+			labelLengths.push(instance.label.length);
+		}
+		const averageLabelLength =
+			labelLengths.reduce((sum, length) => sum + length, 0) / labelLengths.length;
 
-		return { ...prompt, prompt: res || prompt.prompt };
+		return {
+			...prompt,
+			prompt:
+				prompt.prompt +
+				`\n\nYour answer should be about ${Math.floor(averageLabelLength)} characters long.`
+		};
 	}
 }
