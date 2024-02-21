@@ -10,12 +10,14 @@
 		suggestion,
 		prompt,
 		editPrompt,
+		dismissSuggestion,
 		applied = false,
 		disabled = false
 	} = $props<{
 		suggestion: Tables<'suggestions'>;
 		prompt: Tables<'prompts'>;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
+		dismissSuggestion: (suggestionId: number) => void;
 		applied?: boolean;
 		disabled?: boolean;
 	}>();
@@ -64,7 +66,7 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="flex items-center justify-center">
+	<div>
 		{#if applied}
 			<Check class="h-5 w-5 text-green-600" />
 		{:else if applyingSuggestion}
@@ -72,5 +74,11 @@
 		{:else}
 			<Button {disabled} onclick={accept}>Apply</Button>
 		{/if}
+		<button
+			class="w-full cursor-pointer text-center text-sm text-gray-600 transition hover:text-red-600"
+			onclick={() => dismissSuggestion(suggestion.id)}
+		>
+			dismiss
+		</button>
 	</div>
 </div>

@@ -30,6 +30,13 @@
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
+
+	async function dismissSuggestion(suggestionId: number) {
+		suggestions = suggestions?.filter((s) => s.id !== suggestionId);
+		await fetch(`/api/editor/suggestions/${suggestionId}/dismiss`, {
+			method: 'DELETE'
+		});
+	}
 </script>
 
 <div
@@ -69,7 +76,7 @@
 			{:else if suggestionApplied > -1}
 				{@const suggestion = suggestions.find((s) => s.id === suggestionApplied)}
 				{#if suggestion !== undefined}
-					<PromptSuggestion {prompt} {suggestion} {editPrompt} applied />
+					<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} applied />
 				{/if}
 				{#each suggestions.filter((s) => s.id !== suggestionApplied) as suggestion (suggestion.id)}
 					<div
@@ -77,7 +84,7 @@
 							text: 'To apply another suggestion, either save or revert the current changes.'
 						}}
 					>
-						<PromptSuggestion {prompt} {suggestion} {editPrompt} disabled />
+						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
 					</div>
 				{/each}
 			{:else if promptWasEdited}
@@ -87,7 +94,7 @@
 							text: 'To apply a suggestion, either save or revert the current changes.'
 						}}
 					>
-						<PromptSuggestion {prompt} {suggestion} {editPrompt} disabled />
+						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
 					</div>
 				{/each}
 			{:else}
@@ -100,7 +107,7 @@
 						role="button"
 						tabindex="0"
 					>
-						<PromptSuggestion {prompt} {suggestion} {editPrompt} />
+						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} />
 					</div>
 				{/each}
 			{/if}
