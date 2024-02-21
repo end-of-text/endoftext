@@ -11,7 +11,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { PlusCircle, Sparkles, Tag, Trash2 } from 'lucide-svelte';
+	import { PlusCircle, Tag, Trash2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PaywallPopup from '../popups/PaywallPopup.svelte';
 	import GenerateInstances from './GenerateInstances.svelte';
@@ -40,9 +40,16 @@
 		return result;
 	}
 
-	function createInstances(instruction: string, count: number) {
+	function createInstances(instruction: string, count: number, generateSimilar: boolean) {
 		generatingInstances = true;
-		generateInstances(prompt, instances, count, instruction).then((r) => {
+
+		let passedInstances = instances;
+		if (generateSimilar) {
+			passedInstances = selectedInstances
+				.map((d, i) => (d ? instances[i] : null))
+				.filter((d) => d !== null) as Tables<'instances'>[];
+		}
+		generateInstances(prompt, passedInstances, count, instruction).then((r) => {
 			instances = [...instances, ...r];
 			generatingInstances = false;
 		});
@@ -113,31 +120,10 @@
 					<Button classNames="text-red-600" onclick={() => (showDelete = true)}>
 						<Trash2 class="h-5 w-5" />
 					</Button>
-					<Button
-						classNames="text-yellow-400"
-						title="Generate Similar"
-						onclick={() => {
-							if (instances.length >= 25) {
-								showPaywall = true;
-								return;
-							}
-							generatingInstances = true;
-							generateInstances(
-								prompt,
-								instances.filter((_, i) => selectedInstances[i]),
-								5
-							).then((r) => {
-								instances = [...instances, ...r];
-								selectedInstances = [];
-								generatingInstances = false;
-							});
-						}}
-					>
-						<Sparkles class="h-5 w-5" />
-					</Button>
+					<GenerateInstances {createInstances} similar={true} />
 				</div>
 			{/if}
-			<GenerateInstances {createInstances} />
+			<GenerateInstances {createInstances} similar={false} />
 			<Button
 				onclick={() => {
 					if (instances.length >= 25) {

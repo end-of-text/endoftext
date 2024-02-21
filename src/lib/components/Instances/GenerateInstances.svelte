@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { clickOutside } from '$lib/clickOutside';
 	import Button from '$lib/components/ui/Button.svelte';
-	import { Sparkle } from 'lucide-svelte';
+	import { Sparkle, Sparkles } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
-	let { createInstances } = $props<{
-		createInstances: (instruction: string, count: number) => void;
+	let { similar, createInstances } = $props<{
+		similar: boolean;
+		createInstances: (instruction: string, count: number, similar: boolean) => void;
 	}>();
 
 	let showGenerateOptions = $state(false);
@@ -16,10 +17,14 @@
 <div class="relative" use:clickOutside={() => (showGenerateOptions = false)}>
 	<Button
 		onclick={() => (showGenerateOptions = !showGenerateOptions)}
-		title="Generate"
+		title={similar ? 'Generate Similar' : 'Generate'}
 		classNames="text-yellow-400"
 	>
-		<Sparkle class="h-5 w-5 transition" />
+		{#if similar}
+			<Sparkles class="h-5 w-5 transition" />
+		{:else}
+			<Sparkle class="h-5 w-5 transition" />
+		{/if}
 	</Button>
 	{#if showGenerateOptions}
 		<div
@@ -40,7 +45,7 @@
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						showGenerateOptions = false;
-						createInstances(generationInstruction, generationCount);
+						createInstances(generationInstruction, generationCount, similar);
 					}
 				}}
 				class="mb-2 w-full"
@@ -49,10 +54,10 @@
 			<div class="flex items-center gap-2">
 				<input bind:value={generationCount} type="range" min="1" max="10" />
 				<Button
-					classNames="shrink-0"
+					classNames="shrink-0 min-w-52 justify-center"
 					onclick={() => {
 						showGenerateOptions = false;
-						createInstances(generationInstruction, generationCount);
+						createInstances(generationInstruction, generationCount, similar);
 					}}
 				>
 					Generate {generationCount} instances

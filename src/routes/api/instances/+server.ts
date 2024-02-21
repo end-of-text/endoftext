@@ -35,7 +35,7 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 		error(500, 'Invalid data');
 	}
 
-	const prediction = await generateInstances(prompt.prompt, instances, 5, instruction);
+	const prediction = await generateInstances(prompt.prompt, instances, count, instruction);
 
 	let newInstances: string[] = [];
 	try {
