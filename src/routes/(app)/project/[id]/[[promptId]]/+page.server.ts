@@ -4,11 +4,14 @@ import { error, redirect } from '@sveltejs/kit';
 export async function load({ locals: { supabase }, params }) {
 	const projectReq = supabase.from('projects').select('*').eq('id', params.id);
 
-	const promptsReq = supabase
-		.from('prompts')
-		.select('*')
-		.eq('project_id', params.id)
-		.order('created_at', { ascending: false });
+	const promptsReq =
+		params.promptId === undefined
+			? supabase
+					.from('prompts')
+					.select('*')
+					.eq('project_id', params.id)
+					.order('created_at', { ascending: false })
+			: supabase.from('prompts').select('*').eq('project_id', params.id).eq('id', params.promptId);
 
 	const instancesReq = await supabase
 		.from('instances')

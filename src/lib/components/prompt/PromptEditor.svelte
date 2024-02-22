@@ -2,7 +2,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import * as diff from 'diff';
-	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
+	import { Check, Copy, Expand, Save, Undo, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
 	let {
@@ -11,6 +11,7 @@
 		suggestionApplied,
 		editedPrompt,
 		setPrompt,
+		loadPrompt,
 		setPromptMaximized = undefined
 	} = $props<{
 		prompt: Tables<'prompts'>;
@@ -18,6 +19,7 @@
 		suggestionApplied: number;
 		editedPrompt: Tables<'prompts'>;
 		setPrompt: () => void;
+		loadPrompt: (id: string | null) => void;
 		setPromptMaximized?: (maximized: boolean) => void;
 	}>();
 
@@ -137,6 +139,10 @@
 			classNames="text-gray-500"
 		>
 			<Undo2 class="h-5 w-5" />
+		</Button>
+	{:else if prompt.parent_prompt_id !== null}
+		<Button onclick={() => loadPrompt(prompt.parent_prompt_id)} classNames="text-gray-500">
+			<Undo class="h-5 w-5" />
 		</Button>
 	{/if}
 	<Button

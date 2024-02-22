@@ -17,7 +17,8 @@
 		suggestions,
 		setPromptMaximized,
 		editPrompt,
-		setPrompt
+		setPrompt,
+		loadPrompt
 	} = $props<{
 		prompt: Tables<'prompts'>;
 		suggestionApplied: number;
@@ -31,6 +32,7 @@
 		setPromptMaximized: (maximized: boolean) => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		setPrompt: () => void;
+		loadPrompt: (id: string | null) => void;
 	}>();
 </script>
 
@@ -60,6 +62,7 @@
 			bind:suggestionApplied
 			bind:editedPrompt
 			{setPromptMaximized}
+			{loadPrompt}
 		/>
 	</div>
 	{#if projectId}

@@ -17,7 +17,8 @@
 		suggestions,
 		onclose,
 		setPrompt,
-		editPrompt
+		editPrompt,
+		loadPrompt
 	} = $props<{
 		prompt: Tables<'prompts'>;
 		editedPrompt: Tables<'prompts'>;
@@ -30,6 +31,7 @@
 		onclose: () => void;
 		setPrompt: () => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
+		loadPrompt: (id: string | null) => void;
 	}>();
 
 	let showOptions = $state(false);
@@ -63,6 +65,7 @@
 			}}
 			bind:suggestionApplied
 			bind:editedPrompt
+			{loadPrompt}
 		/>
 	</div>
 	<div class="flex h-full w-[450px] shrink-0 flex-col border-l px-6 py-4">

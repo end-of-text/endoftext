@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { getSuggestions, updatePrompt } from '$lib/api';
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
@@ -40,6 +41,11 @@
 		});
 	}
 
+	function loadPrompt(id: string | null) {
+		if (id === null) goto(`/project/${data.project.id}`);
+		goto(`/project/${data.project.id}/${id}`);
+	}
+
 	$effect(() => {
 		untrack(() => {
 			gettingSuggestions = true;
@@ -73,6 +79,7 @@
 		projectId={data.project.id}
 		{editPrompt}
 		{setPrompt}
+		{loadPrompt}
 	/>
 {/if}
 
@@ -92,6 +99,7 @@
 			setPromptMaximized={(maximized) => (promptMaximized = maximized)}
 			{editPrompt}
 			{setPrompt}
+			{loadPrompt}
 		/>
 		<InstanceTable bind:instances bind:project {prompt} />
 	</div>
