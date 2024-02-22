@@ -35,11 +35,11 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 		error(500, 'Invalid data');
 	}
 
-	const prediction = await generateInstances(prompt.prompt, instances, count, instruction);
+	const instancesRes = await generateInstances(prompt.prompt, instances, count, instruction);
 
 	let newInstances: string[] = [];
 	try {
-		newInstances = JSON.parse(prediction || '{}')['instances'];
+		newInstances = JSON.parse(instancesRes || '{}')['instances'];
 	} catch (e) {
 		error(500, 'Invalid prediction');
 	}
