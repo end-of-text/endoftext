@@ -4,18 +4,20 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
-	import { Check, Coins, Lightbulb, ShieldX } from 'lucide-svelte';
+	import { Check, Coins, Lightbulb, ShieldX, X } from 'lucide-svelte';
 
 	let {
 		suggestion,
 		prompt,
 		editPrompt,
+		dismissSuggestion,
 		applied = false,
 		disabled = false
 	} = $props<{
 		suggestion: Tables<'suggestions'>;
 		prompt: Tables<'prompts'>;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
+		dismissSuggestion: (suggestion: Tables<'suggestions'>) => void;
 		applied?: boolean;
 		disabled?: boolean;
 	}>();
@@ -38,7 +40,7 @@
 </script>
 
 <div
-	class="flex items-start justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
+	class="flex justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
 		? 'border-l-gray-600'
 		: borderMap[suggestion.type]}"
 >
@@ -64,7 +66,13 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="flex items-center justify-center">
+	<div class="flex h-full flex-col items-end justify-between">
+		<button
+			class="cursor-pointer text-gray-500 opacity-30 transition hover:text-gray-900 hover:opacity-100"
+			onclick={() => dismissSuggestion(suggestion)}
+		>
+			<X class="h-4 w-4" />
+		</button>
 		{#if applied}
 			<Check class="h-5 w-5 text-green-600" />
 		{:else if applyingSuggestion}
