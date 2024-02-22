@@ -1,7 +1,5 @@
-import { OPENAI_API_KEY } from '$env/static/private';
 import { trackEvent } from '$lib/server/amplitude.js';
 import { generateInstances } from '$lib/server/instances/generateInstances.js';
-import { OpenAILLM } from '$lib/server/llms/openai';
 import type { Tables } from '$lib/supabase';
 import { error, json } from '@sveltejs/kit';
 
@@ -59,38 +57,38 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 
 	trackEvent('Instances Generated', { user_id: session?.user.id ?? '' }, { number: count });
 
-	const openai = new OpenAILLM(OPENAI_API_KEY || '');
-	const predictions = await Promise.all(
-		newInstances.map(
-			async (instance) =>
-				await openai.generate(
-					[
-						{ role: 'system', content: prompt.prompt },
-						{ role: 'user', content: instance }
-					],
-					{
-						model: prompt.model,
-						temperature: prompt.temperature,
-						json: prompt.responseFormat === 'json'
-					}
-				)
-		)
-	);
+	// const openai = new OpenAILLM(OPENAI_API_KEY || '');
+	// const predictions = await Promise.all(
+	// 	newInstances.map(
+	// 		async (instance) =>
+	// 			await openai.generate(
+	// 				[
+	// 					{ role: 'system', content: prompt.prompt },
+	// 					{ role: 'user', content: instance }
+	// 				],
+	// 				{
+	// 					model: prompt.model,
+	// 					temperature: prompt.temperature,
+	// 					json: prompt.responseFormat === 'json'
+	// 				}
+	// 			)
+	// 	)
+	// );
 
-	const predictionsRes = await supabase
-		.from('predictions')
-		.insert(
-			predictions.map((prediction, i) => ({
-				instance_id: res.data[i].id,
-				prompt_id: prompt.id,
-				prediction
-			}))
-		)
-		.select();
+	// const predictionsRes = await supabase
+	// 	.from('predictions')
+	// 	.insert(
+	// 		predictions.map((prediction, i) => ({
+	// 			instance_id: res.data[i].id,
+	// 			prompt_id: prompt.id,
+	// 			prediction
+	// 		}))
+	// 	)
+	// 	.select();
 
-	if (predictionsRes.error) {
-		error(500, predictionsRes.error.message);
-	}
+	// if (predictionsRes.error) {
+	// 	error(500, predictionsRes.error.message);
+	// }
 
-	return json({ instances: res.data, predictions });
+	return json({ instances: res.data });
 }

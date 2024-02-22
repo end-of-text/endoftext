@@ -5,6 +5,7 @@
 		deleteInstance,
 		deleteInstances,
 		generateInstances,
+		getPredictions,
 		toggleProjectLabels
 	} from '$lib/api';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
@@ -26,9 +27,9 @@
 
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
-	let metrics = $state<Record<string, number | undefined>>({});
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
+	let metrics = $state<Record<string, number | undefined>>({});
 
 	let metricValues = $derived(
 		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
@@ -49,14 +50,16 @@
 				.filter((d) => d !== null) as Tables<'instances'>[];
 		}
 
-		generateInstances(prompt, passedInstances, count, instruction).then((r) => {
-			const localPreds = { ...predictions };
-			r.predictions.forEach(
-				(d, i) => (localPreds[r.instances[i].id] = new Promise((resolve) => resolve(d)))
-			);
-			predictions = localPreds;
-			instances = [...instances, ...r.instances];
-			generatingInstances = false;
+		generateInstances(prompt, passedInstances, count, instruction).then((newInstances) => {
+			getPredictions(prompt, newInstances).then((newPredictions) => {
+				const localPreds = { ...predictions };
+				newPredictions?.forEach(
+					(d, i) => (localPreds[newInstances[i].id] = new Promise((resolve) => resolve(d)))
+				);
+				predictions = localPreds;
+				instances = [...instances, ...newInstances];
+				generatingInstances = false;
+			});
 		});
 	}
 

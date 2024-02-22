@@ -21,6 +21,21 @@ export async function getPrediction(
 	return res.prediction.prediction;
 }
 
+export async function getPredictions(
+	prompt: Tables<'prompts'>,
+	instances: Tables<'instances'>[]
+): Promise<string[]> {
+	const response = await fetch(`/api/predictions`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ prompt, instances })
+	});
+	const res = await response.json();
+	return res.predictions;
+}
+
 export async function updateInstance(instance: Tables<'instances'>) {
 	await fetch(`/api/instance`, {
 		method: 'PATCH',
@@ -120,7 +135,7 @@ export async function generateInstances(
 	instances: Tables<'instances'>[],
 	count: number,
 	instruction?: string
-): Promise<{ instances: Tables<'instances'>[]; predictions: string[] }> {
+): Promise<Tables<'instances'>[]> {
 	const res = await fetch(`/api/instances`, {
 		method: 'POST',
 		headers: {
@@ -128,7 +143,8 @@ export async function generateInstances(
 		},
 		body: JSON.stringify({ prompt, instances, count, instruction })
 	});
-	return await res.json();
+	const resJson = await res.json();
+	return resJson.instances as Tables<'instances'>[];
 }
 
 export async function getProjectUsers(projectId: string): Promise<Tables<'users'>[]> {

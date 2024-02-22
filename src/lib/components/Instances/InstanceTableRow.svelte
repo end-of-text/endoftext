@@ -6,11 +6,11 @@
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ArrowRight, Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, metric, selected, project, removeInstance } = $props<{
+	let { instance, prompt, project, metric, selected, removeInstance, prediction } = $props<{
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
-		metric: number | null;
 		project: Tables<'projects'>;
+		metric: number | undefined;
 		selected: boolean;
 		removeInstance: (id: number) => void;
 		prediction: Promise<string | null>;
