@@ -17,20 +17,12 @@ export function lengthMetric(hyp: string, ref: string): number {
 	return ref.length - hyp.length;
 }
 
-export function getMetricFunction(name: string): (hyp: string, ref: string) => number {
-	switch (name) {
-		case 'chrf':
-			return chrfMetric;
-		case 'exact match':
-			return exactMatchMetric;
-		case 'fuzzy match':
-			return fuzzyMatchMetric;
-		case 'length':
-			return lengthMetric;
-		default:
-			throw new Error(`Unknown metric: ${name}`);
-	}
-}
+export const metricMap: Record<string, (hyp: string, ref: string) => number> = {
+	chrf: chrfMetric,
+	'exact match': exactMatchMetric,
+	'fuzzy match': fuzzyMatchMetric,
+	length: lengthMetric
+};
 
 export function getMetric(
 	prompt: Tables<'prompts'>,
@@ -42,7 +34,10 @@ export function getMetric(
 		return;
 	}
 
-	const metricFn = getMetricFunction(metricName);
+	const metricFn = metricMap[metricName];
+	if (metricFn === undefined) {
+		return;
+	}
 
 	let metric: number;
 	if (prompt.responseFormat === 'json') {
