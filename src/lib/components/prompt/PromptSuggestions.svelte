@@ -106,6 +106,7 @@
 						onblur={() => setHoveredSuggestion(null)}
 						role="button"
 						tabindex="0"
+						class="flex"
 					>
 						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} />
 					</div>
