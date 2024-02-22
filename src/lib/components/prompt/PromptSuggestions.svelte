@@ -31,10 +31,13 @@
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
 
-	async function dismissSuggestion(suggestionId: number) {
-		suggestions = suggestions?.filter((s) => s.id !== suggestionId);
-		await fetch(`/api/editor/suggestions/${suggestionId}/dismiss`, {
-			method: 'DELETE'
+	async function dismissSuggestion(suggestion: Tables<'suggestions'>) {
+		suggestions = suggestions?.filter((s) => s.id !== suggestion.id);
+		await fetch(`/api/editor/suggestions/dismiss`, {
+			method: 'DELETE',
+			body: JSON.stringify({
+				suggestion
+			})
 		});
 	}
 </script>

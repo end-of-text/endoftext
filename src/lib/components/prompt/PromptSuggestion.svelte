@@ -17,7 +17,7 @@
 		suggestion: Tables<'suggestions'>;
 		prompt: Tables<'prompts'>;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
-		dismissSuggestion: (suggestionId: number) => void;
+		dismissSuggestion: (suggestion: Tables<'suggestions'>) => void;
 		applied?: boolean;
 		disabled?: boolean;
 	}>();
@@ -69,7 +69,7 @@
 	<div class="flex h-full flex-col items-end justify-between">
 		<button
 			class="cursor-pointer text-gray-500 opacity-30 transition hover:text-gray-900 hover:opacity-100"
-			onclick={() => dismissSuggestion(suggestion.id)}
+			onclick={() => dismissSuggestion(suggestion)}
 		>
 			<X class="h-4 w-4" />
 		</button>
