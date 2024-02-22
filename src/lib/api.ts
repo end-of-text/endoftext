@@ -76,32 +76,6 @@ export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'p
 	return json as Tables<'prompts'>;
 }
 
-export async function getMetric(
-	prompt: Tables<'prompts'>,
-	label: string | null,
-	predictionPromise: Promise<Tables<'predictions'> | undefined>,
-	metricName: string | null
-): Promise<number | undefined> {
-	const prediction = await predictionPromise;
-	if (label === null || metricName === null || label === undefined || prediction === undefined) {
-		return;
-	}
-
-	const response = await fetch(`/api/metric`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			prompt,
-			label,
-			prediction,
-			metricName
-		})
-	});
-	return await response.json();
-}
-
 export async function getSuggestions(
 	selectedPrompt: Tables<'prompts'> | undefined,
 	clear: boolean = false

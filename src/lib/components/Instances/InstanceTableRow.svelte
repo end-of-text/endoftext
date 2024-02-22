@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { getMetric, getPrediction, updateInstance } from '$lib/api';
+	import { getPrediction, updateInstance } from '$lib/api';
 	import autosize from '$lib/autosize';
+	import { getMetric } from '$lib/metrics';
 	import type { Tables } from '$lib/supabase';
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ArrowRight, Trash2 } from 'lucide-svelte';
