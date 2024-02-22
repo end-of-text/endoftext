@@ -94,7 +94,14 @@
 			<div class="flex flex-col gap-2">
 				<label
 					class="flex flex-row items-center"
-					onchange={() => toggleProjectLabels(project.id, project.show_labels)}
+					onchange={async () => {
+						const projectRes = await toggleProjectLabels(
+							project.id,
+							project.show_labels,
+							project.metric_name
+						);
+						project.metric_name = projectRes.metric_name;
+					}}
 				>
 					<input type="checkbox" class="mr-2" bind:checked={project.show_labels} />
 					<span>Show Labels</span>

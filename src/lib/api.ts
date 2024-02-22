@@ -183,14 +183,19 @@ export async function removeProjectUser(projectId: string, userId: string): Prom
 	});
 }
 
-export async function toggleProjectLabels(projectId: string, showLabels: boolean): Promise<void> {
-	await fetch(`/api/project/${projectId}/labels`, {
+export async function toggleProjectLabels(
+	projectId: string,
+	showLabels: boolean,
+	projectMetric: string | null
+): Promise<Tables<'projects'>> {
+	const res = await fetch(`/api/project/${projectId}/labels`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ showLabels })
+		body: JSON.stringify({ showLabels, projectMetric })
 	});
+	return await res.json();
 }
 
 export async function deleteProject(projectId: string): Promise<void> {

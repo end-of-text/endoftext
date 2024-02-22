@@ -79,9 +79,14 @@
 			{#if !project.show_labels}
 				<Button
 					classNames="text-blue-600"
-					onclick={() => {
-						project.show_labels = true;
-						toggleProjectLabels(project.id, project.show_labels);
+					onclick={async () => {
+						project.show_labels = !project.show_labels;
+						const projectRes = await toggleProjectLabels(
+							project.id,
+							project.show_labels,
+							project.metric_name
+						);
+						project.metric_name = projectRes.metric_name;
 					}}
 					title="Add label column"
 				>
