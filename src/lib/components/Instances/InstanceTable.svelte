@@ -25,20 +25,18 @@
 
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
-	let metricValues = $state<Record<string, Promise<Tables<'metrics'> | undefined>>>({});
+	let metrics = $state<Record<string, number | undefined>>({});
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 
-	async function averageMetric(
-		values: Record<string, Promise<Tables<'metrics'> | undefined>>
-	): Promise<number | undefined> {
-		const result = Promise.all(Object.values(values)).then((d) => {
-			const metrics = d.filter((d) => d !== undefined) as Tables<'metrics'>[];
-			if (metrics.length === 0) return undefined;
-			return metrics.reduce((acc, m) => acc + m.metric, 0) / metrics.length;
-		});
-		return result;
-	}
+	let metricValues = $derived(
+		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
+	);
+	let avgMetric = $derived(
+		metricValues.length === 0
+			? undefined
+			: metricValues.reduce((a, b) => a + b, 0) / metricValues.length
+	);
 
 	function createInstances(instruction: string, count: number, generateSimilar: boolean) {
 		generatingInstances = true;
@@ -95,9 +93,14 @@
 			{#if !project.show_labels}
 				<Button
 					classNames="text-blue-600"
-					onclick={() => {
+					onclick={async () => {
 						project.show_labels = true;
-						toggleProjectLabels(project.id, project.show_labels);
+						const projectRes = await toggleProjectLabels(
+							project.id,
+							project.show_labels,
+							project.metric_name
+						);
+						project.metric_name = projectRes.metric_name;
 					}}
 					title="Add label column"
 				>
@@ -148,18 +151,16 @@
 						<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
-						<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
-							<span>chrf</span>
-							{#await averageMetric(metricValues)}
-								<Spinner />
-							{:then metric}
-								{#if metric !== undefined}
+						{#if project.metric_name !== null}
+							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
+								<span>{project.metric_name}</span>
+								{#if avgMetric !== undefined}
 									<span class="text-sm font-normal text-black opacity-40"
-										>({metric.toFixed(2)})</span
+										>({avgMetric.toFixed(2)})</span
 									>
 								{/if}
-							{/await}
-						</th>
+							</th>
+						{/if}
 						<th class="min-w-12 whitespace-nowrap rounded-tr" />
 					{:else}
 						<th class="w-6 rounded-tl" />
@@ -173,7 +174,7 @@
 				{#each instances as instance, i (instance.id)}
 					<InstanceTableRow
 						{instance}
-						bind:metricValues
+						bind:metric={metrics[instance.id]}
 						bind:selected={selectedInstances[i]}
 						{prompt}
 						{project}

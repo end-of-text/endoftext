@@ -76,33 +76,6 @@ export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'p
 	return json as Tables<'prompts'>;
 }
 
-export async function getMetric(
-	prompt: Tables<'prompts'>,
-	label: string | null,
-	predictionPromise: Promise<Tables<'predictions'> | undefined>,
-	clear: boolean = false
-): Promise<Tables<'metrics'> | undefined> {
-	const prediction = await predictionPromise;
-	if (label === null || label === undefined || prediction === undefined) {
-		return;
-	}
-
-	const response = await fetch(`/api/metric`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-			prompt,
-			label,
-			prediction,
-			clear
-		})
-	});
-	const jsonResponse = await response.json();
-	return jsonResponse as Tables<'metrics'>;
-}
-
 export async function getSuggestions(
 	selectedPrompt: Tables<'prompts'> | undefined,
 	clear: boolean = false
@@ -185,18 +158,33 @@ export async function removeProjectUser(projectId: string, userId: string): Prom
 	});
 }
 
-export async function toggleProjectLabels(projectId: string, showLabels: boolean): Promise<void> {
-	await fetch(`/api/project/${projectId}/labels`, {
+export async function toggleProjectLabels(
+	projectId: string,
+	showLabels: boolean,
+	projectMetric: string | null
+): Promise<Tables<'projects'>> {
+	const res = await fetch(`/api/project/${projectId}/labels`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ showLabels })
+		body: JSON.stringify({ showLabels, projectMetric })
 	});
+	return await res.json();
 }
 
 export async function deleteProject(projectId: string): Promise<void> {
 	await fetch(`/api/project/${projectId}`, {
 		method: 'DELETE'
+	});
+}
+
+export async function changeProjectMetric(projectId: string, metric: string | null): Promise<void> {
+	await fetch(`/api/project/${projectId}/metric`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ metric })
 	});
 }
