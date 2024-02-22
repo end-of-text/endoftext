@@ -13,7 +13,7 @@
 		metric: number | undefined;
 		selected: boolean;
 		removeInstance: (id: number) => void;
-		prediction: Promise<string | null>;
+		prediction: Promise<string | null> | null;
 	}>();
 
 	let localInstanceInput = $state(instance.input);
@@ -54,7 +54,7 @@
 				if (localInstanceInput === inputArea?.value) return;
 				localInstanceInput = inputArea?.value ?? '';
 				updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
-				prediction = getPrediction(prompt, instance.id, localInstanceInput, true);
+				prediction = getPrediction(prompt, { ...instance, input: localInstanceInput }, true);
 				inputArea && autosize(inputArea);
 				labelArea && autosize(labelArea);
 				predictionArea && autosize(predictionArea);
@@ -89,7 +89,7 @@
 				onblur={() => {
 					if (localInstanceLabel === labelArea?.value) return;
 					localInstanceLabel = labelArea?.value ?? '';
-					prediction.then((p) => updateLabel(p));
+					prediction?.then((p) => updateLabel(p));
 				}}
 				onkeydown={(event) => {
 					if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
@@ -100,7 +100,7 @@
 			<button
 				class="absolute -left-8 top-3 hidden rounded bg-white p-1 text-gray-500 opacity-20 transition hover:opacity-100 group-hover:flex"
 				onclick={() => {
-					prediction.then((p) => {
+					prediction?.then((p) => {
 						localInstanceLabel = p || '';
 						updateLabel(p);
 					});

@@ -5,7 +5,7 @@
 		deleteInstance,
 		deleteInstances,
 		generateInstances,
-		getPredictions,
+		getPrediction,
 		toggleProjectLabels
 	} from '$lib/api';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
@@ -51,15 +51,11 @@
 		}
 
 		generateInstances(prompt, passedInstances, count, instruction).then((newInstances) => {
-			getPredictions(prompt, newInstances).then((newPredictions) => {
-				const localPreds = { ...predictions };
-				newPredictions?.forEach(
-					(d, i) => (localPreds[newInstances[i].id] = new Promise((resolve) => resolve(d)))
-				);
-				predictions = localPreds;
-				instances = [...instances, ...newInstances];
-				generatingInstances = false;
-			});
+			const localPreds = { ...predictions };
+			newInstances.forEach((inst) => (localPreds[inst.id] = getPrediction(prompt, inst, true)));
+			predictions = localPreds;
+			instances = [...instances, ...newInstances];
+			generatingInstances = false;
 		});
 	}
 
@@ -143,10 +139,7 @@
 						showPaywall = true;
 						return;
 					}
-					createInstance($page.params.id).then((d) => {
-						predictions[d.id] = new Promise((resolve) => resolve(''));
-						instances.push(d);
-					});
+					createInstance($page.params.id).then((d) => instances.push(d));
 				}}
 				title="Add"
 				classNames="text-green-600"

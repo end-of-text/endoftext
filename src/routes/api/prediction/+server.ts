@@ -8,10 +8,9 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = await getSession();
 	const requestData = await request.json();
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
-	const instanceId = requestData.instanceId as number | undefined;
-	const input = requestData.input as string | undefined;
+	const instance = requestData.instance as Tables<'instances'> | undefined;
 	const clear = requestData.clear as boolean;
-	if (!prompt || !instanceId || !input) {
+	if (!prompt || !instance) {
 		error(500, 'Invalid data');
 	}
 
@@ -19,7 +18,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		.from('predictions')
 		.select('*')
 		.eq('prompt_id', prompt.id)
-		.eq('instance_id', instanceId);
+		.eq('instance_id', instance.id);
 
 	if (cacheRes.error) {
 		error(500, cacheRes.error.message);
@@ -37,7 +36,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	const prediction = await openai.generate(
 		[
 			{ role: 'system', content: prompt.prompt },
-			{ role: 'user', content: input }
+			{ role: 'user', content: instance.input }
 		],
 		{
 			model: prompt.model,
@@ -47,7 +46,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	);
 
 	const data: Record<string, unknown> = {
-		instance_id: instanceId,
+		instance_id: instance.id,
 		prompt_id: prompt.id,
 		prediction: prediction
 	};
@@ -59,5 +58,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	trackEvent('Prediction Generated', { user_id: session?.user.id ?? '' });
+
 	return json({ prediction: res.data[0] });
 }
