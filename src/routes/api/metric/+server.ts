@@ -1,4 +1,4 @@
-import { chrfMetric } from '$lib/server/metrics/index.js';
+import { chrfMetric } from '$lib/metrics/index.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
 

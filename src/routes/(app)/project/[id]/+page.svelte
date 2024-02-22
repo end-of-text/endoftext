@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation';
 	import { getSuggestions, updatePrompt } from '$lib/api';
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
@@ -12,6 +13,7 @@
 
 	let project = $state(data.project);
 	let instances = $state(data.instances);
+	let predictions = $state(data.predictions);
 	let prompt = $state(data.prompt);
 	let editedPrompt = $state({ ...data.prompt });
 	let suggestionApplied = $state<number>(-1);
@@ -28,15 +30,18 @@
 	}
 
 	function setPrompt() {
+		showOptions = false;
+		suggestionApplied = -1;
 		updatePrompt(editedPrompt).then((r) => {
 			if (r === null) {
 				showPaywall = true;
 				return;
 			}
-			prompt = r;
-			showOptions = false;
-			suggestionApplied = -1;
-			editedPrompt = { ...prompt };
+			invalidate('prompt').then(() => {
+				prompt = data.prompt;
+				editedPrompt = { ...data.prompt };
+				predictions = data.predictions;
+			});
 		});
 	}
 
@@ -93,6 +98,6 @@
 			{editPrompt}
 			{setPrompt}
 		/>
-		<InstanceTable bind:instances bind:project {prompt} />
+		<InstanceTable bind:instances bind:project bind:predictions {prompt} />
 	</div>
 </div>

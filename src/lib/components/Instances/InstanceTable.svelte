@@ -17,28 +17,23 @@
 	import GenerateInstances from './GenerateInstances.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
-	let { instances, prompt, project } = $props<{
+	let { instances, prompt, project, predictions } = $props<{
 		instances: Tables<'instances'>[];
 		prompt: Tables<'prompts'>;
 		project: Tables<'projects'>;
+		predictions: { [key: string]: Promise<string | null> };
 	}>();
 
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
-	let metricValues = $state<Record<string, Promise<Tables<'metrics'> | undefined>>>({});
+	let metrics = $state<Record<string, number | null>>({});
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 
-	async function averageMetric(
-		values: Record<string, Promise<Tables<'metrics'> | undefined>>
-	): Promise<number | undefined> {
-		const result = Promise.all(Object.values(values)).then((d) => {
-			const metrics = d.filter((d) => d !== undefined) as Tables<'metrics'>[];
-			if (metrics.length === 0) return undefined;
-			return metrics.reduce((acc, m) => acc + m.metric, 0) / metrics.length;
-		});
-		return result;
-	}
+	let averageMetric: number | null = $derived(
+		(Object.values(metrics).reduce((acc, m) => (acc || 0) + (m || 0), 0) || 0) /
+			Object.values(metrics).length
+	);
 
 	function createInstances(instruction: string, count: number, generateSimilar: boolean) {
 		generatingInstances = true;
@@ -49,8 +44,14 @@
 				.map((d, i) => (d ? instances[i] : null))
 				.filter((d) => d !== null) as Tables<'instances'>[];
 		}
+
 		generateInstances(prompt, passedInstances, count, instruction).then((r) => {
-			instances = [...instances, ...r];
+			const localPreds = { ...predictions };
+			r.predictions.forEach(
+				(d, i) => (localPreds[r.instances[i].id] = new Promise((resolve) => resolve(d)))
+			);
+			predictions = localPreds;
+			instances = [...instances, ...r.instances];
 			generatingInstances = false;
 		});
 	}
@@ -130,7 +131,10 @@
 						showPaywall = true;
 						return;
 					}
-					createInstance($page.params.id).then((d) => instances.push(d));
+					createInstance($page.params.id).then((d) => {
+						predictions[d.id] = new Promise((resolve) => resolve(''));
+						instances.push(d);
+					});
 				}}
 				title="Add"
 				classNames="text-green-600"
@@ -150,15 +154,11 @@
 						<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
 						<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
 							<span>chrf</span>
-							{#await averageMetric(metricValues)}
-								<Spinner />
-							{:then metric}
-								{#if metric !== undefined}
-									<span class="text-sm font-normal text-black opacity-40"
-										>({metric.toFixed(2)})</span
-									>
-								{/if}
-							{/await}
+							{#if averageMetric !== null}
+								<span class="text-sm font-normal text-black opacity-40">
+									({averageMetric.toFixed(2)})
+								</span>
+							{/if}
 						</th>
 						<th class="min-w-12 whitespace-nowrap rounded-tr" />
 					{:else}
@@ -172,8 +172,9 @@
 			<tbody>
 				{#each instances as instance, i (instance.id)}
 					<InstanceTableRow
+						prediction={predictions[instance.id]}
 						{instance}
-						bind:metricValues
+						bind:metric={metrics[instance.id]}
 						bind:selected={selectedInstances[i]}
 						{prompt}
 						{project}

@@ -5,9 +5,9 @@ export async function getPrediction(
 	instanceId: number,
 	input: string,
 	clear: boolean = false
-): Promise<Tables<'predictions'> | undefined> {
+): Promise<string | null> {
 	if (input === '') {
-		return undefined;
+		return null;
 	}
 
 	const response = await fetch(`/api/prediction`, {
@@ -18,7 +18,7 @@ export async function getPrediction(
 		body: JSON.stringify({ prompt, instanceId, input, clear })
 	});
 	const res = await response.json();
-	return res.prediction as Tables<'predictions'>;
+	return res.prediction.prediction;
 }
 
 export async function updateInstance(instance: Tables<'instances'>) {
@@ -147,7 +147,7 @@ export async function generateInstances(
 	instances: Tables<'instances'>[],
 	count: number,
 	instruction?: string
-): Promise<Tables<'instances'>[]> {
+): Promise<{ instances: Tables<'instances'>[]; predictions: string[] }> {
 	const res = await fetch(`/api/instances`, {
 		method: 'POST',
 		headers: {
@@ -155,8 +155,7 @@ export async function generateInstances(
 		},
 		body: JSON.stringify({ prompt, instances, count, instruction })
 	});
-	const json = await res.json();
-	return json.instances as Tables<'instances'>[];
+	return await res.json();
 }
 
 export async function getProjectUsers(projectId: string): Promise<Tables<'users'>[]> {
