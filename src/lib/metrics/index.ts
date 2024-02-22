@@ -32,13 +32,12 @@ export function getMetricFunction(name: string): (hyp: string, ref: string) => n
 	}
 }
 
-export async function getMetric(
+export function getMetric(
 	prompt: Tables<'prompts'>,
 	label: string | null,
-	predictionPromise: Promise<Tables<'predictions'> | undefined>,
+	prediction: string | undefined,
 	metricName: string | null
-): Promise<number | undefined> {
-	const prediction = await predictionPromise;
+): number | undefined {
 	if (label === null || metricName === null || label === undefined || prediction === undefined) {
 		return;
 	}
@@ -51,13 +50,13 @@ export async function getMetric(
 			metric = metricFn(
 				// Normalize JSON so that formatting is not an issue.
 				JSON.stringify(JSON.parse(label)),
-				JSON.stringify(JSON.parse(prediction.prediction))
+				JSON.stringify(JSON.parse(prediction))
 			);
 		} catch (error) {
-			metric = metricFn(label, prediction.prediction);
+			metric = metricFn(label, prediction);
 		}
 	} else {
-		metric = metricFn(label, prediction.prediction);
+		metric = metricFn(label, prediction);
 	}
 
 	return metric;

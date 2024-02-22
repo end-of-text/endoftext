@@ -6,11 +6,11 @@
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ArrowRight, Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, metricValues, selected, project, removeInstance } = $props<{
+	let { instance, prompt, metric, selected, project, removeInstance } = $props<{
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
 		project: Tables<'projects'>;
-		metricValues: Record<string, Promise<number | undefined>>;
+		metric: number | undefined;
 		selected: boolean;
 		removeInstance: (id: number) => void;
 	}>();
@@ -24,23 +24,24 @@
 	let prediction: Promise<Tables<'predictions'> | undefined> = $state(
 		new Promise((resolve) => resolve(undefined))
 	);
-	let metric: Promise<number | undefined> = $state(new Promise((resolve) => resolve(undefined)));
-
-	$effect(() => {
-		updateMetric(metric);
-	});
 
 	$effect(() => {
 		prediction = getPrediction(prompt, instance.id, localInstanceInput);
 	});
 
 	$effect(() => {
-		metric = getMetric(prompt, localInstanceLabel, prediction, project.metric_name);
+		project.metric_name;
+		localInstanceLabel;
+		prediction.then(
+			(predictionResult) =>
+				(metric = getMetric(
+					prompt,
+					localInstanceLabel,
+					predictionResult?.prediction ?? undefined,
+					project.metric_name
+				))
+		);
 	});
-
-	function updateMetric(metric: Promise<number | undefined>) {
-		metricValues[instance.id] = metric;
-	}
 </script>
 
 <tr

@@ -24,20 +24,16 @@
 
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
-	let metricValues = $state<Record<string, Promise<number | undefined>>>({});
+	let metrics = $state<Record<string, number | undefined>>({});
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 
-	async function averageMetric(
-		values: Record<string, Promise<number | undefined>>
-	): Promise<number | undefined> {
-		const result = Promise.all(Object.values(values)).then((d) => {
-			const metrics = d.filter((d) => d !== undefined) as number[];
-			if (metrics.length === 0) return undefined;
-			return metrics.reduce((acc, m) => acc + m, 0) / metrics.length;
-		});
-		return result;
-	}
+	let metricValues = $derived(Object.values(metrics).filter((metric) => metric !== undefined));
+	let avgMetric = $derived(
+		metricValues.length === 0
+			? undefined
+			: (metricValues.reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0) / metricValues.length
+	);
 
 	function removeInstance(id: number) {
 		instances.splice(
@@ -177,15 +173,11 @@
 						{#if project.metric_name !== null}
 							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
 								<span>{project.metric_name}</span>
-								{#await averageMetric(metricValues)}
-									<Spinner />
-								{:then metric}
-									{#if metric !== undefined}
-										<span class="text-sm font-normal text-black opacity-40"
-											>({metric.toFixed(2)})</span
-										>
-									{/if}
-								{/await}
+								{#if avgMetric !== undefined}
+									<span class="text-sm font-normal text-black opacity-40"
+										>({avgMetric.toFixed(2)})</span
+									>
+								{/if}
 							</th>
 						{/if}
 						<th class="min-w-12 whitespace-nowrap rounded-tr" />
@@ -201,7 +193,7 @@
 				{#each instances as instance, i (instance.id)}
 					<InstanceTableRow
 						{instance}
-						bind:metricValues
+						bind:metric={metrics[instance.id]}
 						bind:selected={selectedInstances[i]}
 						{prompt}
 						{project}
