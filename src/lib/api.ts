@@ -17,7 +17,7 @@ export async function getPrediction(
 		body: JSON.stringify({ prompt, instance, clear })
 	});
 	const res = await response.json();
-	return res.prediction.prediction;
+	return res.prediction;
 }
 
 export async function updateInstance(instance: Tables<'instances'>) {

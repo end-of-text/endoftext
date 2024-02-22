@@ -179,12 +179,12 @@
 			<tbody>
 				{#each instances as instance, i (instance.id)}
 					<InstanceTableRow
-						prediction={predictions[instance.id]}
 						{instance}
-						bind:metric={metrics[instance.id]}
-						bind:selected={selectedInstances[i]}
 						{prompt}
 						{project}
+						prediction={predictions[instance.id]}
+						bind:metric={metrics[instance.id]}
+						bind:selected={selectedInstances[i]}
 						{removeInstance}
 					/>
 				{/each}
