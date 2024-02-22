@@ -5,6 +5,7 @@
 		deleteInstance,
 		deleteInstances,
 		generateInstances,
+		getPrediction,
 		toggleProjectLabels
 	} from '$lib/api';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
@@ -17,17 +18,18 @@
 	import GenerateInstances from './GenerateInstances.svelte';
 	import InstanceTableRow from './InstanceTableRow.svelte';
 
-	let { instances, prompt, project } = $props<{
+	let { instances, prompt, project, predictions } = $props<{
 		instances: Tables<'instances'>[];
 		prompt: Tables<'prompts'>;
 		project: Tables<'projects'>;
+		predictions: { [key: string]: Promise<string | null> };
 	}>();
 
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
-	let metrics = $state<Record<string, number | undefined>>({});
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
+	let metrics = $state<Record<string, number | undefined>>({});
 
 	let metricValues = $derived(
 		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
@@ -47,8 +49,12 @@
 				.map((d, i) => (d ? instances[i] : null))
 				.filter((d) => d !== null) as Tables<'instances'>[];
 		}
-		generateInstances(prompt, passedInstances, count, instruction).then((r) => {
-			instances = [...instances, ...r];
+
+		generateInstances(prompt, passedInstances, count, instruction).then((newInstances) => {
+			const localPreds = { ...predictions };
+			newInstances.forEach((inst) => (localPreds[inst.id] = getPrediction(prompt, inst, true)));
+			predictions = localPreds;
+			instances = [...instances, ...newInstances];
 			generatingInstances = false;
 		});
 	}
@@ -174,10 +180,11 @@
 				{#each instances as instance, i (instance.id)}
 					<InstanceTableRow
 						{instance}
-						bind:metric={metrics[instance.id]}
-						bind:selected={selectedInstances[i]}
 						{prompt}
 						{project}
+						prediction={predictions[instance.id]}
+						bind:metric={metrics[instance.id]}
+						bind:selected={selectedInstances[i]}
 						{removeInstance}
 					/>
 				{/each}

@@ -6,13 +6,14 @@
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ArrowRight, Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, metric, selected, project, removeInstance } = $props<{
+	let { instance, prompt, project, metric, selected, removeInstance, prediction } = $props<{
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
 		project: Tables<'projects'>;
 		metric: number | undefined;
 		selected: boolean;
 		removeInstance: (id: number) => void;
+		prediction: Promise<string | null> | null;
 	}>();
 
 	let localInstanceInput = $state(instance.input);
@@ -21,27 +22,14 @@
 	let inputArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let labelArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let predictionArea: HTMLTextAreaElement | undefined = $state(undefined);
-	let prediction: Promise<Tables<'predictions'> | undefined> = $state(
-		new Promise((resolve) => resolve(undefined))
-	);
 
-	$effect(() => {
-		prediction = getPrediction(prompt, instance.id, localInstanceInput);
-	});
-
-	$effect(() => {
-		project.metric_name;
-		localInstanceLabel;
-		prediction.then(
-			(predictionResult) =>
-				(metric = getMetric(
-					prompt,
-					localInstanceLabel,
-					predictionResult?.prediction ?? undefined,
-					project.metric_name
-				))
-		);
-	});
+	function updateLabel(pred: string | null) {
+		updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
+		metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
+		inputArea && autosize(inputArea);
+		labelArea && autosize(labelArea);
+		predictionArea && autosize(predictionArea);
+	}
 </script>
 
 <tr
@@ -50,7 +38,7 @@
 	onmouseleave={() => (rowHovered = false)}
 >
 	<td
-		class=": py-3 pl-3 align-top transition-all {rowHovered || selected
+		class="py-3 pl-3 align-top transition-all {rowHovered || selected
 			? 'opacity-100'
 			: 'opacity-20'}"
 	>
@@ -63,9 +51,10 @@
 			class="box-border w-full border-none"
 			value={localInstanceInput}
 			onblur={() => {
+				if (localInstanceInput === inputArea?.value) return;
 				localInstanceInput = inputArea?.value ?? '';
 				updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
-				prediction = getPrediction(prompt, instance.id, localInstanceInput, true);
+				prediction = getPrediction(prompt, { ...instance, input: localInstanceInput }, true);
 				inputArea && autosize(inputArea);
 				labelArea && autosize(labelArea);
 				predictionArea && autosize(predictionArea);
@@ -85,7 +74,7 @@
 				bind:this={predictionArea}
 				use:autosize
 				class="box-border w-full border-none"
-				value={pred?.prediction}
+				value={pred}
 				disabled
 			/>
 		{/await}
@@ -98,11 +87,9 @@
 				class="box-border w-full border-none"
 				value={localInstanceLabel}
 				onblur={() => {
+					if (localInstanceLabel === labelArea?.value) return;
 					localInstanceLabel = labelArea?.value ?? '';
-					updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
-					inputArea && autosize(inputArea);
-					labelArea && autosize(labelArea);
-					predictionArea && autosize(predictionArea);
+					prediction?.then((p) => updateLabel(p));
 				}}
 				onkeydown={(event) => {
 					if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
@@ -112,14 +99,12 @@
 			/>
 			<button
 				class="absolute -left-8 top-3 hidden rounded bg-white p-1 text-gray-500 opacity-20 transition hover:opacity-100 group-hover:flex"
-				onclick={() =>
-					prediction.then((p) => {
-						localInstanceLabel = p?.prediction || '';
-						updateInstance({ ...instance, label: localInstanceLabel });
-						inputArea && autosize(inputArea);
-						labelArea && autosize(labelArea);
-						predictionArea && autosize(predictionArea);
-					})}
+				onclick={() => {
+					prediction?.then((p) => {
+						localInstanceLabel = p || '';
+						updateLabel(p);
+					});
+				}}
 				use:tooltip={{ text: 'Use prediction as instance label' }}
 			>
 				<ArrowRight class="h-4" />

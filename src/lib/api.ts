@@ -2,12 +2,11 @@ import type { Tables } from './supabase';
 
 export async function getPrediction(
 	prompt: Tables<'prompts'>,
-	instanceId: number,
-	input: string,
+	instance: Tables<'instances'>,
 	clear: boolean = false
-): Promise<Tables<'predictions'> | undefined> {
-	if (input === '') {
-		return undefined;
+): Promise<string | null> {
+	if (instance.input === '') {
+		return null;
 	}
 
 	const response = await fetch(`/api/prediction`, {
@@ -15,10 +14,10 @@ export async function getPrediction(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ prompt, instanceId, input, clear })
+		body: JSON.stringify({ prompt, instance, clear })
 	});
 	const res = await response.json();
-	return res.prediction as Tables<'predictions'>;
+	return res.prediction;
 }
 
 export async function updateInstance(instance: Tables<'instances'>) {
@@ -128,8 +127,8 @@ export async function generateInstances(
 		},
 		body: JSON.stringify({ prompt, instances, count, instruction })
 	});
-	const json = await res.json();
-	return json.instances as Tables<'instances'>[];
+	const resJson = await res.json();
+	return resJson.instances as Tables<'instances'>[];
 }
 
 export async function getProjectUsers(projectId: string): Promise<Tables<'users'>[]> {
