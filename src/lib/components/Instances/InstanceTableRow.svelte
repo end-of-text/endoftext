@@ -127,14 +127,8 @@
 		</td>
 		{#if project.metric_name !== null}
 			<td class="p-3">
-				{#if instance.label}
-					{#await metric}
-						Loading...
-					{:then metric}
-						{#if metric}
-							{(Math.round(metric * 100) / 100).toFixed(2)}
-						{/if}
-					{/await}
+				{#if instance.label && metric !== undefined}
+					{(Math.round(metric * 100) / 100).toFixed(2)}
 				{/if}
 			</td>
 		{/if}

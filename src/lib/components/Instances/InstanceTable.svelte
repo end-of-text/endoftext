@@ -28,11 +28,13 @@
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 
-	let metricValues = $derived(Object.values(metrics).filter((metric) => metric !== undefined));
+	let metricValues = $derived(
+		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
+	);
 	let avgMetric = $derived(
 		metricValues.length === 0
 			? undefined
-			: (metricValues.reduce((a, b) => (a ?? 0) + (b ?? 0), 0) ?? 0) / metricValues.length
+			: metricValues.reduce((a, b) => a + b, 0) / metricValues.length
 	);
 
 	function removeInstance(id: number) {
@@ -76,7 +78,7 @@
 				<Button
 					classNames="text-blue-600"
 					onclick={async () => {
-						project.show_labels = !project.show_labels;
+						project.show_labels = true;
 						const projectRes = await toggleProjectLabels(
 							project.id,
 							project.show_labels,
