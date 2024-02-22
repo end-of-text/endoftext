@@ -13,3 +13,5 @@ export type TooltipStateType = {
 	mousePos: { x: number; y: number };
 	text: string | undefined;
 };
+
+export const metrics = ['chrf', 'exact match', 'fuzzy match', 'length'];

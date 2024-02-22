@@ -26,13 +26,17 @@
 
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
-	let metrics = $state<Record<string, number | null>>({});
+	let metrics = $state<Record<string, number | undefined>>({});
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 
-	let averageMetric: number | null = $derived(
-		(Object.values(metrics).reduce((acc, m) => (acc || 0) + (m || 0), 0) || 0) /
-			Object.values(metrics).length
+	let metricValues = $derived(
+		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
+	);
+	let avgMetric = $derived(
+		metricValues.length === 0
+			? undefined
+			: metricValues.reduce((a, b) => a + b, 0) / metricValues.length
 	);
 
 	function createInstances(instruction: string, count: number, generateSimilar: boolean) {
@@ -96,9 +100,14 @@
 			{#if !project.show_labels}
 				<Button
 					classNames="text-blue-600"
-					onclick={() => {
+					onclick={async () => {
 						project.show_labels = true;
-						toggleProjectLabels(project.id, project.show_labels);
+						const projectRes = await toggleProjectLabels(
+							project.id,
+							project.show_labels,
+							project.metric_name
+						);
+						project.metric_name = projectRes.metric_name;
 					}}
 					title="Add label column"
 				>
@@ -152,14 +161,16 @@
 						<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
-						<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
-							<span>chrf</span>
-							{#if averageMetric !== null}
-								<span class="text-sm font-normal text-black opacity-40">
-									({averageMetric.toFixed(2)})
-								</span>
-							{/if}
-						</th>
+						{#if project.metric_name !== null}
+							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
+								<span>{project.metric_name}</span>
+								{#if avgMetric !== undefined}
+									<span class="text-sm font-normal text-black opacity-40"
+										>({avgMetric.toFixed(2)})</span
+									>
+								{/if}
+							</th>
+						{/if}
 						<th class="min-w-12 whitespace-nowrap rounded-tr" />
 					{:else}
 						<th class="w-6 rounded-tl" />

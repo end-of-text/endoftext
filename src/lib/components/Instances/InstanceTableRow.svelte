@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { getPrediction, updateInstance } from '$lib/api';
 	import autosize from '$lib/autosize';
-	import { chrfMetric } from '$lib/metrics';
+	import { getMetric } from '$lib/metrics';
 	import type { Tables } from '$lib/supabase';
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ArrowRight, Trash2 } from 'lucide-svelte';
 
-	let { instance, prompt, selected, project, removeInstance, prediction, metric } = $props<{
+	let { instance, prompt, metric, selected, project, removeInstance } = $props<{
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
+		metric: number | null;
 		project: Tables<'projects'>;
 		selected: boolean;
 		removeInstance: (id: number) => void;
 		prediction: Promise<string | null>;
-		metric: number | null;
 	}>();
 
 	let localInstanceInput = $state(instance.input);
@@ -23,13 +23,9 @@
 	let labelArea: HTMLTextAreaElement | undefined = $state(undefined);
 	let predictionArea: HTMLTextAreaElement | undefined = $state(undefined);
 
-	$effect(() => {
-		prediction.then((p) => (metric = chrfMetric(instance.label || '', p || '')));
-	});
-
 	function updateLabel(pred: string | null) {
 		updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
-		metric = chrfMetric(localInstanceLabel || '', pred || '');
+		metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
 		inputArea && autosize(inputArea);
 		labelArea && autosize(labelArea);
 		predictionArea && autosize(predictionArea);
@@ -114,11 +110,13 @@
 				<ArrowRight class="h-4" />
 			</button>
 		</td>
-		<td class="p-3">
-			{#if metric}
-				{(Math.round(metric * 100) / 100).toFixed(2)}
-			{/if}
-		</td>
+		{#if project.metric_name !== null}
+			<td class="p-3">
+				{#if instance.label && metric !== undefined}
+					{(Math.round(metric * 100) / 100).toFixed(2)}
+				{/if}
+			</td>
+		{/if}
 	{/if}
 	<td class="flex justify-end p-3">
 		<button onclick={() => removeInstance(instance.id)}>

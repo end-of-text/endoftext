@@ -110,6 +110,7 @@ export type Database = {
 				Row: {
 					created_at: string;
 					id: string;
+					metric_name: string | null;
 					name: string;
 					show_labels: boolean;
 					user_id: string;
@@ -117,6 +118,7 @@ export type Database = {
 				Insert: {
 					created_at?: string;
 					id: string;
+					metric_name?: string | null;
 					name: string;
 					show_labels?: boolean;
 					user_id: string;
@@ -124,6 +126,7 @@ export type Database = {
 				Update: {
 					created_at?: string;
 					id?: string;
+					metric_name?: string | null;
 					name?: string;
 					show_labels?: boolean;
 					user_id?: string;
