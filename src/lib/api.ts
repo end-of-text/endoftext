@@ -80,10 +80,10 @@ export async function getMetric(
 	prompt: Tables<'prompts'>,
 	label: string | null,
 	predictionPromise: Promise<Tables<'predictions'> | undefined>,
-	clear: boolean = false
-): Promise<Tables<'metrics'> | undefined> {
+	metricName: string | null
+): Promise<number | undefined> {
 	const prediction = await predictionPromise;
-	if (label === null || label === undefined || prediction === undefined) {
+	if (label === null || metricName === null || label === undefined || prediction === undefined) {
 		return;
 	}
 
@@ -96,11 +96,10 @@ export async function getMetric(
 			prompt,
 			label,
 			prediction,
-			clear
+			metricName
 		})
 	});
-	const jsonResponse = await response.json();
-	return jsonResponse as Tables<'metrics'>;
+	return await response.json();
 }
 
 export async function getSuggestions(
@@ -197,5 +196,15 @@ export async function toggleProjectLabels(projectId: string, showLabels: boolean
 export async function deleteProject(projectId: string): Promise<void> {
 	await fetch(`/api/project/${projectId}`, {
 		method: 'DELETE'
+	});
+}
+
+export async function changeProjectMetric(projectId: string, metric: string | null): Promise<void> {
+	await fetch(`/api/project/${projectId}/metric`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ metric })
 	});
 }

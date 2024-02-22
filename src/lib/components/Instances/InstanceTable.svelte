@@ -24,17 +24,17 @@
 
 	let selectedInstances = $state<boolean[]>([]);
 	let generatingInstances = $state(false);
-	let metricValues = $state<Record<string, Promise<Tables<'metrics'> | undefined>>>({});
+	let metricValues = $state<Record<string, Promise<number | undefined>>>({});
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 
 	async function averageMetric(
-		values: Record<string, Promise<Tables<'metrics'> | undefined>>
+		values: Record<string, Promise<number | undefined>>
 	): Promise<number | undefined> {
 		const result = Promise.all(Object.values(values)).then((d) => {
-			const metrics = d.filter((d) => d !== undefined) as Tables<'metrics'>[];
+			const metrics = d.filter((d) => d !== undefined) as number[];
 			if (metrics.length === 0) return undefined;
-			return metrics.reduce((acc, m) => acc + m.metric, 0) / metrics.length;
+			return metrics.reduce((acc, m) => acc + m, 0) / metrics.length;
 		});
 		return result;
 	}
@@ -169,18 +169,20 @@
 						<th class="w-1/3 px-2 py-2 font-semibold">Input</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
-						<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
-							<span>chrf</span>
-							{#await averageMetric(metricValues)}
-								<Spinner />
-							{:then metric}
-								{#if metric !== undefined}
-									<span class="text-sm font-normal text-black opacity-40"
-										>({metric.toFixed(2)})</span
-									>
-								{/if}
-							{/await}
-						</th>
+						{#if project.metric_name !== null}
+							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
+								<span>{project.metric_name}</span>
+								{#await averageMetric(metricValues)}
+									<Spinner />
+								{:then metric}
+									{#if metric !== undefined}
+										<span class="text-sm font-normal text-black opacity-40"
+											>({metric.toFixed(2)})</span
+										>
+									{/if}
+								{/await}
+							</th>
+						{/if}
 						<th class="min-w-12 whitespace-nowrap rounded-tr" />
 					{:else}
 						<th class="w-6 rounded-tl" />

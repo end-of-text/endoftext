@@ -1,13 +1,16 @@
 <script lang="ts">
 	import {
 		addProjectUser,
+		changeProjectMetric,
 		getProjectUsers,
 		removeProjectUser,
 		toggleProjectLabels
 	} from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
+	import Select from '$lib/components/ui/Select.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
+	import { metrics } from '$lib/types';
 	import { X } from 'lucide-svelte';
 	import Popup from './Popup.svelte';
 
@@ -88,7 +91,7 @@
 				{/if}
 			</div>
 			<h2 class="mt-4">Settings</h2>
-			<div class="flex flex-col">
+			<div class="flex flex-col gap-2">
 				<label
 					class="flex flex-row items-center"
 					onchange={() => toggleProjectLabels(project.id, project.show_labels)}
@@ -96,6 +99,19 @@
 					<input type="checkbox" class="mr-2" bind:checked={project.show_labels} />
 					<span>Show Labels</span>
 				</label>
+				<div class="flex flex-row items-center">
+					<span class="mr-2">Metric</span>
+					<Select
+						bind:value={project.metric_name}
+						onchange={() => changeProjectMetric(project.id, project.metric_name)}
+						options={[
+							{ value: null, label: 'none' },
+							...metrics.map((m) => {
+								return { value: m, label: m };
+							})
+						]}
+					/>
+				</div>
 			</div>
 		</div>
 		<Button classNames="self-end" onclick={onclose}>Done</Button>

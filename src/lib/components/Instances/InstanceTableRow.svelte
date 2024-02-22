@@ -9,7 +9,7 @@
 		instance: Tables<'instances'>;
 		prompt: Tables<'prompts'>;
 		project: Tables<'projects'>;
-		metricValues: Record<string, Promise<Tables<'metrics'> | undefined>>;
+		metricValues: Record<string, Promise<number | undefined>>;
 		selected: boolean;
 		removeInstance: (id: number) => void;
 	}>();
@@ -23,9 +23,7 @@
 	let prediction: Promise<Tables<'predictions'> | undefined> = $state(
 		new Promise((resolve) => resolve(undefined))
 	);
-	let metric: Promise<Tables<'metrics'> | undefined> = $state(
-		new Promise((resolve) => resolve(undefined))
-	);
+	let metric: Promise<number | undefined> = $state(new Promise((resolve) => resolve(undefined)));
 
 	$effect(() => {
 		updateMetric(metric);
@@ -36,10 +34,10 @@
 	});
 
 	$effect(() => {
-		metric = getMetric(prompt, localInstanceLabel, prediction);
+		metric = getMetric(prompt, localInstanceLabel, prediction, project.metric_name);
 	});
 
-	function updateMetric(metric: Promise<Tables<'metrics'> | undefined>) {
+	function updateMetric(metric: Promise<number | undefined>) {
 		metricValues[instance.id] = metric;
 	}
 </script>
@@ -66,7 +64,6 @@
 				localInstanceInput = inputArea?.value ?? '';
 				updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
 				prediction = getPrediction(prompt, instance.id, localInstanceInput, true);
-				metric = getMetric(prompt, localInstanceLabel, prediction, true);
 				inputArea && autosize(inputArea);
 				labelArea && autosize(labelArea);
 				predictionArea && autosize(predictionArea);
@@ -101,7 +98,6 @@
 				onblur={() => {
 					localInstanceLabel = labelArea?.value ?? '';
 					updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
-					metric = getMetric(prompt, localInstanceLabel, prediction, true);
 					inputArea && autosize(inputArea);
 					labelArea && autosize(labelArea);
 					predictionArea && autosize(predictionArea);
@@ -127,17 +123,19 @@
 				<ArrowRight class="h-4" />
 			</button>
 		</td>
-		<td class="p-3">
-			{#if instance.label}
-				{#await metric}
-					Loading...
-				{:then metric}
-					{#if metric}
-						{(Math.round(metric.metric * 100) / 100).toFixed(2)}
-					{/if}
-				{/await}
-			{/if}
-		</td>
+		{#if project.metric_name !== null}
+			<td class="p-3">
+				{#if instance.label}
+					{#await metric}
+						Loading...
+					{:then metric}
+						{#if metric}
+							{(Math.round(metric * 100) / 100).toFixed(2)}
+						{/if}
+					{/await}
+				{/if}
+			</td>
+		{/if}
 	{/if}
 	<td class="flex justify-end p-3">
 		<button onclick={() => removeInstance(instance.id)}>

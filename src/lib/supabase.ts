@@ -110,6 +110,7 @@ export type Database = {
 				Row: {
 					created_at: string;
 					id: string;
+					metric_name: string | null;
 					name: string;
 					show_labels: boolean;
 					user_id: string;
@@ -117,6 +118,7 @@ export type Database = {
 				Insert: {
 					created_at?: string;
 					id: string;
+					metric_name?: string | null;
 					name: string;
 					show_labels?: boolean;
 					user_id: string;
@@ -124,6 +126,7 @@ export type Database = {
 				Update: {
 					created_at?: string;
 					id?: string;
+					metric_name?: string | null;
 					name?: string;
 					show_labels?: boolean;
 					user_id?: string;
@@ -195,7 +198,7 @@ export type Database = {
 					name: string;
 					prompt_id: number;
 					required_input_type: string | null;
-					target_spans: number[][] | null;
+					target_spans: number[] | null;
 					type: string;
 				};
 				Insert: {
@@ -206,7 +209,7 @@ export type Database = {
 					name: string;
 					prompt_id: number;
 					required_input_type?: string | null;
-					target_spans?: number[][] | null;
+					target_spans?: number[] | null;
 					type: string;
 				};
 				Update: {
@@ -217,7 +220,7 @@ export type Database = {
 					name?: string;
 					prompt_id?: number;
 					required_input_type?: string | null;
-					target_spans?: number[][] | null;
+					target_spans?: number[] | null;
 					type?: string;
 				};
 				Relationships: [
