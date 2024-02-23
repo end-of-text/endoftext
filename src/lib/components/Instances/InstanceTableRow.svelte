@@ -30,6 +30,12 @@
 		labelArea && autosize(labelArea);
 		predictionArea && autosize(predictionArea);
 	}
+
+	$effect(() => {
+		prediction?.then((pred) => {
+			metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
+		});
+	});
 </script>
 
 <tr
