@@ -60,6 +60,8 @@
 		instances = data.instances;
 		predictions = data.predictions;
 		project = data.project;
+		showOptions = false;
+		suggestionApplied = -1;
 	});
 </script>
 
