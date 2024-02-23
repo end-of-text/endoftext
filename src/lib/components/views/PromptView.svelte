@@ -15,11 +15,9 @@
 		projectId,
 		gettingSuggestions,
 		suggestions,
-		forwardTarget,
 		onclose,
 		setPrompt,
-		editPrompt,
-		loadPrompt
+		editPrompt
 	} = $props<{
 		prompt: Tables<'prompts'>;
 		editedPrompt: Tables<'prompts'>;
@@ -29,11 +27,9 @@
 		projectId: string | undefined;
 		gettingSuggestions: boolean;
 		suggestions: Tables<'suggestions'>[] | undefined;
-		forwardTarget: Tables<'prompts'>;
 		onclose: () => void;
 		setPrompt: () => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
-		loadPrompt: (id: number | null) => void;
 	}>();
 
 	let showOptions = $state(false);
@@ -67,8 +63,6 @@
 			}}
 			bind:suggestionApplied
 			bind:editedPrompt
-			{loadPrompt}
-			{forwardTarget}
 		/>
 	</div>
 	<div class="flex h-full w-[450px] shrink-0 flex-col border-l px-6 py-4">

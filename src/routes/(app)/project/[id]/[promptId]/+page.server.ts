@@ -35,19 +35,29 @@ export async function load({ depends, locals: { supabase }, params }) {
 	if (promptsRes.data.length === 0) {
 		redirect(303, '/project/' + params.id + '/new/prompt');
 	}
+	const childPromptReq = supabase
+		.from('prompts')
+		.select('*')
+		.eq('parent_prompt_id', promptsRes.data[0].id)
+		.order('created_at', { ascending: false });
 
-	const { data: existingPredictions, error: err } = await supabase
+	const existingPredictionsReq = supabase
 		.from('predictions')
 		.select('*')
 		.eq('prompt_id', promptsRes.data[0].id);
 
-	if (err) {
-		error(500, err.message);
+	const [childPromptRes, existingPredictionsRes] = await Promise.all([
+		childPromptReq,
+		existingPredictionsReq
+	]);
+
+	if (childPromptRes.error || existingPredictionsRes.error) {
+		error(500, 'Failed to get child prompt or existing predictions');
 	}
 
 	const predictions = getPredictions(
 		supabase,
-		existingPredictions,
+		existingPredictionsRes.data || [],
 		instancesReq.data || [],
 		promptsRes.data[0]
 	);
@@ -56,6 +66,7 @@ export async function load({ depends, locals: { supabase }, params }) {
 		project: projectRes.data[0] as Tables<'projects'>,
 		prompt: promptsRes.data[0] as Tables<'prompts'>,
 		instances: instancesReq.data as Tables<'instances'>[],
+		childPrompt: childPromptRes.data[0] as Tables<'prompts'> | undefined,
 		predictions
 	};
 }

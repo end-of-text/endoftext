@@ -1,10 +1,5 @@
 import type { Tables } from './supabase';
 
-export async function getPrompt(promptId: number): Promise<Tables<'prompts'>> {
-	const res = await fetch(`/api/prompt/${promptId}`);
-	return await res.json();
-}
-
 export async function getPrediction(
 	prompt: Tables<'prompts'>,
 	instance: Tables<'instances'>,

@@ -4,7 +4,7 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
-	import { Check, Coins, Lightbulb, ShieldX, X } from 'lucide-svelte';
+	import { Check, Coins, Lightbulb, ShieldX } from 'lucide-svelte';
 
 	let {
 		suggestion,
@@ -40,7 +40,7 @@
 </script>
 
 <div
-	class="flex justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
+	class="flex flex-col justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
 		? 'border-l-gray-600'
 		: borderMap[suggestion.type]}"
 >
@@ -57,7 +57,7 @@
 				{suggestion.name}
 			</p>
 		</div>
-		<p class="my-1 text-gray-600">
+		<p class="mt-1 text-gray-600">
 			{suggestion.description}
 		</p>
 		{#if suggestion.required_input_type}
@@ -66,12 +66,12 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="flex h-full flex-col items-end justify-between">
+	<div class="mt-2 flex items-center justify-end gap-4">
 		<button
-			class="cursor-pointer text-gray-500 opacity-30 transition hover:text-gray-900 hover:opacity-100"
+			class="cursor-pointer text-gray-500 transition hover:text-gray-900"
 			onclick={() => dismissSuggestion(suggestion)}
 		>
-			<X class="h-4 w-4" />
+			Dismiss
 		</button>
 		{#if applied}
 			<Check class="h-5 w-5 text-green-600" />

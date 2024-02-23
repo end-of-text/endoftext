@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getPrompt } from '$lib/api';
+	import { goto } from '$app/navigation';
 	import type { Tables } from '$lib/supabase';
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ChevronDown, ChevronUp, MoveLeft, MoveRight } from 'lucide-svelte';
@@ -9,6 +9,7 @@
 
 	let {
 		prompt,
+		childPrompt,
 		suggestionApplied,
 		userStatus,
 		showOptions,
@@ -17,13 +18,12 @@
 		projectId,
 		gettingSuggestions,
 		suggestions,
-		forwardTarget,
 		setPromptMaximized,
 		editPrompt,
-		setPrompt,
-		loadPrompt
+		setPrompt
 	} = $props<{
 		prompt: Tables<'prompts'>;
+		childPrompt: Tables<'prompts'> | undefined;
 		suggestionApplied: number;
 		userStatus: string;
 		showOptions: boolean;
@@ -32,22 +32,14 @@
 		projectId: string | undefined;
 		gettingSuggestions: boolean;
 		suggestions: Tables<'suggestions'>[] | undefined;
-		forwardTarget: Tables<'prompts'>;
 		setPromptMaximized: (maximized: boolean) => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		setPrompt: () => void;
-		loadPrompt: (id: number | null) => void;
 	}>();
 
-	async function forward() {
-		let target = forwardTarget;
-		while (target.parent_prompt_id !== null) {
-			if (target.parent_prompt_id === prompt.id) {
-				loadPrompt(target.id);
-				return;
-			}
-			target = await getPrompt(target.parent_prompt_id);
-		}
+	function loadPrompt(id: number | null) {
+		if (id === null) goto(`/project/${projectId}`);
+		goto(`/project/${projectId}/${id}`);
 	}
 </script>
 
@@ -65,8 +57,8 @@
 			</button>
 			<button
 				class="group h-5 w-5 cursor-pointer text-gray-500 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300"
-				disabled={prompt.id === forwardTarget.id}
-				onclick={forward}
+				disabled={childPrompt === undefined}
+				onclick={() => loadPrompt(childPrompt!.id)}
 				use:tooltip={{ text: 'Go to next prompt' }}
 			>
 				<MoveRight />

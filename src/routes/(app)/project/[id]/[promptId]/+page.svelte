@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterNavigate, goto, invalidate } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { getSuggestions, updatePrompt } from '$lib/api';
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
@@ -15,6 +15,7 @@
 	let instances = $state(data.instances);
 	let predictions = $state(data.predictions);
 	let prompt = $state(data.prompt);
+	let childPrompt = $state(data.childPrompt);
 	let editedPrompt = $state({ ...data.prompt });
 	let suggestionApplied = $state<number>(-1);
 	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
@@ -23,7 +24,6 @@
 	let promptMaximized = $state(false);
 	let gettingSuggestions = $state(false);
 	let suggestions: Tables<'suggestions'>[] | undefined = $state([]);
-	let forwardTarget = $state(data.prompt);
 
 	function editPrompt(newPrompt: Tables<'prompts'>, suggestionId: number) {
 		suggestionApplied = suggestionId;
@@ -31,25 +31,13 @@
 	}
 
 	function setPrompt() {
-		showOptions = false;
-		suggestionApplied = -1;
 		updatePrompt(editedPrompt).then((r) => {
 			if (r === null) {
 				showPaywall = true;
 				return;
 			}
-			invalidate('prompt').then(() => {
-				prompt = data.prompt;
-				forwardTarget = data.prompt;
-				editedPrompt = { ...data.prompt };
-				predictions = data.predictions;
-			});
+			goto(`/project/${data.project.id}/${r.id}`);
 		});
-	}
-
-	function loadPrompt(id: number | null) {
-		if (id === null) goto(`/project/${data.project.id}`);
-		goto(`/project/${data.project.id}/${id}`);
 	}
 
 	$effect(() => {
@@ -68,6 +56,7 @@
 	afterNavigate(() => {
 		editedPrompt = { ...data.prompt };
 		prompt = data.prompt;
+		childPrompt = data.childPrompt;
 		instances = data.instances;
 		predictions = data.predictions;
 		project = data.project;
@@ -93,8 +82,6 @@
 		projectId={data.project.id}
 		{editPrompt}
 		{setPrompt}
-		{loadPrompt}
-		{forwardTarget}
 	/>
 {/if}
 
@@ -103,6 +90,7 @@
 	<div class="flex min-h-0 grow">
 		<PromptBar
 			{prompt}
+			{childPrompt}
 			userStatus={data.user.status}
 			bind:suggestionApplied
 			bind:gettingSuggestions
@@ -112,10 +100,8 @@
 			bind:suggestions
 			projectId={data.project.id}
 			setPromptMaximized={(maximized) => (promptMaximized = maximized)}
-			{forwardTarget}
 			{editPrompt}
 			{setPrompt}
-			{loadPrompt}
 		/>
 		<InstanceTable bind:instances bind:project bind:predictions {prompt} />
 	</div>
