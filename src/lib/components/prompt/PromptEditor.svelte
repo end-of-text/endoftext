@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { getPrompt } from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import * as diff from 'diff';
-	import { Check, Copy, Expand, Redo, Save, Undo, Undo2 } from 'lucide-svelte';
+	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
 	let {
@@ -11,18 +10,14 @@
 		hoveredSuggestion,
 		suggestionApplied,
 		editedPrompt,
-		forwardTarget,
 		setPrompt,
-		loadPrompt,
 		setPromptMaximized = undefined
 	} = $props<{
 		prompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		suggestionApplied: number;
 		editedPrompt: Tables<'prompts'>;
-		forwardTarget: Tables<'prompts'>;
 		setPrompt: () => void;
-		loadPrompt: (id: number | null) => void;
 		setPromptMaximized?: (maximized: boolean) => void;
 	}>();
 
@@ -39,17 +34,6 @@
 		setTimeout(() => {
 			promptCopied = false;
 		}, 3000);
-	}
-
-	async function forward() {
-		let target = forwardTarget;
-		while (target.parent_prompt_id !== null) {
-			if (target.parent_prompt_id === prompt.id) {
-				loadPrompt(target.id);
-				return;
-			}
-			target = await getPrompt(target.parent_prompt_id);
-		}
 	}
 </script>
 
@@ -154,17 +138,6 @@
 		>
 			<Undo2 class="h-5 w-5" />
 		</Button>
-	{:else}
-		{#if prompt.parent_prompt_id !== null}
-			<Button onclick={() => loadPrompt(prompt.parent_prompt_id)} classNames="text-gray-500">
-				<Undo class="h-5 w-5" />
-			</Button>
-		{/if}
-		{#if prompt.id !== forwardTarget.id}
-			<Button onclick={forward} classNames="text-gray-500">
-				<Redo class="h-5 w-5" />
-			</Button>
-		{/if}
 	{/if}
 	<Button
 		onclick={setPrompt}
