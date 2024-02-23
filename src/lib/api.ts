@@ -159,6 +159,7 @@ export async function removeProjectUser(projectId: string, userId: string): Prom
 
 export async function toggleProjectLabels(
 	projectId: string,
+	prompt: string,
 	showLabels: boolean,
 	projectMetric: string | null
 ): Promise<Tables<'projects'>> {
@@ -167,7 +168,7 @@ export async function toggleProjectLabels(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ showLabels, projectMetric })
+		body: JSON.stringify({ showLabels, prompt, projectMetric })
 	});
 	return await res.json();
 }
