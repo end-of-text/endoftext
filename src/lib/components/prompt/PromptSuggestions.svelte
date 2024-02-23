@@ -2,39 +2,63 @@
 	import { getSuggestions } from '$lib/api';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
+	import { tooltip } from '$lib/tooltip.svelte';
 	import { RefreshCw } from 'lucide-svelte';
-	import { untrack } from 'svelte';
+	import { fade } from 'svelte/transition';
 	import PromptSuggestion from './PromptSuggestion.svelte';
 
-	let { prompt, setHoveredSuggestion, editPrompt } = $props<{
+	let {
+		prompt,
+		editedPrompt,
+		setHoveredSuggestion,
+		editPrompt,
+		gettingSuggestions,
+		suggestions,
+		suggestionApplied,
+		toplevel = false
+	} = $props<{
 		prompt: Tables<'prompts'>;
+		editedPrompt: Tables<'prompts'>;
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
-		editPrompt: (suggestion: string) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
+		gettingSuggestions: boolean;
+		suggestions: Tables<'suggestions'>[] | undefined;
+		suggestionApplied: number;
+		toplevel?: boolean;
 	}>();
 
-	let gettingSuggestions = $state(false);
-	let suggestionsRequest: Tables<'suggestions'>[] | undefined = $state([]);
+	let promptWasEdited = $derived(
+		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
+	);
 
-	$effect(() => {
-		untrack(() => (gettingSuggestions = true));
-		getSuggestions(prompt).then((r) => {
-			untrack(() => {
-				suggestionsRequest = r;
-				gettingSuggestions = false;
-			});
+	async function dismissSuggestion(suggestion: Tables<'suggestions'>) {
+		suggestions = suggestions?.filter((s) => s.id !== suggestion.id);
+		await fetch(`/api/editor/suggestions/dismiss`, {
+			method: 'DELETE',
+			body: JSON.stringify({
+				suggestion
+			})
 		});
-	});
+	}
 </script>
 
-<div class="my-4 flex min-h-0 grow flex-col gap-2">
+<div
+	class="{!toplevel ? 'my-4' : ''} flex min-h-0 grow flex-col gap-2"
+	transition:fade={{ duration: 200 }}
+>
 	<div class="mb-3 flex items-center">
-		<h2>Suggestions</h2>
+		{#if toplevel}
+			<h1>Suggestions</h1>
+		{:else}
+			<h2>Suggestions</h2>
+		{/if}
 		<button
 			class="pl-4"
 			onclick={() => {
 				gettingSuggestions = true;
+				suggestions = [];
 				getSuggestions(prompt, true).then((r) => {
-					suggestionsRequest = r;
+					suggestions = r;
 					gettingSuggestions = false;
 				});
 			}}
@@ -49,11 +73,33 @@
 		</button>
 	</div>
 	<div class="flex flex-col gap-4 overflow-auto">
-		{#await suggestionsRequest}
-			<Spinner />
-		{:then suggestions}
+		{#if !gettingSuggestions}
 			{#if suggestions === undefined || suggestions.length === 0}
 				No suggestions
+			{:else if suggestionApplied > -1}
+				{@const suggestion = suggestions.find((s) => s.id === suggestionApplied)}
+				{#if suggestion !== undefined}
+					<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} applied />
+				{/if}
+				{#each suggestions.filter((s) => s.id !== suggestionApplied) as suggestion (suggestion.id)}
+					<div
+						use:tooltip={{
+							text: 'To apply another suggestion, either save or revert the current changes.'
+						}}
+					>
+						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
+					</div>
+				{/each}
+			{:else if promptWasEdited}
+				{#each suggestions as suggestion (suggestion.id)}
+					<div
+						use:tooltip={{
+							text: 'To apply a suggestion, either save or revert the current changes.'
+						}}
+					>
+						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
+					</div>
+				{/each}
 			{:else}
 				{#each suggestions as suggestion (suggestion.id)}
 					<div
@@ -63,11 +109,12 @@
 						onblur={() => setHoveredSuggestion(null)}
 						role="button"
 						tabindex="0"
+						class="flex"
 					>
-						<PromptSuggestion {prompt} {suggestion} {editPrompt} />
+						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} />
 					</div>
 				{/each}
 			{/if}
-		{/await}
+		{/if}
 	</div>
 </div>

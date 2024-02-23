@@ -3,11 +3,12 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
+	import { fade } from 'svelte/transition';
 
 	let { selectedText, prompt, editPrompt } = $props<{
 		selectedText: string | undefined;
 		prompt: Tables<'prompts'>;
-		editPrompt: (suggestion: string) => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 	}>();
 
 	let userInput = $state<string>('');
@@ -15,12 +16,17 @@
 
 	async function accept() {
 		applyingSuggestion = true;
-		if (selectedText) editPrompt(await applyRewrite(selectedText, prompt, userInput));
+		if (selectedText)
+			editPrompt({ ...prompt, prompt: await applyRewrite(selectedText, prompt, userInput) }, -1);
 		selectedText = undefined;
 	}
 </script>
 
-<button class="absolute left-full top-0 z-50 w-[400px]" onmouseup={(e) => e.stopPropagation()}>
+<button
+	class="absolute left-full top-0 z-50 w-[400px]"
+	transition:fade={{ duration: 200 }}
+	onmouseup={(e) => e.stopPropagation()}
+>
 	<div
 		class="ml-2 flex flex-col items-start rounded-br rounded-tr border border-l-4 border-l-blue-500 bg-white p-4 shadow"
 	>

@@ -4,7 +4,26 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
-	import { Coins, Lightbulb, ShieldX } from 'lucide-svelte';
+	import { Check, Coins, Lightbulb, ShieldX } from 'lucide-svelte';
+
+	let {
+		suggestion,
+		prompt,
+		editPrompt,
+		dismissSuggestion,
+		applied = false,
+		disabled = false
+	} = $props<{
+		suggestion: Tables<'suggestions'>;
+		prompt: Tables<'prompts'>;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
+		dismissSuggestion: (suggestion: Tables<'suggestions'>) => void;
+		applied?: boolean;
+		disabled?: boolean;
+	}>();
+
+	let applyingSuggestion = $state(false);
+	let userInput = $state<string | undefined>(undefined);
 
 	const borderMap: { [key: string]: string } = {
 		ERROR: 'border-l-red-600',
@@ -12,41 +31,33 @@
 		OPTIMIZATION: 'border-l-yellow-400'
 	};
 
-	let { suggestion, prompt, editPrompt } = $props<{
-		suggestion: Tables<'suggestions'>;
-		prompt: Tables<'prompts'>;
-		editPrompt: (suggestion: string) => void;
-	}>();
-
-	let applyingSuggestion = $state(false);
-	let userInput = $state<string | undefined>(undefined);
-
 	async function accept() {
 		applyingSuggestion = true;
-		editPrompt(await acceptSuggestion(suggestion, prompt, userInput));
+		const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
+		editPrompt(changedPrompt, suggestion.id);
 		applyingSuggestion = false;
 	}
 </script>
 
 <div
-	class="flex items-start justify-between rounded-br rounded-tr border border-l-4 p-3 {borderMap[
-		suggestion.type
-	]}"
+	class="flex flex-col justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
+		? 'border-l-gray-600'
+		: borderMap[suggestion.type]}"
 >
 	<div class="flex flex-col">
 		<div class="flex items-center gap-2">
 			{#if suggestion.type === EditorType.ERROR}
-				<ShieldX class="h-5 w-5 text-red-600" />
+				<ShieldX class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-red-600'}" />
 			{:else if suggestion.type === EditorType.ENHANCEMENT}
-				<Lightbulb class="h-5 w-5 text-green-600" />
+				<Lightbulb class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-green-600'}" />
 			{:else if suggestion.type === EditorType.OPTIMIZATION}
-				<Coins class="h-5 w-5 text-yellow-400" />
+				<Coins class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-yellow-400'}" />
 			{/if}
 			<p class="font-semibold">
 				{suggestion.name}
 			</p>
 		</div>
-		<p class="my-1 text-gray-600">
+		<p class="mt-1 text-gray-600">
 			{suggestion.description}
 		</p>
 		{#if suggestion.required_input_type}
@@ -55,11 +66,19 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="flex items-center justify-center">
-		{#if applyingSuggestion}
+	<div class="mt-2 flex items-center justify-end gap-4">
+		<button
+			class="cursor-pointer text-gray-500 transition hover:text-gray-900"
+			onclick={() => dismissSuggestion(suggestion)}
+		>
+			Dismiss
+		</button>
+		{#if applied}
+			<Check class="h-5 w-5 text-green-600" />
+		{:else if applyingSuggestion}
 			<Spinner />
 		{:else}
-			<Button onclick={accept}>Apply</Button>
+			<Button {disabled} onclick={accept}>Apply</Button>
 		{/if}
 	</div>
 </div>

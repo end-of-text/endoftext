@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { navigating } from '$app/stores';
 	import ProjectSettingsPopup from '$lib/components/popups/ProjectSettingsPopup.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { Settings } from 'lucide-svelte';
 	import HelpButton from './HelpButton.svelte';
+	import Spinner from './Spinner.svelte';
 
 	let { project } = $props<{
 		project: Tables<'projects'>;
@@ -20,6 +22,9 @@
 	</a>
 	<div class="flex items-center gap-2">
 		<span class="my-4 text-xl font-semibold text-gray-700">{project.name}</span>
+		{#if $navigating}
+			<Spinner />
+		{/if}
 	</div>
 	<div class="ml-auto flex items-center gap-3">
 		<div class="pointer-events-none rounded-md bg-rose-50 px-4 py-1 text-sm font-bold text-primary">

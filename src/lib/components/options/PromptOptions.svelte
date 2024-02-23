@@ -8,10 +8,13 @@
 	}>();
 </script>
 
-<div class="flex shrink-0 flex-col gap-2 rounded border bg-gray-50 p-2" transition:slide>
+<div
+	class="flex shrink-0 flex-col items-start gap-2 rounded border bg-gray-50 p-2"
+	transition:slide
+>
 	<div>
 		<label class="mr-2 italic text-gray-500" for="model">model:</label>
-		<select class="rounded border p-1" name="model" value={prompt.model}>
+		<select class="rounded border p-1" name="model" bind:value={prompt.model}>
 			<option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
 			<option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
 			<option disabled={userStatus !== 'active'} value="gpt-4-0125-preview"

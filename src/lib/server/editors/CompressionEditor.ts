@@ -28,14 +28,22 @@ export class CompressionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		return await filterSentences(prompt.prompt, llm, [canBeSimplifiedPrompt]);
+		return await filterSentences(
+			prompt.prompt,
+			llm,
+			[canBeSimplifiedPrompt],
+			(sentence) => sentence.split(' ').length > 15
+		);
 	}
 
 	async rewritePrompt(
 		prompt: Tables<'prompts'>,
 		targetSpans: number[][],
 		llm: LLM
-	): Promise<string> {
-		return await rewriteSentences(prompt.prompt, targetSpans, llm, simplifyPrompt);
+	): Promise<Tables<'prompts'>> {
+		return {
+			...prompt,
+			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, simplifyPrompt)
+		};
 	}
 }

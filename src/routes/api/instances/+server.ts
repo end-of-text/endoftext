@@ -5,10 +5,6 @@ import { error, json } from '@sveltejs/kit';
 
 export async function DELETE({ locals: { getSession, supabase }, request }) {
 	const session = await getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
 	const requestData = await request.json();
 	const instanceIds = requestData.instanceIds as number[] | undefined;
 	if (!instanceIds) {
@@ -20,29 +16,30 @@ export async function DELETE({ locals: { getSession, supabase }, request }) {
 		error(500, res.error.message);
 	}
 
-	trackEvent('Instances Deleted', { user_id: session.user.id }, { number: instanceIds.length });
+	trackEvent(
+		'Instances Deleted',
+		{ user_id: session?.user.id ?? '' },
+		{ number: instanceIds.length }
+	);
 	return new Response(null, { status: 200 });
 }
 
 export async function POST({ locals: { getSession, supabase }, request }) {
 	const session = await getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
 	const requestData = await request.json();
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
 	const instances = requestData.instances as Tables<'instances'>[] | undefined;
+	const instruction = requestData.instruction as string | undefined;
 	const count = requestData.count as number | undefined;
 	if (!prompt || !instances || !count) {
 		error(500, 'Invalid data');
 	}
 
-	const prediction = await generateInstances(prompt.prompt, instances, 5);
+	const instancesRes = await generateInstances(prompt.prompt, instances, count, instruction);
 
 	let newInstances: string[] = [];
 	try {
-		newInstances = JSON.parse(prediction || '{}')['instances'];
+		newInstances = JSON.parse(instancesRes || '{}')['instances'];
 	} catch (e) {
 		error(500, 'Invalid prediction');
 	}
@@ -57,6 +54,6 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 	if (res.error) {
 		error(500, res.error.message);
 	}
-	trackEvent('Instances Generated', { user_id: session.user.id }, { number: count });
+	trackEvent('Instances Generated', { user_id: session?.user.id ?? '' }, { number: count });
 	return json({ instances: res.data });
 }

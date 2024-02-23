@@ -5,13 +5,15 @@ import type { LLM } from '../llms/llm';
  * @param prompt target propmt to be filtered
  * @param llm language model to be used
  * @param filterPrompts filter prompts to be used
+ * @param prefilter optional prefilter to be used, checks if the sentence should be filtered
  * @returns the indices of the sentences in the given prompt that match any of the filter prompts
  *     or null if no sentences match the filter prompts
  */
 export async function filterSentences(
 	prompt: string,
 	llm: LLM,
-	filterPrompts: string[]
+	filterPrompts: string[],
+	prefilter: (sentence: string) => boolean
 ): Promise<number[][] | null> {
 	const segmenter = new Intl.Segmenter('en', {
 		granularity: 'sentence'
@@ -27,6 +29,8 @@ export async function filterSentences(
 			candidateSentence: false
 		};
 	});
+
+	phrases = phrases.filter((p) => prefilter(p.phrase));
 
 	for (const filterPrompt of filterPrompts) {
 		phrases = await Promise.all(

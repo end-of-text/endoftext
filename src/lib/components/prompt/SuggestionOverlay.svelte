@@ -6,17 +6,17 @@
 	let { prompt, hoveredSuggestion, suggestionApplied, editedPrompt } = $props<{
 		prompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
-		suggestionApplied: boolean;
+		suggestionApplied: number;
 		editedPrompt: Tables<'prompts'>;
 	}>();
 </script>
 
 <div
-	class="user-select-none pointer-events-none absolute left-0 top-0 h-full min-h-24 w-full overflow-y-auto whitespace-pre-line rounded border py-2 pl-2 pr-6 text-sm text-transparent shadow"
+	class="user-select-none absolute left-0 top-0 h-full min-h-24 w-full whitespace-pre-line py-2 pl-2 pr-6 text-sm text-transparent"
 	aria-hidden="true"
 	transition:fade={{ duration: 200 }}
 >
-	{#if suggestionApplied}
+	{#if suggestionApplied > -1}
 		{#each diff.diffWords(prompt.prompt, editedPrompt.prompt) as part}
 			{#if part.added}
 				<span class="bg-blue-600 opacity-30">{part.value}</span>

@@ -22,7 +22,14 @@ export const actions = {
 		if (error) {
 			return fail(500, { message: 'Server error. Try again later.', success: false, email });
 		}
-		redirect(303, '/home');
+		redirect(
+			303,
+			formData.has('redirect') &&
+				formData.get('redirect') !== '' &&
+				formData.get('redirect') !== '/login'
+				? (formData.get('redirect') as string)
+				: `/home`
+		);
 	},
 	loginWithOauth: async ({ url, locals: { supabase }, request }) => {
 		const formData = await request.formData();

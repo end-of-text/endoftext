@@ -2,12 +2,7 @@ import { trackEvent } from '$lib/server/amplitude.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
 
-export async function PATCH({ locals: { supabase, getSession }, request }) {
-	const session = getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
+export async function PATCH({ locals: { supabase }, request }) {
 	const requestData = await request.json();
 	const instance = requestData.instance as Tables<'instances'> | undefined;
 	if (!instance) {
@@ -23,25 +18,11 @@ export async function PATCH({ locals: { supabase, getSession }, request }) {
 		error(500, instanceRes.error.message);
 	}
 
-	const predictionRes = await supabase
-		.from('predictions')
-		.delete()
-		.eq('instance_id', instance.id)
-		.select();
-
-	if (predictionRes.error) {
-		error(500, predictionRes.error.message);
-	}
-
 	return new Response(null, { status: 200 });
 }
 
 export async function PUT({ locals: { supabase, getSession }, request }) {
 	const session = await getSession();
-	if (!session) {
-		error(401, 'Forbidden');
-	}
-
 	const requestData = await request.json();
 	const projectId = requestData.projectId as string | undefined;
 
@@ -58,7 +39,7 @@ export async function PUT({ locals: { supabase, getSession }, request }) {
 	if (res.error) {
 		error(500, res.error.message);
 	} else {
-		trackEvent('Instance Created', { user_id: session.user.id });
+		trackEvent('Instance Created', { user_id: session?.user.id ?? '' });
 		return json(res.data);
 	}
 }
