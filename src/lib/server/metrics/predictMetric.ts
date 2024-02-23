@@ -12,7 +12,10 @@ You can pick from the following metrics:
 Return JSON with the key "output" and the string of the metric.
 `;
 
-export async function predictMetric(prompt: string): Promise<string> {
+export async function predictMetric(prompt: string | undefined): Promise<string> {
+	if (prompt === undefined) {
+		return 'chrf';
+	}
 	const openai = new OpenAILLM(OPENAI_API_KEY || '');
 	const predictedMetric = await openai.generate(
 		[

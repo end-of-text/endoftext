@@ -159,7 +159,7 @@ export async function removeProjectUser(projectId: string, userId: string): Prom
 
 export async function toggleProjectLabels(
 	projectId: string,
-	prompt: string,
+	prompt: string | undefined,
 	showLabels: boolean,
 	projectMetric: string | null
 ): Promise<Tables<'projects'>> {

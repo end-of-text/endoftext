@@ -14,7 +14,10 @@
 	import { X } from 'lucide-svelte';
 	import Popup from './Popup.svelte';
 
-	let { project, onclose } = $props<{ project: Tables<'projects'>; onclose: () => void }>();
+	let { project, onclose } = $props<{
+		project: Tables<'projects'>;
+		onclose: () => void;
+	}>();
 
 	let newUser = $state('');
 	let localProjectName = $state(project.name);
@@ -97,6 +100,7 @@
 					onchange={async () => {
 						const projectRes = await toggleProjectLabels(
 							project.id,
+							undefined,
 							project.show_labels,
 							project.metric_name
 						);

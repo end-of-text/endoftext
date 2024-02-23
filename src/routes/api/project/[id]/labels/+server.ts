@@ -9,7 +9,7 @@ export async function POST({ params, request, locals: { supabase } }) {
 
 	const projectUpdate: Record<string, unknown> = { show_labels: showLabels };
 	if (showLabels && projectMetric === null) {
-		projectUpdate['metric_name'] = prompt !== undefined ? predictMetric(prompt) : 'chrf';
+		projectUpdate['metric_name'] = await predictMetric(prompt);
 	}
 
 	const res = await supabase.from('projects').update(projectUpdate).eq('id', params.id).select();
