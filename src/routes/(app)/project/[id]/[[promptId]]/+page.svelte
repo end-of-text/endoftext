@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
+	import { afterNavigate, goto, invalidate } from '$app/navigation';
 	import { getSuggestions, updatePrompt } from '$lib/api';
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
@@ -23,6 +23,7 @@
 	let promptMaximized = $state(false);
 	let gettingSuggestions = $state(false);
 	let suggestions: Tables<'suggestions'>[] | undefined = $state([]);
+	let forwardTarget = $state(data.prompt);
 
 	function editPrompt(newPrompt: Tables<'prompts'>, suggestionId: number) {
 		suggestionApplied = suggestionId;
@@ -39,13 +40,14 @@
 			}
 			invalidate('prompt').then(() => {
 				prompt = data.prompt;
+				forwardTarget = data.prompt;
 				editedPrompt = { ...data.prompt };
 				predictions = data.predictions;
 			});
 		});
 	}
 
-	function loadPrompt(id: string | null) {
+	function loadPrompt(id: number | null) {
 		if (id === null) goto(`/project/${data.project.id}`);
 		goto(`/project/${data.project.id}/${id}`);
 	}
@@ -61,6 +63,14 @@
 				gettingSuggestions = false;
 			});
 		});
+	});
+
+	afterNavigate(() => {
+		editedPrompt = { ...data.prompt };
+		prompt = data.prompt;
+		instances = data.instances;
+		predictions = data.predictions;
+		project = data.project;
 	});
 </script>
 
@@ -84,6 +94,7 @@
 		{editPrompt}
 		{setPrompt}
 		{loadPrompt}
+		{forwardTarget}
 	/>
 {/if}
 
@@ -101,6 +112,7 @@
 			bind:suggestions
 			projectId={data.project.id}
 			setPromptMaximized={(maximized) => (promptMaximized = maximized)}
+			{forwardTarget}
 			{editPrompt}
 			{setPrompt}
 			{loadPrompt}

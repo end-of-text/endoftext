@@ -15,6 +15,7 @@
 		projectId,
 		gettingSuggestions,
 		suggestions,
+		forwardTarget,
 		setPromptMaximized,
 		editPrompt,
 		setPrompt,
@@ -29,10 +30,11 @@
 		projectId: string | undefined;
 		gettingSuggestions: boolean;
 		suggestions: Tables<'suggestions'>[] | undefined;
+		forwardTarget: Tables<'prompts'>;
 		setPromptMaximized: (maximized: boolean) => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		setPrompt: () => void;
-		loadPrompt: (id: string | null) => void;
+		loadPrompt: (id: number | null) => void;
 	}>();
 </script>
 
@@ -58,6 +60,7 @@
 		<PromptEditor
 			{prompt}
 			{hoveredSuggestion}
+			{forwardTarget}
 			{setPrompt}
 			bind:suggestionApplied
 			bind:editedPrompt
