@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { getSuggestions, updatePrompt } from '$lib/api';
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
@@ -15,6 +15,7 @@
 	let instances = $state(data.instances);
 	let predictions = $state(data.predictions);
 	let prompt = $state(data.prompt);
+	let childPrompt = $state(data.childPrompt);
 	let editedPrompt = $state({ ...data.prompt });
 	let suggestionApplied = $state<number>(-1);
 	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
@@ -30,18 +31,12 @@
 	}
 
 	function setPrompt() {
-		showOptions = false;
-		suggestionApplied = -1;
 		updatePrompt(editedPrompt).then((r) => {
 			if (r === null) {
 				showPaywall = true;
 				return;
 			}
-			invalidate('prompt').then(() => {
-				prompt = data.prompt;
-				editedPrompt = { ...data.prompt };
-				predictions = data.predictions;
-			});
+			goto(`/project/${data.project.id}/${r.id}`);
 		});
 	}
 
@@ -56,6 +51,17 @@
 				gettingSuggestions = false;
 			});
 		});
+	});
+
+	afterNavigate(() => {
+		editedPrompt = { ...data.prompt };
+		prompt = data.prompt;
+		childPrompt = data.childPrompt;
+		instances = data.instances;
+		predictions = data.predictions;
+		project = data.project;
+		showOptions = false;
+		suggestionApplied = -1;
 	});
 </script>
 
@@ -86,6 +92,7 @@
 	<div class="flex min-h-0 grow">
 		<PromptBar
 			{prompt}
+			{childPrompt}
 			userStatus={data.user.status}
 			bind:suggestionApplied
 			bind:gettingSuggestions

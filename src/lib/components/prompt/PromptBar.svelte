@@ -1,12 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { Tables } from '$lib/supabase';
-	import { ChevronDown, ChevronUp } from 'lucide-svelte';
+	import { tooltip } from '$lib/tooltip.svelte';
+	import { ChevronDown, ChevronUp, MoveLeft, MoveRight } from 'lucide-svelte';
 	import PromptOptions from '../options/PromptOptions.svelte';
 	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
 	let {
 		prompt,
+		childPrompt,
 		suggestionApplied,
 		userStatus,
 		showOptions,
@@ -20,6 +23,7 @@
 		setPrompt
 	} = $props<{
 		prompt: Tables<'prompts'>;
+		childPrompt: Tables<'prompts'> | undefined;
 		suggestionApplied: number;
 		userStatus: string;
 		showOptions: boolean;
@@ -32,13 +36,36 @@
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		setPrompt: () => void;
 	}>();
+
+	function loadPrompt(id: number | null) {
+		if (id === null) goto(`/project/${projectId}`);
+		goto(`/project/${projectId}/${id}`);
+	}
 </script>
 
 <div class="flex h-full w-[450px] shrink-0 flex-col border-r px-6 py-4">
 	<div class="mb-2 flex items-end justify-between">
-		<h1>Prompt</h1>
+		<div class="flex items-center gap-4">
+			<h1 class="mr-2">Prompt</h1>
+			<button
+				class="group h-5 w-5 cursor-pointer text-gray-500 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300"
+				disabled={prompt.parent_prompt_id === null}
+				onclick={() => loadPrompt(prompt.parent_prompt_id)}
+				use:tooltip={{ text: 'Go to previous prompt' }}
+			>
+				<MoveLeft />
+			</button>
+			<button
+				class="group h-5 w-5 cursor-pointer text-gray-500 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300"
+				disabled={childPrompt === undefined}
+				onclick={() => loadPrompt(childPrompt!.id)}
+				use:tooltip={{ text: 'Go to next prompt' }}
+			>
+				<MoveRight />
+			</button>
+		</div>
 		<button
-			class="flex items-center gap-1 opacity-40 transition-all hover:opacity-100"
+			class="flex h-full items-center gap-1 opacity-40 transition-all hover:opacity-100"
 			onclick={() => (showOptions = !showOptions)}
 		>
 			<span class="text-black">Model Options</span>

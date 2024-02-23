@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { afterNavigate } from '$app/navigation';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import * as diff from 'diff';
@@ -27,6 +28,7 @@
 
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
+	let promptSubmitted = $state(false);
 
 	function copyPrompt() {
 		navigator.clipboard.writeText(prompt.prompt);
@@ -35,6 +37,10 @@
 			promptCopied = false;
 		}, 3000);
 	}
+
+	afterNavigate(() => {
+		promptSubmitted = false;
+	});
 </script>
 
 <div
@@ -128,7 +134,7 @@
 	</div>
 </div>
 <div class="ml-auto flex items-center gap-1 pt-3">
-	{#if promptWasEdited}
+	{#if promptWasEdited && !promptSubmitted}
 		<Button
 			onclick={() => {
 				editedPrompt = { ...prompt };
@@ -140,8 +146,11 @@
 		</Button>
 	{/if}
 	<Button
-		onclick={setPrompt}
-		disabled={!promptWasEdited}
+		onclick={() => {
+			promptSubmitted = true;
+			setPrompt();
+		}}
+		disabled={!promptWasEdited || promptSubmitted}
 		classNames=" w-fit text-blue-600"
 		title="Save & Run"
 		tooltipText="Save this as a new prompt."
