@@ -13,6 +13,6 @@ export const actions = {
 			await supabase.from('projects').update({ name: name }).eq('id', params.id);
 		}
 
-		redirect(303, '/project/' + params.id + '/new/data');
+		redirect(303, '/new/' + params.id + '/data');
 	}
 };
