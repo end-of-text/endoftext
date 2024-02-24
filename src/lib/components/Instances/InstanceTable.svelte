@@ -161,9 +161,7 @@
 							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
 								<span>{project.metric_name}</span>
 								{#if avgMetric !== undefined}
-									<span class="text-sm font-normal text-black opacity-40"
-										>({avgMetric.toFixed(2)})</span
-									>
+									<span class="text-sm font-normal text-gray-500">({avgMetric.toFixed(2)})</span>
 								{/if}
 							</th>
 						{/if}

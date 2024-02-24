@@ -65,10 +65,10 @@
 			</button>
 		</div>
 		<button
-			class="flex h-full items-center gap-1 opacity-40 transition-all hover:opacity-100"
+			class="flex h-full items-center gap-1 text-gray-500 transition-all hover:text-gray-900"
 			onclick={() => (showOptions = !showOptions)}
 		>
-			<span class="text-black">Model Options</span>
+			<span>Model Options</span>
 			{#if showOptions}
 				<ChevronUp class="h-5 w-5" />
 			{:else}

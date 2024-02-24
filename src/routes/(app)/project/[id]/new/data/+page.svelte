@@ -42,7 +42,7 @@
 		</div>
 		<div class="flex w-full flex-col gap-2">
 			{#if data.generatedInstances && instances.length === 0}
-				<p class="mb-2 italic text-gray-600">Generating instances...</p>
+				<p class="mb-2 italic text-gray-500">Generating instances...</p>
 			{/if}
 			{#each instances as instance, i}
 				<div class="flex items-center gap-2">

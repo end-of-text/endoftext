@@ -46,7 +46,7 @@
 	<td
 		class="py-3 pl-3 align-top transition-all {rowHovered || selected
 			? 'opacity-100'
-			: 'opacity-20'}"
+			: 'opacity-30'}"
 	>
 		<input bind:checked={selected} type="checkbox" />
 	</td>
@@ -104,7 +104,7 @@
 				}}
 			/>
 			<button
-				class="absolute -left-8 top-3 hidden rounded bg-white p-1 text-gray-500 opacity-20 transition hover:opacity-100 group-hover:flex"
+				class="absolute -left-8 top-3 hidden rounded border bg-white p-1 text-gray-500 transition hover:text-gray-900 hover:shadow group-hover:flex"
 				onclick={() => {
 					prediction?.then((p) => {
 						localInstanceLabel = p || '';

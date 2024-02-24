@@ -47,17 +47,17 @@
 	<div class="flex flex-col">
 		<div class="flex items-center gap-2">
 			{#if suggestion.type === EditorType.ERROR}
-				<ShieldX class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-red-600'}" />
+				<ShieldX class="h-5 w-5 {disabled ? 'text-gray-500' : 'text-red-600'}" />
 			{:else if suggestion.type === EditorType.ENHANCEMENT}
-				<Lightbulb class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-green-600'}" />
+				<Lightbulb class="h-5 w-5 {disabled ? 'text-gray-500' : 'text-green-600'}" />
 			{:else if suggestion.type === EditorType.OPTIMIZATION}
-				<Coins class="h-5 w-5 {disabled ? 'text-gray-600' : 'text-yellow-400'}" />
+				<Coins class="h-5 w-5 {disabled ? 'text-gray-500' : 'text-yellow-400'}" />
 			{/if}
 			<p class="font-semibold">
 				{suggestion.name}
 			</p>
 		</div>
-		<p class="mt-1 text-gray-600">
+		<p class="mt-1 text-gray-500">
 			{suggestion.description}
 		</p>
 		{#if suggestion.required_input_type}
@@ -69,9 +69,7 @@
 	<div class="mt-2 flex items-center justify-end gap-4">
 		{#if !applied}
 			<button
-				class="cursor-pointer text-gray-500 opacity-30 transition {!disabled
-					? 'hover:text-gray-900 hover:opacity-100'
-					: ''}"
+				class="cursor-pointer text-gray-500 transition {!disabled ? 'hover:text-gray-900 ' : ''}"
 				onclick={() => dismissSuggestion(suggestion)}
 				{disabled}
 			>

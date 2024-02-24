@@ -105,16 +105,14 @@
 	<div class="absolute right-1 top-1 flex flex-col gap-1">
 		<button
 			onclick={copyPrompt}
-			class="rounded bg-white p-1 transition-all {promptHovered
-				? 'opacity-100'
-				: 'opacity-30'} {promptCopied ? 'text-emerald-600' : ''}"
+			class="rounded bg-white p-1 {promptHovered ? 'text-gray-500' : 'text-gray-300'} transition"
 		>
 			{#if promptCopied}
-				<span class="flex items-center gap-2" in:fade>
+				<span class="flex items-center gap-2 text-emerald-600" in:fade>
 					<Check class="h-5 w-5" />
 				</span>
 			{:else}
-				<span class="group flex items-center gap-2 text-gray-500 hover:text-gray-900" in:fade>
+				<span class="group flex items-center gap-2 hover:text-gray-900" in:fade>
 					<Copy class="h-5 w-5" />
 				</span>
 			{/if}
@@ -124,9 +122,11 @@
 				onclick={() => {
 					if (setPromptMaximized) setPromptMaximized(true);
 				}}
-				class="rounded bg-white p-1 transition-all {promptHovered ? 'opacity-100' : 'opacity-30'}"
+				class="rounded bg-white p-1 transition-all {promptHovered
+					? 'text-gray-500'
+					: 'text-gray-300'}"
 			>
-				<span class="group flex items-center gap-2 text-gray-500 hover:text-gray-900" in:fade>
+				<span class="group flex items-center gap-2 hover:text-gray-900" in:fade>
 					<Expand class="h-5 w-5" />
 				</span>
 			</button>
