@@ -82,7 +82,7 @@
 {/if}
 
 <div class="flex h-full w-full flex-col">
-	<ProjectHeader bind:project />
+	<ProjectHeader bind:project {prompt} />
 	<div class="flex min-h-0 grow">
 		<PromptBar
 			{prompt}

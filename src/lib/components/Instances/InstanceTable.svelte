@@ -103,7 +103,7 @@
 						project.show_labels = true;
 						const projectRes = await toggleProjectLabels(
 							project.id,
-							prompt.prompt,
+							prompt,
 							project.show_labels,
 							project.metric_name
 						);
