@@ -24,19 +24,16 @@ export const actions = {
 			};
 		}
 
-		const res = await supabase
+		const projectRes = await supabase
 			.from('projects')
 			.insert({ user_id: session.user.id, name: 'New Prompt' })
 			.select();
 
-		if (res.error || (res.data && res.data.length === 0)) {
-			return {
-				status: 500,
-				body: "Couldn't create project"
-			};
+		if (projectRes.error || (projectRes.data && projectRes.data.length === 0)) {
+			error(500, "Couldn't create project");
 		} else {
 			trackEvent('Prompt Created', { user_id: session.user.id });
-			redirect(303, '/project/' + res.data[0].id);
+			redirect(303, '/new/' + projectRes.data[0].id + '/prompt');
 		}
 	}
 };
