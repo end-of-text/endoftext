@@ -1,13 +1,16 @@
+import { predictMetric } from '$lib/server/metrics/predictMetric';
+import type { Tables } from '$lib/supabase';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ params, request, locals: { supabase } }) {
 	const requestData = await request.json();
 	const showLabels = requestData.showLabels;
 	const projectMetric = requestData.projectMetric as string | null;
+	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
 
 	const projectUpdate: Record<string, unknown> = { show_labels: showLabels };
 	if (showLabels && projectMetric === null) {
-		projectUpdate['metric_name'] = 'chrf';
+		projectUpdate['metric_name'] = await predictMetric(prompt);
 	}
 
 	const res = await supabase.from('projects').update(projectUpdate).eq('id', params.id).select();

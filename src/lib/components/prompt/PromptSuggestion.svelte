@@ -40,7 +40,7 @@
 </script>
 
 <div
-	class="flex flex-col justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
+	class="flex w-full flex-col justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
 		? 'border-l-gray-600'
 		: borderMap[suggestion.type]}"
 >
@@ -67,12 +67,17 @@
 		{/if}
 	</div>
 	<div class="mt-2 flex items-center justify-end gap-4">
-		<button
-			class="cursor-pointer text-gray-500 transition hover:text-gray-900"
-			onclick={() => dismissSuggestion(suggestion)}
-		>
-			Dismiss
-		</button>
+		{#if !applied}
+			<button
+				class="cursor-pointer text-gray-500 opacity-30 transition {!disabled
+					? 'hover:text-gray-900 hover:opacity-100'
+					: ''}"
+				onclick={() => dismissSuggestion(suggestion)}
+				{disabled}
+			>
+				Dismiss
+			</button>
+		{/if}
 		{#if applied}
 			<Check class="h-5 w-5 text-green-600" />
 		{:else if applyingSuggestion}

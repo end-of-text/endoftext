@@ -6,15 +6,16 @@
 	import HelpButton from './HelpButton.svelte';
 	import Spinner from './Spinner.svelte';
 
-	let { project } = $props<{
+	let { project, prompt } = $props<{
 		project: Tables<'projects'>;
+		prompt: Tables<'prompts'>;
 	}>();
 
 	let showSettings = $state(false);
 </script>
 
 {#if showSettings}
-	<ProjectSettingsPopup bind:project onclose={() => (showSettings = false)} />
+	<ProjectSettingsPopup {prompt} bind:project onclose={() => (showSettings = false)} />
 {/if}
 <div class="flex w-full shrink-0 items-center border-b px-6">
 	<a href="/home">

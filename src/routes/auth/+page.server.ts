@@ -20,7 +20,7 @@ export const actions = {
 			password
 		});
 		if (error) {
-			return fail(500, { message: 'Server error. Try again later.', success: false, email });
+			return fail(500, { message: error.message, success: false, email });
 		}
 		redirect(
 			303,
