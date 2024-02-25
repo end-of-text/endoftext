@@ -87,8 +87,8 @@
 	{/if}
 	{#if form?.success}
 		<p class="my-2">Check email for confirmation.</p>
-	{:else if form?.error}
-		<p class="my-2">{form?.error}</p>
+	{:else if form && form.success === false}
+		<p class="my-2 text-red-600">{form.message}</p>
 	{/if}
 	<p class="mt-6 text-center text-sm italic text-gray-400">
 		By signing up you agree to our <br /><a href="/tos" class="text-gray-500 hover:text-gray-600"
