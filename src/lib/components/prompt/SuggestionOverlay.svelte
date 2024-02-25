@@ -38,10 +38,10 @@
 			{/if}
 		{/each}
 	{:else if selectedSpan}
-		{prompt.prompt.slice(0, selectedSpan.start)}
+		{editedPrompt.prompt.slice(0, selectedSpan.start)}
 		<span class="underline decoration-blue-600 decoration-wavy decoration-2">
-			{prompt.prompt.slice(selectedSpan.start, selectedSpan.end)}
+			{editedPrompt.prompt.slice(selectedSpan.start, selectedSpan.end)}
 		</span>
-		{prompt.prompt.slice(selectedSpan.end)}
+		{editedPrompt.prompt.slice(selectedSpan.end)}
 	{/if}
 </div>

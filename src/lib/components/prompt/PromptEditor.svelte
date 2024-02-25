@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
 	import autosize from '$lib/autosize';
+	import { clickOutside } from '$lib/clickOutside';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
@@ -65,6 +66,7 @@
 	class="relative flex min-h-24 cursor-text flex-col text-left {setPromptMaximized ? '' : 'grow'}"
 	onmouseenter={() => (promptHovered = true)}
 	onmouseleave={() => (promptHovered = false)}
+	use:clickOutside={() => (selectedSpan = undefined)}
 	role="button"
 	tabindex="0"
 >
