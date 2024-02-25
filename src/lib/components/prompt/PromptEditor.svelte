@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
+	import autosize from '$lib/autosize';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
@@ -29,36 +30,29 @@
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
 
+	let promptEditor: HTMLTextAreaElement | undefined = $state(undefined);
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
-	let selectedText = $state<string | undefined>(undefined);
+	let selectedSpan = $state<{ start: number; end: number } | undefined>(undefined);
 	let promptSubmitted = $state(false);
 
 	function copyPrompt() {
 		navigator.clipboard.writeText(prompt.prompt);
+		selectedSpan = undefined;
 		promptCopied = true;
 		setTimeout(() => {
 			promptCopied = false;
 		}, 3000);
 	}
 
-	function getSelectionHtml() {
-		var selected = '';
-		if (typeof window.getSelection != 'undefined') {
-			var sel = window.getSelection();
-			if (sel && sel.rangeCount) {
-				var container = document.createElement('div');
-				for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-					container.appendChild(sel.getRangeAt(i).cloneContents());
-				}
-				selected = container.innerHTML.replaceAll('<br>', '\n');
-			}
-		}
-
-		if (selected.length > 10 && prompt.prompt.includes(selected)) {
-			selectedText = selected;
+	function getSelection() {
+		if (promptEditor?.selectionEnd ?? 0 - (promptEditor?.selectionStart ?? 0) > 10) {
+			selectedSpan = {
+				start: promptEditor?.selectionStart ?? 0,
+				end: promptEditor?.selectionEnd ?? 0
+			};
 		} else {
-			selectedText = undefined;
+			selectedSpan = undefined;
 		}
 	}
 
@@ -67,8 +61,6 @@
 	});
 </script>
 
-<svelte:window onmouseup={getSelectionHtml} />
-
 <div
 	class="relative flex min-h-24 cursor-text flex-col text-left {setPromptMaximized ? '' : 'grow'}"
 	onmouseenter={() => (promptHovered = true)}
@@ -76,30 +68,37 @@
 	role="button"
 	tabindex="0"
 >
-	{#if selectedText}
-		<RewriteBox bind:selectedText {prompt} {editPrompt} />
+	{#if selectedSpan}
+		<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
 	{/if}
 	<div
 		class="relative min-h-24 {setPromptMaximized
 			? ''
 			: 'grow'} overflow-y-auto rounded border shadow"
 	>
-		<div
-			contenteditable="plaintext-only"
-			class="relative h-full min-h-24 bg-white py-2 pl-2 pr-6 text-sm"
-			role="textbox"
-			aria-multiline="true"
-			tabindex="0"
-			bind:innerText={editedPrompt.prompt}
+		<textarea
+			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none"
+			bind:this={promptEditor}
+			bind:value={editedPrompt.prompt}
+			use:autosize
+			onselect={getSelection}
+			onmousedown={() => (selectedSpan = undefined)}
 			onkeydown={(e) => {
+				selectedSpan = undefined;
 				suggestionApplied = -1;
 				if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
 					setPrompt();
 				}
 			}}
 		/>
-		{#if suggestionApplied > -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans)}
-			<SuggestionOverlay {prompt} {hoveredSuggestion} {suggestionApplied} {editedPrompt} />
+		{#if suggestionApplied > -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans) || selectedSpan}
+			<SuggestionOverlay
+				{prompt}
+				{hoveredSuggestion}
+				{suggestionApplied}
+				{editedPrompt}
+				{selectedSpan}
+			/>
 		{/if}
 	</div>
 	<div class="absolute right-1 top-1 flex flex-col gap-1">
@@ -123,6 +122,7 @@
 			<button
 				onclick={() => {
 					if (setPromptMaximized) setPromptMaximized(true);
+					selectedSpan = undefined;
 				}}
 				class="rounded bg-white p-1 transition-all {promptHovered ? 'opacity-100' : 'opacity-30'}"
 			>

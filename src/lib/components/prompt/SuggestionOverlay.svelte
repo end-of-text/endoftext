@@ -3,16 +3,17 @@
 	import * as diff from 'diff';
 	import { fade } from 'svelte/transition';
 
-	let { prompt, hoveredSuggestion, suggestionApplied, editedPrompt } = $props<{
+	let { prompt, hoveredSuggestion, suggestionApplied, editedPrompt, selectedSpan } = $props<{
 		prompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		suggestionApplied: number;
 		editedPrompt: Tables<'prompts'>;
+		selectedSpan: { start: number; end: number } | undefined;
 	}>();
 </script>
 
 <div
-	class="user-select-none absolute left-0 top-0 h-full min-h-24 w-full whitespace-pre-line py-2 pl-2 pr-6 text-sm text-transparent"
+	class="user-select-none pointer-events-none absolute left-0 top-0 h-full min-h-24 w-full whitespace-pre-line py-2 pl-2 pr-6 text-sm text-transparent"
 	aria-hidden="true"
 	transition:fade={{ duration: 200 }}
 >
@@ -36,5 +37,11 @@
 				</span>
 			{/if}
 		{/each}
+	{:else if selectedSpan}
+		{prompt.prompt.slice(0, selectedSpan.start)}
+		<span class="underline decoration-blue-600 decoration-wavy decoration-2">
+			{prompt.prompt.slice(selectedSpan.start, selectedSpan.end)}
+		</span>
+		{prompt.prompt.slice(selectedSpan.end)}
 	{/if}
 </div>

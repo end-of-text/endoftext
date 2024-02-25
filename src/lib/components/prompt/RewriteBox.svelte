@@ -5,8 +5,8 @@
 	import type { Tables } from '$lib/supabase';
 	import { fade } from 'svelte/transition';
 
-	let { selectedText, prompt, editPrompt } = $props<{
-		selectedText: string | undefined;
+	let { selectedSpan, prompt, editPrompt } = $props<{
+		selectedSpan: { start: number; end: number } | undefined;
 		prompt: Tables<'prompts'>;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 	}>();
@@ -16,9 +16,19 @@
 
 	async function accept() {
 		applyingSuggestion = true;
-		if (selectedText)
-			editPrompt({ ...prompt, prompt: await applyRewrite(selectedText, prompt, userInput) }, -1);
-		selectedText = undefined;
+		if (selectedSpan)
+			editPrompt(
+				{
+					...prompt,
+					prompt: await applyRewrite(
+						prompt.prompt.slice(selectedSpan.start, selectedSpan.end),
+						prompt,
+						userInput
+					)
+				},
+				-1
+			);
+		selectedSpan = undefined;
 	}
 </script>
 
