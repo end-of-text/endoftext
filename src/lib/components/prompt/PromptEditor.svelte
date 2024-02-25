@@ -57,7 +57,7 @@
 	>
 		<div
 			contenteditable="plaintext-only"
-			class="relative h-full min-h-24 bg-white py-2 pl-2 pr-6 text-sm"
+			class="relative h-full min-h-24 bg-white py-2 pl-2 pr-6 text-sm outline-none"
 			role="textbox"
 			aria-multiline="true"
 			tabindex="0"
