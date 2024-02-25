@@ -1,4 +1,5 @@
 import type { Tables } from '$lib/supabase';
+import { error } from '@sveltejs/kit';
 
 export async function load({ params, locals: { supabase } }) {
 	const { data: projectData, error: projectError } = await supabase
@@ -7,10 +8,7 @@ export async function load({ params, locals: { supabase } }) {
 		.eq('id', params.id);
 
 	if (projectError) {
-		return {
-			status: 500,
-			body: 'Internal Server Error'
-		};
+		error(500, projectError.message);
 	}
 
 	const { data: promptData, error: promptError } = await supabase
@@ -20,10 +18,7 @@ export async function load({ params, locals: { supabase } }) {
 		.order('created_at', { ascending: false });
 
 	if (promptError) {
-		return {
-			status: 500,
-			body: 'Internal Server Error'
-		};
+		error(500, promptError.message);
 	}
 
 	return {
