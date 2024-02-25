@@ -13,7 +13,7 @@
 <svelte:window onkeydown={submit} />
 
 <Popup {onclose} classNames="w-1/2 py-10 flex flex-col gap-5 items-center justify-center min-w-60">
-	<p class="text-xl font-medium text-gray-900">{message}</p>
+	<p class="text-xl font-medium text-gray-hovered">{message}</p>
 	<a
 		href="/home/account"
 		class="rounded border border-primary bg-rose-50 px-4 py-2 font-bold text-primary transition-colors hover:bg-rose-100"

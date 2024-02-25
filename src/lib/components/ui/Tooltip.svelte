@@ -23,7 +23,7 @@
 <svelte:window bind:innerWidth={windowWidth} bind:innerHeight={windowHeight} />
 {#if tooltipState.tooltip.hover && tooltipState.tooltip.text !== undefined}
 	<div
-		class="fixed z-40 my-4 flex rounded bg-gray-700 p-1 text-xs text-white shadow"
+		class="fixed z-40 my-4 flex rounded bg-gray-hovered p-1 text-xs text-white shadow"
 		{style}
 		out:fade
 		in:fade={{ delay: 1000 }}

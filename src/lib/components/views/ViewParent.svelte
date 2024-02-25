@@ -31,6 +31,6 @@
 		{@render children()}
 	</button>
 	<button class="absolute right-14 top-14 rounded bg-white" onclick={onclose}>
-		<X class="text-gray-300 transition-all hover:text-black" />
+		<X class="text-gray-inactive transition-all hover:text-gray-hovered" />
 	</button>
 </div>

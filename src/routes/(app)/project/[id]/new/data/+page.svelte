@@ -32,7 +32,7 @@
 		}}
 	>
 		<div class="flex w-full items-center justify-between">
-			<p class="mb-2 text-gray-500">2 / 2</p>
+			<p class="mb-2 text-gray-active">2 / 2</p>
 			<img src="/logo.svg" alt="logo" class="h-4" />
 		</div>
 		<h1>Example Inputs</h1>
@@ -42,7 +42,7 @@
 		</div>
 		<div class="flex w-full flex-col gap-2">
 			{#if data.generatedInstances && instances.length === 0}
-				<p class="mb-2 italic text-gray-500">Generating instances...</p>
+				<p class="mb-2 italic text-gray-active">Generating instances...</p>
 			{/if}
 			{#each instances as instance, i}
 				<div class="flex items-center gap-2">

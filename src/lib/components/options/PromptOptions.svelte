@@ -13,7 +13,7 @@
 	transition:slide
 >
 	<div>
-		<label class="mr-2 italic text-gray-500" for="model">model:</label>
+		<label class="mr-2 italic text-gray-active" for="model">model:</label>
 		<select class="rounded border p-1" name="model" bind:value={prompt.model}>
 			<option value="gpt-3.5-turbo-0125">gpt-3.5-turbo-0125</option>
 			<option value="gpt-3.5-turbo-1106">gpt-3.5-turbo-1106</option>
@@ -26,14 +26,14 @@
 		</select>
 	</div>
 	<div>
-		<label class="mr-2 italic text-gray-500" for="model">response format:</label>
+		<label class="mr-2 italic text-gray-active" for="model">response format:</label>
 		<select class="rounded border p-1" name="responseFormat" bind:value={prompt.responseFormat}>
 			<option value="text">text</option>
 			<option value="json">json</option>
 		</select>
 	</div>
 	<div class="flex items-center">
-		<label class="mr-2 italic text-gray-500" for="temperature">temperature:</label>
+		<label class="mr-2 italic text-gray-active" for="temperature">temperature:</label>
 		<input
 			type="range"
 			name="temperature"

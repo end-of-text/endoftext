@@ -90,9 +90,10 @@
 	{:else if form?.error}
 		<p class="my-2">{form?.error}</p>
 	{/if}
-	<p class="mt-6 text-center text-sm italic text-gray-500">
-		By signing up you agree to our <br /><a href="/tos" class="text-gray-600 hover:text-gray-600"
-			>terms of service</a
+	<p class="mt-6 text-center text-sm italic text-gray-inactive">
+		By signing up you agree to our <br /><a
+			href="/tos"
+			class="text-gray-active transition hover:text-gray-hovered">terms of service</a
 		>
 	</p>
 </div>

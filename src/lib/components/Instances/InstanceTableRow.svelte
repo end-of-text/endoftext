@@ -104,7 +104,7 @@
 				}}
 			/>
 			<button
-				class="absolute -left-8 top-3 hidden rounded border bg-white p-1 text-gray-500 transition hover:text-gray-900 hover:shadow group-hover:flex"
+				class="absolute -left-8 top-3 hidden rounded border bg-white p-1 text-gray-active transition hover:text-gray-hovered hover:shadow group-hover:flex"
 				onclick={() => {
 					prediction?.then((p) => {
 						localInstanceLabel = p || '';
