@@ -122,7 +122,7 @@
 			{#if selectedInstances.some((d) => d === true)}
 				<div class="flex items-center gap-2" transition:fade={{ duration: 300 }}>
 					<button
-						class="mr-2 text-gray-500 transition-colors hover:text-gray-900"
+						class="mr-2 text-gray-active transition-colors hover:text-gray-hovered"
 						onclick={() => (selectedInstances = [])}
 					>
 						clear
@@ -162,9 +162,7 @@
 							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
 								<span>{project.metric_name}</span>
 								{#if avgMetric !== undefined}
-									<span class="text-sm font-normal text-black opacity-40"
-										>({avgMetric.toFixed(2)})</span
-									>
+									<span class="text-sm font-normal text-gray-active">({avgMetric.toFixed(2)})</span>
 								{/if}
 							</th>
 						{/if}

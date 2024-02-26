@@ -12,9 +12,9 @@
 			<img src="/logo.svg" alt="logo" />
 		</a>
 		<a
-			class="flex gap-2 rounded p-2 text-gray-500 transition-all hover:text-gray-900 {$page.url
-				.pathname === '/home'
-				? 'text-gray-900'
+			class="flex gap-2 rounded p-2 text-gray-active transition-all hover:text-gray-hovered {$page
+				.url.pathname === '/home'
+				? 'text-gray-hovered'
 				: ''}"
 			href="/home"
 		>
@@ -22,9 +22,9 @@
 			All Prompts
 		</a>
 		<a
-			class="flex gap-2 rounded p-2 text-gray-500 transition-all hover:text-gray-900 {$page.url
-				.pathname === '/home/account'
-				? 'text-gray-900'
+			class="flex gap-2 rounded p-2 text-gray-active transition-all hover:text-gray-hovered {$page
+				.url.pathname === '/home/account'
+				? 'text-gray-hovered'
 				: ''}"
 			href="/home/account"
 		>

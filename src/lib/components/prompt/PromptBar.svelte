@@ -48,7 +48,7 @@
 		<div class="flex items-center gap-4">
 			<h1 class="mr-2">Prompt</h1>
 			<button
-				class="group h-5 w-5 cursor-pointer text-gray-500 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300"
+				class="group h-5 w-5 cursor-pointer text-gray-active transition-colors hover:text-gray-hovered disabled:cursor-not-allowed disabled:text-gray-inactive"
 				disabled={prompt.parent_prompt_id === null}
 				onclick={() => loadPrompt(prompt.parent_prompt_id)}
 				use:tooltip={{ text: 'Go to previous prompt' }}
@@ -56,7 +56,7 @@
 				<MoveLeft />
 			</button>
 			<button
-				class="group h-5 w-5 cursor-pointer text-gray-500 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:text-gray-300"
+				class="group h-5 w-5 cursor-pointer text-gray-active transition-colors hover:text-gray-hovered disabled:cursor-not-allowed disabled:text-gray-inactive"
 				disabled={childPrompt === undefined}
 				onclick={() => loadPrompt(childPrompt!.id)}
 				use:tooltip={{ text: 'Go to next prompt' }}
@@ -65,10 +65,10 @@
 			</button>
 		</div>
 		<button
-			class="flex h-full items-center gap-1 opacity-40 transition-all hover:opacity-100"
+			class="flex h-full items-center gap-1 text-gray-active transition-all hover:text-gray-hovered"
 			onclick={() => (showOptions = !showOptions)}
 		>
-			<span class="text-black">Model Options</span>
+			<span>Model Options</span>
 			{#if showOptions}
 				<ChevronUp class="h-5 w-5" />
 			{:else}

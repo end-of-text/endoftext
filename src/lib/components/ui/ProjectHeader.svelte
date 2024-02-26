@@ -22,7 +22,7 @@
 		<img class="h-5 pr-4" src="/logo-small.svg" alt="logo" />
 	</a>
 	<div class="flex items-center gap-2">
-		<span class="my-4 text-xl font-semibold text-gray-700">{project.name}</span>
+		<span class="my-4 text-xl font-semibold text-gray-hovered">{project.name}</span>
 		{#if $navigating}
 			<Spinner />
 		{/if}

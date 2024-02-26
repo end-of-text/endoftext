@@ -40,7 +40,7 @@
 		<div class="mb-2 flex items-end justify-between">
 			<h1>Prompt</h1>
 			<button
-				class="flex items-center gap-1 opacity-40 transition-all hover:opacity-100"
+				class="flex items-center gap-1 text-gray-active transition-all hover:text-gray-hovered"
 				onclick={() => (showOptions = !showOptions)}
 			>
 				<span class="text-black">Model Options</span>
