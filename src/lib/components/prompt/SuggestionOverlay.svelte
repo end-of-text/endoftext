@@ -17,7 +17,7 @@
 	aria-hidden="true"
 	transition:fade={{ duration: 200 }}
 >
-	{#if suggestionApplied > -1}
+	{#if suggestionApplied !== -1}
 		{#each diff.diffWords(prompt.prompt, editedPrompt.prompt) as part}
 			{#if part.added}
 				<span class="bg-blue-600 opacity-30">{part.value}</span>

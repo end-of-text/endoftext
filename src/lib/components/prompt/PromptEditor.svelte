@@ -93,7 +93,7 @@
 				}
 			}}
 		/>
-		{#if suggestionApplied > -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans) || selectedSpan}
+		{#if suggestionApplied !== -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans) || selectedSpan}
 			<SuggestionOverlay
 				{prompt}
 				{hoveredSuggestion}

@@ -26,7 +26,7 @@
 						userInput
 					)
 				},
-				-1
+				-2
 			);
 		selectedSpan = undefined;
 	}
@@ -40,7 +40,7 @@
 	<div
 		class="ml-2 flex flex-col items-start rounded-br rounded-tr border border-l-4 border-l-blue-500 bg-white p-4 shadow"
 	>
-		<h3>Rewrite</h3>
+		<h3>Rewrite the selected text</h3>
 		<textarea
 			class="mt-2 w-full resize-none"
 			placeholder="describe how to rewrite the selected text"
