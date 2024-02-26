@@ -1,6 +1,8 @@
 import autosize from 'autosize';
 
 const action = (node: HTMLElement) => {
+	console.log('triggered');
+	console.log(node.value);
 	autosize(node);
 
 	return {
