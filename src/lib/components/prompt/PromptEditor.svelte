@@ -114,7 +114,7 @@
 					<Check class="h-5 w-5" />
 				</span>
 			{:else}
-				<span class="group flex items-center gap-2 hover:text-gray-hovered" in:fade>
+				<span class="hover:text-gray-hovered group flex items-center gap-2" in:fade>
 					<Copy class="h-5 w-5" />
 				</span>
 			{/if}
@@ -128,7 +128,7 @@
 					? 'text-gray-active'
 					: 'text-gray-inactive'}"
 			>
-				<span class="group flex items-center gap-2 hover:text-gray-hovered" in:fade>
+				<span class="hover:text-gray-hovered group flex items-center gap-2" in:fade>
 					<Expand class="h-5 w-5" />
 				</span>
 			</button>

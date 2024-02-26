@@ -1,5 +1,5 @@
 import { trackEvent } from '$lib/server/amplitude.js';
-import { editors } from '$lib/server/editors/editors.js';
+import { getEditors } from '$lib/server/editors/editors.js';
 import type { Tables } from '$lib/supabase.js';
 import { error } from '@sveltejs/kit';
 
@@ -14,7 +14,7 @@ export async function DELETE({ request, locals: { supabase, getSession } }) {
 		error(500, 'Invalid suggestion data');
 	}
 
-	const editor = editors.find((o) => o.id === suggestion.identifier);
+	const editor = getEditors().find((o) => o.id === suggestion.identifier);
 	if (!editor) {
 		error(500, 'Could not find editor');
 	}

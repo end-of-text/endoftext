@@ -1,12 +1,17 @@
 import { OPENAI_API_KEY } from '$env/static/private';
+import { getRootNode } from '$lib/hypertune/hypertune.js';
 import { trackEvent } from '$lib/server/amplitude.js';
-import { editors } from '$lib/server/editors/editors.js';
+import { getEditors } from '$lib/server/editors/editors.js';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
 
 export async function POST({ locals: { supabase, getSession }, request }) {
 	const session = await getSession();
+	if (!session) {
+		error(401, 'Unauthorized');
+	}
+
 	const requestData = await request.json();
 	const selectedPrompt = requestData.selectedPrompt as Tables<'prompts'> | undefined;
 	if (!selectedPrompt) {
@@ -40,9 +45,10 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		return json([]);
 	}
 
+	const hypertuneRoot = await getRootNode(session.user);
 	const llm = new OpenAILLM(OPENAI_API_KEY || '');
 	const results = await Promise.all(
-		editors.map(async (editor) => {
+		getEditors(hypertuneRoot).map(async (editor) => {
 			const canBeApplied = await editor.canBeApplied(selectedPrompt, llm, instanceRes.data);
 			return { canBeApplied, editor };
 		})
@@ -66,7 +72,7 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 			if (insertRes.data && insertRes.data.length > 0) {
 				trackEvent(
 					'Suggestion Created',
-					{ user_id: session?.user.id ?? '' },
+					{ user_id: session.user.id ?? '' },
 					{
 						editor_name: result.editor.name
 					}

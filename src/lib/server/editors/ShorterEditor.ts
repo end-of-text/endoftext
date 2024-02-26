@@ -3,9 +3,9 @@ import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 
-export class ShortenEditor extends PromptEditor {
+export class ShorterEditor extends PromptEditor {
 	constructor() {
-		super('Shorten', 'Shorten', 'Make the predictions of the model shorter.', EditorType.ERROR);
+		super('Shorter', 'Shorter', 'Make the predictions of the model shorter.', EditorType.ERROR);
 	}
 
 	async canBeApplied(

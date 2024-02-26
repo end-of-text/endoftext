@@ -1,6 +1,6 @@
 import { OPENAI_API_KEY } from '$env/static/private';
 import { trackEvent } from '$lib/server/amplitude.js';
-import { editors } from '$lib/server/editors/editors.js';
+import { getEditors } from '$lib/server/editors/editors.js';
 import { OpenAILLM } from '$lib/server/llms/openai.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
@@ -17,7 +17,7 @@ export async function POST({ request, locals: { supabase, getSession } }) {
 		error(500, 'Invalid suggestion data');
 	}
 
-	const editor = editors.find((o) => o.id === suggestion.identifier);
+	const editor = getEditors().find((o) => o.id === suggestion.identifier);
 	if (!editor) {
 		error(500, 'Could not find editor');
 	}
