@@ -17,9 +17,9 @@ export class SeparateInstructionEditor extends PromptEditor {
 		const systemPrompt = `You are an AI prompt writing critiquer. You decide if a prompt could be split into a task instruction and other information.
 
 ### Guidelines
-1. Check whether it makes sense to separate the task instruction from the rest of the prompt. For example, if there is only a task instruction and no other information, return false.
-2. If the task instruction is already clearly separated, return true.
-3. If it makes sense to separate the task instruction from the rest of the prompt and the instruction is not already sparated, return false.
+1. Check whether it makes sense to separate the task instruction from the rest of the prompt. For example, if there is only a task instruction and no other information, return true.
+2. If the task instruction is already clearly separated, return false.
+3. If it makes sense to separate the task instruction from the rest of the prompt and the instruction is not already sparated, return true.
 
 ### Output
 Return the output in JSON with the key "output" that is either true or false.`;

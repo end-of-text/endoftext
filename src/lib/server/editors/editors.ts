@@ -2,9 +2,9 @@ import { CompressionEditor } from './CompressionEditor';
 import { LongerEditor } from './LongerEditor';
 import { NoNegationEditor } from './NoNegationEditor';
 import { OutputDescriptionEditor } from './OutputDescriptionEditor';
+import { PersonaEditor } from './PersonaEditor';
 import { SeparateInstructionEditor } from './SeparateInstructionEditor';
 import { ShortenEditor } from './ShortenEditor';
-import { SingleInstructionEditor } from './SingleInstructionEditor';
 import { ConvertToJSONEditor } from './json/ConvertToJsonEditor';
 import { JSONDescriptionEditor } from './json/JSONDescriptionEditor';
 import { JSONInstructionEditor } from './json/JSONInstructionEditor';
@@ -17,7 +17,7 @@ export const editors = [
 	new JSONInstructionEditor(),
 	new JSONDescriptionEditor(),
 	new OutputDescriptionEditor(),
-	new SingleInstructionEditor(),
 	new CompressionEditor(),
-	new ConvertToJSONEditor()
+	new ConvertToJSONEditor(),
+	new PersonaEditor()
 ];
