@@ -22,6 +22,7 @@
 		"@tailwindcss/typography": "^0.5.10",
 		"@types/autosize": "^4.0.3",
 		"@types/eslint": "8.56.2",
+		"@types/nprogress": "^0.2.3",
 		"@typescript-eslint/eslint-plugin": "^7.0.2",
 		"@typescript-eslint/parser": "^7.0.2",
 		"autoprefixer": "^10.4.17",
@@ -50,6 +51,7 @@
 		"autosize": "^6.0.1",
 		"diff": "^5.2.0",
 		"lucide-svelte": "^0.336.0",
+		"nprogress": "^0.2.0",
 		"openai": "^4.28.0",
 		"stripe": "^14.17.0",
 		"tailwind-merge": "^2.2.1"
