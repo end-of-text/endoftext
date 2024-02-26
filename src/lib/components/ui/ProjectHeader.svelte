@@ -20,7 +20,7 @@
 		<img class="h-5 pr-4" src="/logo-small.svg" alt="logo" />
 	</a>
 	<div class="flex items-center gap-2">
-		<span class="text-gray-hovered my-4 text-xl font-semibold">{project.name}</span>
+		<span class="my-4 text-xl font-semibold text-gray-hovered">{project.name}</span>
 	</div>
 	<div class="ml-auto flex items-center gap-3">
 		<div class="pointer-events-none rounded-md bg-rose-50 px-4 py-1 text-sm font-bold text-primary">
