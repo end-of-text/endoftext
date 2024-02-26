@@ -1,14 +1,22 @@
 <script lang="ts">
 	import { browser, dev } from '$app/environment';
 	import { onNavigate } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 	import { PUBLIC_AMPLITUDE_API_KEY } from '$env/static/public';
 	import Tooltip from '$lib/components/ui/Tooltip.svelte';
 	import { tooltipState } from '$lib/tooltip.svelte';
 	import * as amplitude from '@amplitude/analytics-browser';
+	import NProgress from 'nprogress';
 	import '../app.css';
+	import '../nprogress.css';
 
 	let { children } = $props();
+
+	NProgress.configure({
+		// Full list: https://github.com/rstacruz/nprogress#configuration
+		minimum: 0.16,
+		showSpinner: false
+	});
 
 	if (browser && !dev) {
 		amplitude.init(PUBLIC_AMPLITUDE_API_KEY, {
@@ -22,6 +30,11 @@
 			mousePos: { x: 0, y: 0 },
 			text: undefined
 		});
+	});
+
+	$effect(() => {
+		if ($navigating) NProgress.start();
+		else NProgress.done();
 	});
 </script>
 
