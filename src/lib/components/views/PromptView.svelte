@@ -26,7 +26,7 @@
 		suggestionApplied: number;
 		projectId: string | undefined;
 		gettingSuggestions: boolean;
-		suggestions: Tables<'suggestions'>[] | undefined;
+		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 		onclose: () => void;
 		setPrompt: () => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
@@ -57,6 +57,7 @@
 		<PromptEditor
 			{prompt}
 			{hoveredSuggestion}
+			promptMaximized={true}
 			setPrompt={() => {
 				setPrompt();
 				onclose();

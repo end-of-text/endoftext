@@ -22,7 +22,7 @@
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		gettingSuggestions: boolean;
-		suggestions: Tables<'suggestions'>[] | undefined;
+		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 		suggestionApplied: number;
 		toplevel?: boolean;
 	}>();
@@ -32,7 +32,11 @@
 	);
 
 	async function dismissSuggestion(suggestion: Tables<'suggestions'>) {
-		suggestions = suggestions?.filter((s) => s.id !== suggestion.id);
+		suggestions.then((localSuggestions) => {
+			suggestions = new Promise((resolve) =>
+				resolve(localSuggestions?.filter((s) => s.id !== suggestion.id))
+			);
+		});
 		await fetch(`/api/editor/suggestions/dismiss`, {
 			method: 'DELETE',
 			body: JSON.stringify({
@@ -56,24 +60,20 @@
 			class="pl-4"
 			onclick={() => {
 				gettingSuggestions = true;
-				suggestions = [];
-				getSuggestions(prompt, true).then((r) => {
-					suggestions = r;
-					gettingSuggestions = false;
-				});
+				suggestions = getSuggestions(prompt);
 			}}
 		>
-			{#if gettingSuggestions}
+			{#await suggestions}
 				<Spinner />
-			{:else}
+			{:then}
 				<RefreshCw
 					class="h-5 w-5 cursor-pointer transition-all duration-500 hover:rotate-180 hover:text-blue-600"
 				/>
-			{/if}
+			{/await}
 		</button>
 	</div>
 	<div class="flex flex-col gap-4 overflow-auto">
-		{#if !gettingSuggestions}
+		{#await suggestions then suggestions}
 			{#if suggestions === undefined || suggestions.length === 0}
 				No suggestions
 			{:else if suggestionApplied > -1}
@@ -115,6 +115,6 @@
 					</div>
 				{/each}
 			{/if}
-		{/if}
+		{/await}
 	</div>
 </div>

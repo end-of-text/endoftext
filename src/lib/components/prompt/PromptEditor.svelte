@@ -6,29 +6,23 @@
 	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
-	let {
-		prompt,
-		hoveredSuggestion,
-		suggestionApplied,
-		editedPrompt,
-		setPrompt,
-		setPromptMaximized = undefined
-	} = $props<{
-		prompt: Tables<'prompts'>;
-		hoveredSuggestion: Tables<'suggestions'> | null;
-		suggestionApplied: number;
-		editedPrompt: Tables<'prompts'>;
-		setPrompt: () => void;
-		setPromptMaximized?: (maximized: boolean) => void;
-	}>();
-
-	let promptWasEdited = $derived(
-		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
-	);
+	let { editedPrompt, hoveredSuggestion, prompt, promptMaximized, setPrompt, suggestionApplied } =
+		$props<{
+			editedPrompt: Tables<'prompts'>;
+			hoveredSuggestion: Tables<'suggestions'> | null;
+			prompt: Tables<'prompts'>;
+			promptMaximized: boolean;
+			setPrompt: () => void;
+			suggestionApplied: number;
+		}>();
 
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
 	let promptSubmitted = $state(false);
+
+	let promptWasEdited = $derived(
+		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
+	);
 
 	function copyPrompt() {
 		navigator.clipboard.writeText(prompt.prompt);
@@ -44,17 +38,13 @@
 </script>
 
 <div
-	class="relative flex min-h-24 cursor-text flex-col text-left {setPromptMaximized ? '' : 'grow'}"
+	class="relative flex min-h-24 grow cursor-text flex-col text-left"
 	onmouseenter={() => (promptHovered = true)}
 	onmouseleave={() => (promptHovered = false)}
 	role="button"
 	tabindex="0"
 >
-	<div
-		class="relative min-h-24 {setPromptMaximized
-			? ''
-			: 'grow'} overflow-y-auto rounded border shadow"
-	>
+	<div class="relative min-h-24 grow overflow-y-auto rounded border shadow">
 		<div
 			contenteditable="plaintext-only"
 			class="relative h-full min-h-24 bg-white py-2 pl-2 pr-6 text-sm outline-none"
@@ -119,11 +109,9 @@
 				</span>
 			{/if}
 		</button>
-		{#if setPromptMaximized !== undefined}
+		{#if !promptMaximized}
 			<button
-				onclick={() => {
-					if (setPromptMaximized) setPromptMaximized(true);
-				}}
+				onclick={() => (promptMaximized = true)}
 				class="rounded bg-white p-1 transition-all {promptHovered
 					? 'text-gray-active'
 					: 'text-gray-inactive'}"
