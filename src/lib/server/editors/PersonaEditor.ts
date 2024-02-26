@@ -70,7 +70,7 @@ Return the output in JSON with the key "output" that is either true or false.`;
 
 ### Instructions
 * You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the propmt should not be changed. 
-* Make sure the desired persona is added somewhere towards the end of the prompt.
+* Make sure the desired persona is added somewhere at the start of the prompt.
 * Only return the new prompt in plain text without any other information or formatting.
 
 A persona description could be something like "You are a friendly AI assistant that helps people with their homework.", or "You are a grumpy old person that hates technology.".`;
