@@ -2,9 +2,10 @@
 	import { acceptSuggestion } from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import { dataGenerationOptions } from '$lib/state.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
-	import { Check, Coins, Lightbulb, ShieldX } from 'lucide-svelte';
+	import { Check, Coins, FlaskConical, Lightbulb, ShieldX } from 'lucide-svelte';
 
 	let {
 		suggestion,
@@ -28,13 +29,24 @@
 	const borderMap: { [key: string]: string } = {
 		ERROR: 'border-l-red-600',
 		ENHANCEMENT: 'border-l-green-600',
-		OPTIMIZATION: 'border-l-yellow-400'
+		OPTIMIZATION: 'border-l-yellow-400',
+		DATA: 'border-l-blue-600'
 	};
 
 	async function accept() {
 		applyingSuggestion = true;
-		const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
-		editPrompt(changedPrompt, suggestion.id);
+		if (suggestion.type === 'DATA') {
+			dataGenerationOptions.instruction = suggestion.description
+				.split(':')
+				.slice(1)
+				.join(':')
+				.trim();
+			dataGenerationOptions.show = true;
+			dismissSuggestion(suggestion);
+		} else {
+			const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
+			editPrompt(changedPrompt, suggestion.id);
+		}
 		applyingSuggestion = false;
 	}
 </script>
@@ -52,6 +64,8 @@
 				<Lightbulb class="h-5 w-5 {disabled ? 'text-gray-active' : 'text-green-600'}" />
 			{:else if suggestion.type === EditorType.OPTIMIZATION}
 				<Coins class="h-5 w-5 {disabled ? 'text-gray-active' : 'text-yellow-400'}" />
+			{:else if suggestion.type === EditorType.DATA}
+				<FlaskConical class="h-5 w-5 {disabled ? 'text-gray-active' : 'text-blue-600'}" />
 			{/if}
 			<p class="font-semibold">
 				{suggestion.name}

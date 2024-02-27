@@ -1,7 +1,8 @@
 export const enum EditorType {
 	ENHANCEMENT = 'ENHANCEMENT',
 	OPTIMIZATION = 'OPTIMIZATION',
-	ERROR = 'ERROR'
+	ERROR = 'ERROR',
+	DATA = 'DATA'
 }
 
 export const enum RequiredInputType {
