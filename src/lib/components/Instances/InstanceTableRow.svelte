@@ -26,9 +26,6 @@
 	function updateLabel(pred: string | null) {
 		updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
 		metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
-		inputArea && autosize(inputArea);
-		labelArea && autosize(labelArea);
-		predictionArea && autosize(predictionArea);
 	}
 
 	$effect(() => {
@@ -46,7 +43,7 @@
 	<td
 		class="py-3 pl-3 align-top transition-all {rowHovered || selected
 			? 'opacity-100'
-			: 'opacity-20'}"
+			: 'opacity-30'}"
 	>
 		<input bind:checked={selected} type="checkbox" />
 	</td>
@@ -61,9 +58,6 @@
 				localInstanceInput = inputArea?.value ?? '';
 				updateInstance({ ...instance, input: localInstanceInput, label: localInstanceLabel });
 				prediction = getPrediction(prompt, { ...instance, input: localInstanceInput }, true);
-				inputArea && autosize(inputArea);
-				labelArea && autosize(labelArea);
-				predictionArea && autosize(predictionArea);
 			}}
 			onkeydown={(event) => {
 				if (event.key === 'Enter' && (event.shiftKey || event.metaKey)) {
@@ -104,11 +98,12 @@
 				}}
 			/>
 			<button
-				class="absolute -left-8 top-3 hidden rounded bg-white p-1 text-gray-500 opacity-20 transition hover:opacity-100 group-hover:flex"
+				class="absolute -left-8 top-3 hidden rounded border bg-white p-1 text-gray-active transition hover:text-gray-hovered hover:shadow group-hover:flex"
 				onclick={() => {
-					prediction?.then((p) => {
-						localInstanceLabel = p || '';
-						updateLabel(p);
+					prediction?.then((pred) => {
+						localInstanceLabel = pred || '';
+						if (labelArea && predictionArea) labelArea.style.height = predictionArea.style.height;
+						updateLabel(pred);
 					});
 				}}
 				use:tooltip={{ text: 'Use prediction as instance label' }}
@@ -118,7 +113,7 @@
 		</td>
 		{#if project.metric_name !== null}
 			<td class="p-3">
-				{#if instance.label && metric !== undefined}
+				{#if localInstanceLabel && metric !== undefined}
 					{(Math.round(metric * 100) / 100).toFixed(2)}
 				{/if}
 			</td>

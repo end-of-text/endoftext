@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { navigating } from '$app/stores';
 	import { deleteProject } from '$lib/api.js';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
-	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import { PlusCircle, Trash2 } from 'lucide-svelte';
 
 	const { data } = $props();
@@ -32,9 +30,6 @@
 <div class="mb-4 flex items-center justify-between">
 	<div class="flex items-center gap-3">
 		<h1>Your Prompts</h1>
-		{#if $navigating}
-			<Spinner />
-		{/if}
 	</div>
 	<form class="flex" method="post" use:enhance action="?/create">
 		<Button title="New Prompt" classNames="text-green-600">

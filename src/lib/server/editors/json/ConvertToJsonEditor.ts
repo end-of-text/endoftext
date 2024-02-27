@@ -23,9 +23,9 @@ export class ConvertToJSONEditor extends PromptEditor {
 You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt should use JSON as its desired output format.
 		
 ### Instruction
-Go through the following steps one by one. If either applies, return true.
-1. Check whether the prompt includes a detailed description of the desired information. This can be an example or a description of the desired output but it needs to clearly outline the information contained in the answer. If it does, continue to step 2. Otherwise, return true.
-2. If the desired output is very structured and could be represented as JSON, return false.
+Go through the following steps one by one. If all apply, return true.
+1. The prompt said that the output should be in JSON format.
+2. It makes sense to represent the output as JSON.
 		
 ### Output Format
 Return the output in JSON with the key "output" that is either true or false.`;

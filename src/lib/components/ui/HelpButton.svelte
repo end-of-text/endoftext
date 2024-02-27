@@ -16,7 +16,7 @@
 
 	{#if showOptions}
 		<div
-			class="absolute right-0 top-6 z-20 rounded border border-gray-300 bg-white"
+			class="absolute right-0 top-6 z-20 rounded border border-gray-inactive bg-white"
 			transition:fade={{ duration: 100 }}
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => {
@@ -29,7 +29,7 @@
 		>
 			<div class="flex flex-col gap-2 p-2">
 				<button
-					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-500 transition-all hover:text-black"
+					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-active transition-all hover:text-gray-hovered"
 					onclick={() => {
 						window.open('https://github.com/end-of-text/endoftext/issues', '_blank');
 						showOptions = false;
@@ -39,7 +39,7 @@
 					<span class="whitespace-nowrap text-sm">Report an Issue</span>
 				</button>
 				<button
-					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-500 transition-all hover:text-black"
+					class="mx-2 flex cursor-pointer items-center gap-2 text-gray-active transition-all hover:text-gray-hovered"
 					onclick={() => {
 						location.href = 'mailto:help@endoftext.app';
 						showOptions = false;

@@ -11,19 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
       - name: Install modules
-        run: npm ci
+        run: bun i --frozen-lockfile
       - name: version
-        run: npx prettier --version
+        run: bunx prettier --version
       - name: linting
-        run: npm run lint
+        run: bun run lint
 
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
       - name: Install modules
-        run: npm ci
+        run: bun i --frozen-lockfile
       - name: Svelte check
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -31,4 +33,4 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
           PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
-        run: npm run check
+        run: bun run check

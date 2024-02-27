@@ -10,21 +10,21 @@
 	import SuggestionOverlay from './SuggestionOverlay.svelte';
 
 	let {
-		prompt,
-		hoveredSuggestion,
-		suggestionApplied,
 		editedPrompt,
+		hoveredSuggestion,
+		prompt,
+		promptMaximized = false,
 		setPrompt,
 		editPrompt,
-		setPromptMaximized = undefined
+		suggestionApplied
 	} = $props<{
-		prompt: Tables<'prompts'>;
-		hoveredSuggestion: Tables<'suggestions'> | null;
-		suggestionApplied: number;
 		editedPrompt: Tables<'prompts'>;
+		hoveredSuggestion: Tables<'suggestions'> | null;
+		prompt: Tables<'prompts'>;
+		promptMaximized: boolean;
 		setPrompt: () => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
-		setPromptMaximized?: (maximized: boolean) => void;
+		suggestionApplied: number;
 	}>();
 
 	let promptWasEdited = $derived(
@@ -63,7 +63,7 @@
 </script>
 
 <div
-	class="relative flex min-h-24 cursor-text flex-col text-left {setPromptMaximized ? '' : 'grow'}"
+	class="relative flex min-h-24 grow cursor-text flex-col text-left"
 	onmouseenter={() => (promptHovered = true)}
 	onmouseleave={() => (promptHovered = false)}
 	use:clickOutside={() => (selectedSpan = undefined)}
@@ -73,11 +73,7 @@
 	{#if selectedSpan}
 		<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
 	{/if}
-	<div
-		class="relative min-h-24 {setPromptMaximized
-			? ''
-			: 'grow'} overflow-y-auto rounded border shadow"
-	>
+	<div class="relative min-h-24 grow overflow-y-auto rounded border shadow">
 		<textarea
 			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none"
 			bind:this={promptEditor}
@@ -106,29 +102,31 @@
 	<div class="absolute right-1 top-1 flex flex-col gap-1">
 		<button
 			onclick={copyPrompt}
-			class="rounded bg-white p-1 transition-all {promptHovered
-				? 'opacity-100'
-				: 'opacity-30'} {promptCopied ? 'text-emerald-600' : ''}"
+			class="rounded bg-white p-1 {promptHovered
+				? 'text-gray-active'
+				: 'text-gray-inactive'} transition"
 		>
 			{#if promptCopied}
-				<span class="flex items-center gap-2" in:fade>
+				<span class="flex items-center gap-2 text-emerald-600" in:fade>
 					<Check class="h-5 w-5" />
 				</span>
 			{:else}
-				<span class="group flex items-center gap-2 text-gray-500 hover:text-gray-900" in:fade>
+				<span class="group flex items-center gap-2 hover:text-gray-hovered" in:fade>
 					<Copy class="h-5 w-5" />
 				</span>
 			{/if}
 		</button>
-		{#if setPromptMaximized !== undefined}
+		{#if !promptMaximized}
 			<button
 				onclick={() => {
-					if (setPromptMaximized) setPromptMaximized(true);
+					promptMaximized = true;
 					selectedSpan = undefined;
 				}}
-				class="rounded bg-white p-1 transition-all {promptHovered ? 'opacity-100' : 'opacity-30'}"
+				class="rounded bg-white p-1 transition-all {promptHovered
+					? 'text-gray-active'
+					: 'text-gray-inactive'}"
 			>
-				<span class="group flex items-center gap-2 text-gray-500 hover:text-gray-900" in:fade>
+				<span class="group flex items-center gap-2 hover:text-gray-hovered" in:fade>
 					<Expand class="h-5 w-5" />
 				</span>
 			</button>
@@ -142,7 +140,7 @@
 				editedPrompt = { ...prompt };
 				suggestionApplied = -1;
 			}}
-			classNames="text-gray-500"
+			classNames="text-gray-active"
 		>
 			<Undo2 class="h-5 w-5" />
 		</Button>
