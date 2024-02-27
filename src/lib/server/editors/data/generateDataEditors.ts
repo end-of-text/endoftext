@@ -38,9 +38,9 @@ export async function generateDataEditors(
             Prompt: ${prompt.prompt}
             Test Cases:
             ${instances
-                .sort(() => 0.5 - Math.random())
-                .slice(0, 20)
-                .join('\n')}
+							.sort(() => 0.5 - Math.random())
+							.slice(0, 20)
+							.join('\n')}
             `
 		}
 	]);
