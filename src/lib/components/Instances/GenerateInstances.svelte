@@ -4,19 +4,18 @@
 	import { Sparkle, Sparkles } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
-	let { similar, createInstances } = $props<{
+	let { similar, generationOptions, createInstances } = $props<{
 		similar: boolean;
+		generationOptions: { instruction: string; showGenerateOptions: boolean };
 		createInstances: (instruction: string, count: number, similar: boolean) => void;
 	}>();
 
-	let showGenerateOptions = $state(false);
-	let generationInstruction = $state('');
 	let generationCount = $state(5);
 </script>
 
-<div class="relative" use:clickOutside={() => (showGenerateOptions = false)}>
+<div class="relative" use:clickOutside={() => (generationOptions.showGenerateOptions = false)}>
 	<Button
-		onclick={() => (showGenerateOptions = !showGenerateOptions)}
+		onclick={() => (generationOptions.showGenerateOptions = !generationOptions.showGenerateOptions)}
 		title={similar ? 'Generate Similar' : 'Generate'}
 		classNames="text-yellow-400"
 	>
@@ -26,13 +25,13 @@
 			<Sparkle class="h-5 w-5 transition" />
 		{/if}
 	</Button>
-	{#if showGenerateOptions}
+	{#if generationOptions.showGenerateOptions}
 		<div
 			class="absolute right-0 top-10 z-20 w-max rounded border bg-white p-3"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => {
 				if (e.key === 'Escape') {
-					showGenerateOptions = false;
+					generationOptions.showGenerateOptions = false;
 				}
 			}}
 			role="button"
@@ -41,11 +40,11 @@
 		>
 			<input
 				placeholder="Describe the new data."
-				bind:value={generationInstruction}
+				bind:value={generationOptions.instruction}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
-						showGenerateOptions = false;
-						createInstances(generationInstruction, generationCount, similar);
+						generationOptions.showGenerateOptions = false;
+						createInstances(generationOptions.instruction, generationCount, similar);
 					}
 				}}
 				class="mb-2 w-full"
@@ -56,8 +55,8 @@
 				<Button
 					classNames="shrink-0 min-w-52 justify-center"
 					onclick={() => {
-						showGenerateOptions = false;
-						createInstances(generationInstruction, generationCount, similar);
+						generationOptions.showGenerateOptions = false;
+						createInstances(generationOptions.instruction, generationCount, similar);
 					}}
 				>
 					Generate {generationCount} instance{generationCount > 1 ? 's' : ''}

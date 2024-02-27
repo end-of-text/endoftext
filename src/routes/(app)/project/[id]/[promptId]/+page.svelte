@@ -4,7 +4,9 @@
 	import PaywallPopup from '$lib/components/popups/PaywallPopup.svelte';
 	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
 	import ProjectHeader from '$lib/components/ui/ProjectHeader.svelte';
+	import { createDataGenerationState } from '$lib/state.svelte.js';
 	import type { Tables } from '$lib/supabase';
+	import { setContext } from 'svelte';
 
 	let { data } = $props();
 
@@ -20,6 +22,13 @@
 	let showOptions = $state(false);
 	let showPaywall = $state(false);
 	let gettingSuggestions = $state(false);
+
+	// Keep in context to avoid prop drilling
+	let generationOptions = createDataGenerationState({
+		instruction: '',
+		showGenerateOptions: false
+	});
+	setContext('generationOptions', generationOptions);
 
 	afterNavigate(() => {
 		editedPrompt = { ...data.prompt };

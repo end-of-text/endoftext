@@ -13,6 +13,7 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { PlusCircle, Tag, Trash2 } from 'lucide-svelte';
+	import { getContext } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import PaywallPopup from '../popups/PaywallPopup.svelte';
 	import GenerateInstances from './GenerateInstances.svelte';
@@ -30,6 +31,8 @@
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 	let metrics = $state<Record<string, number | undefined>>({});
+	let generationOptions: { instruction: string; showGenerateOptions: boolean } =
+		getContext('generationOptions');
 
 	let metricValues = $derived(
 		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
@@ -130,10 +133,14 @@
 					<Button classNames="text-red-600" onclick={() => (showDelete = true)}>
 						<Trash2 class="h-5 w-5" />
 					</Button>
-					<GenerateInstances {createInstances} similar={true} />
+					<GenerateInstances
+						{createInstances}
+						similar={true}
+						generationOptions={{ instruction: '', showGenerateOptions: false }}
+					/>
 				</div>
 			{/if}
-			<GenerateInstances {createInstances} similar={false} />
+			<GenerateInstances {createInstances} similar={false} bind:generationOptions />
 			<Button
 				onclick={() => {
 					if (instances.length >= 25) {
