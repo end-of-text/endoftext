@@ -1,3 +1,4 @@
+import { dev } from '$app/environment';
 import { PUBLIC_HYPERTUNE_TOKEN } from '$env/static/public';
 import { initializeHypertune } from './generated';
 
@@ -8,7 +9,7 @@ export async function getHypertuneRoot(user: { id: string; email?: string }) {
 
 	return hypertune.root({
 		context: {
-			environment: 'PRODUCTION',
+			environment: dev ? 'DEVELOPMENT' : 'PRODUCTION',
 			user: {
 				id: user.id,
 				name: user.id,
