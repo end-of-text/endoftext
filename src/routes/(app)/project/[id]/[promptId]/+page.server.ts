@@ -1,9 +1,15 @@
+import { getHypertuneRoot } from '$lib/hypertune/hypertune.js';
 import { getSuggestions } from '$lib/server/editors/getSuggestions.js';
 import { getPredictions } from '$lib/server/predictions/getPredictions';
 import type { Tables } from '$lib/supabase.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { supabase }, params }) {
+export async function load({ locals: { supabase, getSession }, params }) {
+	const session = await getSession();
+	if (!session) {
+		error(401, 'Unauthorized');
+	}
+
 	const projectReq = supabase.from('projects').select('*').eq('id', params.id);
 	const promptsReq = supabase
 		.from('prompts')
@@ -55,7 +61,8 @@ export async function load({ locals: { supabase }, params }) {
 		instancesReq.data || [],
 		promptsRes.data[0]
 	);
-	const suggestions = getSuggestions(supabase, promptsRes.data[0], false);
+	const hypertuneRoot = await getHypertuneRoot(session.user);
+	const suggestions = getSuggestions(supabase, promptsRes.data[0], false, hypertuneRoot);
 
 	return {
 		project: projectRes.data[0] as Tables<'projects'>,

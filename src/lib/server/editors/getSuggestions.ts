@@ -1,15 +1,17 @@
 import { OPENAI_API_KEY } from '$env/static/private';
+import type { RootNode } from '$lib/hypertune/generated';
 import type { Tables } from '$lib/supabase';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { OpenAILLM } from '../llms/openai';
 import { generateDataEditors } from './data/generateDataEditors';
 import type { PromptEditor } from './editor';
-import { editors } from './editors';
+import { getEditors } from './editors';
 
 export async function getSuggestions(
 	supabase: SupabaseClient,
 	prompt: Tables<'prompts'>,
-	clear: boolean
+	clear: boolean,
+	hypertuneRoot: RootNode
 ): Promise<Tables<'suggestions'>[]> {
 	if (clear) {
 		await supabase.from('suggestions').delete().eq('prompt_id', prompt.id);
@@ -35,7 +37,7 @@ export async function getSuggestions(
 
 	const llm = new OpenAILLM(OPENAI_API_KEY || '');
 	const results = await Promise.all(
-		editors.map(async (editor) => {
+		getEditors(hypertuneRoot).map(async (editor) => {
 			const canBeApplied = await editor.canBeApplied(prompt, llm, instanceRes.data);
 			return { canBeApplied, editor: editor as PromptEditor };
 		})

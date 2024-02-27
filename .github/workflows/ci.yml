@@ -33,4 +33,5 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
           PUBLIC_AMPLITUDE_API_KEY: ${{ secrets.PUBLIC_AMPLITUDE_API_KEY }}
+          PUBLIC_HYPERTUNE_TOKEN: ${{ secrets.PUBLIC_HYPERTUNE_TOKEN }}
         run: bun run check
