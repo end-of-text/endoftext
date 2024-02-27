@@ -33,7 +33,7 @@
 </script>
 
 <button
-	class="absolute left-full top-0 z-50 w-[400px]"
+	class="absolute left-full top-0 z-50 w-[400px] cursor-default"
 	transition:fade={{ duration: 200 }}
 	onmouseup={(e) => e.stopPropagation()}
 >
@@ -45,6 +45,12 @@
 			class="mt-2 w-full resize-none"
 			placeholder="describe how to rewrite the selected text"
 			bind:value={userInput}
+			onkeydown={(e) => {
+				if (e.key === 'Enter' && e.metaKey) {
+					e.preventDefault();
+					accept();
+				}
+			}}
 		/>
 		<div class="flex w-full items-center justify-end pt-2">
 			{#if applyingSuggestion}

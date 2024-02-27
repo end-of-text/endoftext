@@ -19,7 +19,7 @@
 >
 	{#if selectedSpan}
 		{editedPrompt.prompt.slice(0, selectedSpan.start)}
-		<span class="underline decoration-blue-600 decoration-wavy decoration-2">
+		<span class="underline decoration-blue-600 decoration-2">
 			{editedPrompt.prompt.slice(selectedSpan.start, selectedSpan.end)}
 		</span>
 		{editedPrompt.prompt.slice(selectedSpan.end)}
