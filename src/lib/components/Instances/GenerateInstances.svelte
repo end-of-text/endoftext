@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { clickOutside } from '$lib/clickOutside';
 	import Button from '$lib/components/ui/Button.svelte';
+	import { dataGenerationOptions } from '$lib/state.svelte';
 	import { Sparkle, Sparkles } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
@@ -9,14 +10,12 @@
 		createInstances: (instruction: string, count: number, similar: boolean) => void;
 	}>();
 
-	let showGenerateOptions = $state(false);
-	let generationInstruction = $state('');
 	let generationCount = $state(5);
 </script>
 
-<div class="relative" use:clickOutside={() => (showGenerateOptions = false)}>
+<div class="relative" use:clickOutside={() => (dataGenerationOptions.show = false)}>
 	<Button
-		onclick={() => (showGenerateOptions = !showGenerateOptions)}
+		onclick={() => (dataGenerationOptions.show = !dataGenerationOptions.show)}
 		title={similar ? 'Generate Similar' : 'Generate'}
 		classNames="text-yellow-400"
 	>
@@ -26,13 +25,13 @@
 			<Sparkle class="h-5 w-5 transition" />
 		{/if}
 	</Button>
-	{#if showGenerateOptions}
+	{#if dataGenerationOptions.show}
 		<div
 			class="absolute right-0 top-10 z-20 w-max rounded border bg-white p-3"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => {
 				if (e.key === 'Escape') {
-					showGenerateOptions = false;
+					dataGenerationOptions.show = false;
 				}
 			}}
 			role="button"
@@ -41,11 +40,11 @@
 		>
 			<input
 				placeholder="Describe the new data."
-				bind:value={generationInstruction}
+				bind:value={dataGenerationOptions.instruction}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
-						showGenerateOptions = false;
-						createInstances(generationInstruction, generationCount, similar);
+						dataGenerationOptions.show = false;
+						createInstances(dataGenerationOptions.instruction, generationCount, similar);
 					}
 				}}
 				class="mb-2 w-full"
@@ -56,8 +55,8 @@
 				<Button
 					classNames="shrink-0 min-w-52 justify-center"
 					onclick={() => {
-						showGenerateOptions = false;
-						createInstances(generationInstruction, generationCount, similar);
+						dataGenerationOptions.show = false;
+						createInstances(dataGenerationOptions.instruction, generationCount, similar);
 					}}
 				>
 					Generate {generationCount} instance{generationCount > 1 ? 's' : ''}

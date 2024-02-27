@@ -130,10 +130,9 @@
 					<Button classNames="text-red-600" onclick={() => (showDelete = true)}>
 						<Trash2 class="h-5 w-5" />
 					</Button>
-					<GenerateInstances {createInstances} similar={true} />
 				</div>
 			{/if}
-			<GenerateInstances {createInstances} similar={false} />
+			<GenerateInstances {createInstances} similar={selectedInstances.some((d) => d === true)} />
 			<Button
 				onclick={() => {
 					if (instances.length >= 25) {

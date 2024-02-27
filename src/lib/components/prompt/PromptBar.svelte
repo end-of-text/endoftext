@@ -118,14 +118,12 @@
 			bind:editedPrompt
 		/>
 	</div>
-	{#if projectId}
-		<PromptSuggestions
-			{prompt}
-			{editedPrompt}
-			{editPrompt}
-			{suggestions}
-			{suggestionApplied}
-			setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
-		/>
-	{/if}
+	<PromptSuggestions
+		{prompt}
+		{editedPrompt}
+		{editPrompt}
+		{suggestions}
+		{suggestionApplied}
+		setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
+	/>
 </div>

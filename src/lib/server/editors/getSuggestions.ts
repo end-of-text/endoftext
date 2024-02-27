@@ -2,6 +2,8 @@ import { OPENAI_API_KEY } from '$env/static/private';
 import type { Tables } from '$lib/supabase';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { OpenAILLM } from '../llms/openai';
+import { generateDataEditors } from './data/generateDataEditors';
+import type { PromptEditor } from './editor';
 import { editors } from './editors';
 
 export async function getSuggestions(
@@ -35,13 +37,26 @@ export async function getSuggestions(
 	const results = await Promise.all(
 		editors.map(async (editor) => {
 			const canBeApplied = await editor.canBeApplied(prompt, llm, instanceRes.data);
-			return { canBeApplied, editor };
+			return { canBeApplied, editor: editor as PromptEditor };
 		})
 	);
 
+	const dataSuggestions = (
+		await generateDataEditors(
+			prompt,
+			instanceRes.data.map((instance) => instance.input),
+			llm
+		)
+	)
+		.slice(0, 3)
+		.map((editor) => ({
+			canBeApplied: [],
+			editor
+		}));
+
 	const suggestions: Tables<'suggestions'>[] = [];
-	for (const result of results) {
-		if (result.canBeApplied !== null) {
+	for (const result of [...results, ...dataSuggestions]) {
+		if (result.canBeApplied) {
 			const insertRes = await supabase
 				.from('suggestions')
 				.insert({
