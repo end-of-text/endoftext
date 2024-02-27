@@ -76,7 +76,7 @@
 		<div class="flex items-center gap-4">
 			<h1 class="mr-2">Prompt</h1>
 			<button
-				class="text-gray-active hover:text-gray-hovered disabled:text-gray-inactive group h-5 w-5 cursor-pointer transition-colors disabled:cursor-not-allowed"
+				class="group h-5 w-5 cursor-pointer text-gray-active transition-colors hover:text-gray-hovered disabled:cursor-not-allowed disabled:text-gray-inactive"
 				disabled={prompt.parent_prompt_id === null}
 				onclick={() => loadPrompt(prompt.parent_prompt_id)}
 				use:tooltip={{ text: 'Go to previous prompt' }}
@@ -84,7 +84,7 @@
 				<MoveLeft />
 			</button>
 			<button
-				class="text-gray-active hover:text-gray-hovered disabled:text-gray-inactive group h-5 w-5 cursor-pointer transition-colors disabled:cursor-not-allowed"
+				class="group h-5 w-5 cursor-pointer text-gray-active transition-colors hover:text-gray-hovered disabled:cursor-not-allowed disabled:text-gray-inactive"
 				disabled={childPrompt === undefined}
 				onclick={() => loadPrompt(childPrompt!.id)}
 				use:tooltip={{ text: 'Go to next prompt' }}
@@ -93,7 +93,7 @@
 			</button>
 		</div>
 		<button
-			class="text-gray-active hover:text-gray-hovered flex h-full items-center gap-1 transition-all"
+			class="flex h-full items-center gap-1 text-gray-active transition-all hover:text-gray-hovered"
 			onclick={() => (showOptions = !showOptions)}
 		>
 			<span>Model Options</span>
