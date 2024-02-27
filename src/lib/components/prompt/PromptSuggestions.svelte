@@ -12,7 +12,6 @@
 		editedPrompt,
 		setHoveredSuggestion,
 		editPrompt,
-		gettingSuggestions,
 		suggestions,
 		suggestionApplied,
 		toplevel = false
@@ -21,7 +20,6 @@
 		editedPrompt: Tables<'prompts'>;
 		setHoveredSuggestion: (suggestion: Tables<'suggestions'> | null) => void;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
-		gettingSuggestions: boolean;
 		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 		suggestionApplied: number;
 		toplevel?: boolean;
@@ -56,13 +54,7 @@
 		{:else}
 			<h2>Suggestions</h2>
 		{/if}
-		<button
-			class="pl-4"
-			onclick={() => {
-				gettingSuggestions = true;
-				suggestions = getSuggestions(prompt);
-			}}
-		>
+		<button class="pl-4" onclick={() => (suggestions = getSuggestions(prompt))}>
 			{#await suggestions}
 				<Spinner />
 			{:then}

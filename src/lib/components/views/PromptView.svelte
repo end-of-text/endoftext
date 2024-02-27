@@ -13,7 +13,6 @@
 		hoveredSuggestion,
 		suggestionApplied,
 		projectId,
-		gettingSuggestions,
 		suggestions,
 		onclose,
 		setPrompt,
@@ -25,7 +24,6 @@
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		suggestionApplied: number;
 		projectId: string | undefined;
-		gettingSuggestions: boolean;
 		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 		onclose: () => void;
 		setPrompt: () => void;
@@ -72,7 +70,6 @@
 				{prompt}
 				{editedPrompt}
 				{suggestionApplied}
-				bind:gettingSuggestions
 				bind:suggestions
 				{editPrompt}
 				setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}

@@ -5,37 +5,25 @@
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ChevronDown, ChevronUp, MoveLeft, MoveRight } from 'lucide-svelte';
 	import PromptOptions from '../options/PromptOptions.svelte';
+	import PaywallPopup from '../popups/PaywallPopup.svelte';
 	import PromptView from '../views/PromptView.svelte';
 	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
-	let {
-		prompt,
-		childPrompt,
-		suggestionApplied,
-		userStatus,
-		showOptions,
-		editedPrompt,
-		hoveredSuggestion,
-		projectId,
-		gettingSuggestions,
-		suggestions,
-		showPaywall
-	} = $props<{
+	let { prompt, childPrompt, userStatus, projectId, suggestions } = $props<{
 		prompt: Tables<'prompts'>;
 		childPrompt: Tables<'prompts'> | undefined;
-		suggestionApplied: number;
 		userStatus: string;
-		showOptions: boolean;
-		editedPrompt: Tables<'prompts'>;
-		hoveredSuggestion: Tables<'suggestions'> | null;
 		projectId: string | undefined;
-		gettingSuggestions: boolean;
 		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
-		showPaywall: boolean;
 	}>();
 
 	let promptMaximized = $state(false);
+	let showPaywall = $state(false);
+	let showOptions = $state(false);
+	let editedPrompt = $state({ ...prompt });
+	let suggestionApplied = $state(-1);
+	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
 
 	function loadPrompt(id: number | null) {
 		if (id === null) goto(`/project/${projectId}`);
@@ -53,6 +41,9 @@
 				showPaywall = true;
 				return;
 			}
+			editedPrompt = { ...r };
+			suggestionApplied = -1;
+			showOptions = false;
 			goto(`/project/${projectId}/${r.id}`);
 		});
 	}
@@ -68,9 +59,15 @@
 		bind:hoveredSuggestion
 		bind:suggestionApplied
 		bind:editedPrompt
-		bind:gettingSuggestions
 		{editPrompt}
 		{setPrompt}
+	/>
+{/if}
+
+{#if showPaywall}
+	<PaywallPopup
+		onclose={() => (showPaywall = false)}
+		message="You have reached your monthly limit of 100 prompts."
 	/>
 {/if}
 
@@ -125,7 +122,6 @@
 			{prompt}
 			{editedPrompt}
 			{editPrompt}
-			bind:gettingSuggestions
 			{suggestions}
 			{suggestionApplied}
 			setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
