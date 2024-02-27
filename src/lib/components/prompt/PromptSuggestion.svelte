@@ -67,7 +67,7 @@
 		{/if}
 	</div>
 	<div class="mt-2 flex items-center justify-end gap-4">
-		{#if !applied}
+		{#if !applied && !applyingSuggestion}
 			<button
 				class="cursor-pointer text-gray-inactive transition {!disabled
 					? 'hover:text-gray-hovered'

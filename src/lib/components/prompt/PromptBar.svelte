@@ -1,47 +1,75 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { updatePrompt } from '$lib/api';
 	import type { Tables } from '$lib/supabase';
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ChevronDown, ChevronUp, MoveLeft, MoveRight } from 'lucide-svelte';
 	import PromptOptions from '../options/PromptOptions.svelte';
+	import PaywallPopup from '../popups/PaywallPopup.svelte';
+	import PromptView from '../views/PromptView.svelte';
 	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
-	let {
-		prompt,
-		childPrompt,
-		suggestionApplied,
-		userStatus,
-		showOptions,
-		editedPrompt,
-		hoveredSuggestion,
-		projectId,
-		gettingSuggestions,
-		suggestions,
-		setPromptMaximized,
-		editPrompt,
-		setPrompt
-	} = $props<{
+	let { prompt, childPrompt, userStatus, projectId, suggestions } = $props<{
 		prompt: Tables<'prompts'>;
 		childPrompt: Tables<'prompts'> | undefined;
-		suggestionApplied: number;
 		userStatus: string;
-		showOptions: boolean;
-		editedPrompt: Tables<'prompts'>;
-		hoveredSuggestion: Tables<'suggestions'> | null;
 		projectId: string | undefined;
-		gettingSuggestions: boolean;
-		suggestions: Tables<'suggestions'>[] | undefined;
-		setPromptMaximized: (maximized: boolean) => void;
-		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
-		setPrompt: () => void;
+		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 	}>();
+
+	let promptMaximized = $state(false);
+	let showPaywall = $state(false);
+	let showOptions = $state(false);
+	let editedPrompt = $state({ ...prompt });
+	let suggestionApplied = $state(-1);
+	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
 
 	function loadPrompt(id: number | null) {
 		if (id === null) goto(`/project/${projectId}`);
 		goto(`/project/${projectId}/${id}`);
 	}
+
+	function editPrompt(newPrompt: Tables<'prompts'>, suggestionId: number) {
+		suggestionApplied = suggestionId;
+		editedPrompt = newPrompt;
+	}
+
+	function setPrompt() {
+		updatePrompt(editedPrompt).then((r) => {
+			if (r === null) {
+				showPaywall = true;
+				return;
+			}
+			editedPrompt = { ...r };
+			suggestionApplied = -1;
+			showOptions = false;
+			goto(`/project/${projectId}/${r.id}`);
+		});
+	}
 </script>
+
+{#if promptMaximized}
+	<PromptView
+		{prompt}
+		{suggestions}
+		{userStatus}
+		{projectId}
+		onclose={() => (promptMaximized = false)}
+		bind:hoveredSuggestion
+		bind:suggestionApplied
+		bind:editedPrompt
+		{editPrompt}
+		{setPrompt}
+	/>
+{/if}
+
+{#if showPaywall}
+	<PaywallPopup
+		onclose={() => (showPaywall = false)}
+		message="You have reached your monthly limit of 100 prompts."
+	/>
+{/if}
 
 <div class="flex h-full w-[450px] shrink-0 flex-col border-r px-6 py-4">
 	<div class="mb-2 flex items-end justify-between">
@@ -84,9 +112,9 @@
 			{prompt}
 			{hoveredSuggestion}
 			{setPrompt}
+			bind:promptMaximized
 			bind:suggestionApplied
 			bind:editedPrompt
-			{setPromptMaximized}
 		/>
 	</div>
 	{#if projectId}
@@ -94,8 +122,7 @@
 			{prompt}
 			{editedPrompt}
 			{editPrompt}
-			bind:gettingSuggestions
-			bind:suggestions
+			{suggestions}
 			{suggestionApplied}
 			setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
 		/>

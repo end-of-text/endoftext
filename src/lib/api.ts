@@ -76,8 +76,7 @@ export async function updatePrompt(prompt: Tables<'prompts'>): Promise<Tables<'p
 }
 
 export async function getSuggestions(
-	selectedPrompt: Tables<'prompts'> | undefined,
-	clear: boolean = false
+	selectedPrompt: Tables<'prompts'> | undefined
 ): Promise<Tables<'suggestions'>[]> {
 	if (selectedPrompt === undefined) {
 		return [];
@@ -88,7 +87,7 @@ export async function getSuggestions(
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({ selectedPrompt: selectedPrompt, clear })
+		body: JSON.stringify({ selectedPrompt: selectedPrompt })
 	});
 	const jsonResponse = await response.json();
 	return jsonResponse as Tables<'suggestions'>[];
