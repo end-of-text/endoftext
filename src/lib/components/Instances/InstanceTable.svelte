@@ -31,8 +31,9 @@
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 	let metrics = $state<Record<string, number | undefined>>({});
-	let generationOptions: { instruction: string; showGenerateOptions: boolean } =
-		getContext('generationOptions');
+
+	let dataGenerationInstruction: string = getContext('dataGenerationInstruction');
+	let showDataGeneration: boolean = getContext('showDataGeneration');
 
 	let metricValues = $derived(
 		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
@@ -136,11 +137,17 @@
 					<GenerateInstances
 						{createInstances}
 						similar={true}
-						generationOptions={{ instruction: '', showGenerateOptions: false }}
+						showDataGeneration={false}
+						dataGenerationInstruction={''}
 					/>
 				</div>
 			{/if}
-			<GenerateInstances {createInstances} similar={false} bind:generationOptions />
+			<GenerateInstances
+				{createInstances}
+				similar={false}
+				bind:showDataGeneration
+				bind:dataGenerationInstruction
+			/>
 			<Button
 				onclick={() => {
 					if (instances.length >= 25) {

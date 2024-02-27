@@ -4,18 +4,19 @@
 	import { Sparkle, Sparkles } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
-	let { similar, generationOptions, createInstances } = $props<{
+	let { similar, showDataGeneration, dataGenerationInstruction, createInstances } = $props<{
 		similar: boolean;
-		generationOptions: { instruction: string; showGenerateOptions: boolean };
+		showDataGeneration: boolean;
+		dataGenerationInstruction: string;
 		createInstances: (instruction: string, count: number, similar: boolean) => void;
 	}>();
 
 	let generationCount = $state(5);
 </script>
 
-<div class="relative" use:clickOutside={() => (generationOptions.showGenerateOptions = false)}>
+<div class="relative" use:clickOutside={() => (showDataGeneration = false)}>
 	<Button
-		onclick={() => (generationOptions.showGenerateOptions = !generationOptions.showGenerateOptions)}
+		onclick={() => (showDataGeneration = !showDataGeneration)}
 		title={similar ? 'Generate Similar' : 'Generate'}
 		classNames="text-yellow-400"
 	>
@@ -25,13 +26,13 @@
 			<Sparkle class="h-5 w-5 transition" />
 		{/if}
 	</Button>
-	{#if generationOptions.showGenerateOptions}
+	{#if showDataGeneration}
 		<div
 			class="absolute right-0 top-10 z-20 w-max rounded border bg-white p-3"
 			onclick={(e) => e.stopPropagation()}
 			onkeydown={(e) => {
 				if (e.key === 'Escape') {
-					generationOptions.showGenerateOptions = false;
+					showDataGeneration = false;
 				}
 			}}
 			role="button"
@@ -40,11 +41,11 @@
 		>
 			<input
 				placeholder="Describe the new data."
-				bind:value={generationOptions.instruction}
+				bind:value={dataGenerationInstruction}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
-						generationOptions.showGenerateOptions = false;
-						createInstances(generationOptions.instruction, generationCount, similar);
+						showDataGeneration = false;
+						createInstances(dataGenerationInstruction, generationCount, similar);
 					}
 				}}
 				class="mb-2 w-full"
@@ -55,8 +56,8 @@
 				<Button
 					classNames="shrink-0 min-w-52 justify-center"
 					onclick={() => {
-						generationOptions.showGenerateOptions = false;
-						createInstances(generationOptions.instruction, generationCount, similar);
+						showDataGeneration = false;
+						createInstances(dataGenerationInstruction, generationCount, similar);
 					}}
 				>
 					Generate {generationCount} instance{generationCount > 1 ? 's' : ''}

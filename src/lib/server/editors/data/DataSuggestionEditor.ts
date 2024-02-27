@@ -1,5 +1,4 @@
 import { PromptEditor } from '$lib/server/editors/editor';
-import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 
@@ -13,15 +12,11 @@ export class DataSuggestionEditor extends PromptEditor {
 		);
 	}
 
-	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
+	async canBeApplied() {
 		return [];
 	}
 
-	async rewritePrompt(
-		prompt: Tables<'prompts'>,
-		targetSpans: number[][],
-		llm: LLM
-	): Promise<Tables<'prompts'>> {
+	async rewritePrompt(prompt: Tables<'prompts'>): Promise<Tables<'prompts'>> {
 		return prompt;
 	}
 }

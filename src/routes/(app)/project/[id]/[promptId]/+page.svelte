@@ -3,7 +3,7 @@
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
 	import ProjectHeader from '$lib/components/ui/ProjectHeader.svelte';
-	import { createDataGenerationState } from '$lib/state.svelte.js';
+	import { dataGenerationInstructionState, showDataGenerationState } from '$lib/state.svelte.js';
 	import { setContext } from 'svelte';
 
 	let { data } = $props();
@@ -15,12 +15,10 @@
 	let prompt = $state(data.prompt);
 	let childPrompt = $state(data.childPrompt);
 
-	// Keep in context to avoid prop drilling
-	let generationOptions = createDataGenerationState({
-		instruction: '',
-		showGenerateOptions: false
-	});
-	setContext('generationOptions', generationOptions);
+	let dataGenerationInstruction = dataGenerationInstructionState('');
+	let showDataGeneration = showDataGenerationState(false);
+	setContext('dataGenerationInstruction', dataGenerationInstruction);
+	setContext('showDataGeneration', showDataGeneration);
 
 	afterNavigate(() => {
 		prompt = data.prompt;
