@@ -3,8 +3,6 @@
 	import InstanceTable from '$lib/components/Instances/InstanceTable.svelte';
 	import PromptBar from '$lib/components/prompt/PromptBar.svelte';
 	import ProjectHeader from '$lib/components/ui/ProjectHeader.svelte';
-	import { dataGenerationInstructionState, showDataGenerationState } from '$lib/state.svelte.js';
-	import { setContext } from 'svelte';
 
 	let { data } = $props();
 
@@ -14,11 +12,6 @@
 	let suggestions = $state(data.suggestions);
 	let prompt = $state(data.prompt);
 	let childPrompt = $state(data.childPrompt);
-
-	let dataGenerationInstruction = dataGenerationInstructionState('');
-	let showDataGeneration = showDataGenerationState(false);
-	setContext('dataGenerationInstruction', dataGenerationInstruction);
-	setContext('showDataGeneration', showDataGeneration);
 
 	afterNavigate(() => {
 		prompt = data.prompt;

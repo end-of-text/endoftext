@@ -2,10 +2,10 @@
 	import { acceptSuggestion } from '$lib/api';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import { dataGenerationOptions } from '$lib/state.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
 	import { Check, Coins, FlaskConical, Lightbulb, ShieldX } from 'lucide-svelte';
-	import { getContext } from 'svelte';
 
 	let {
 		suggestion,
@@ -25,8 +25,6 @@
 
 	let applyingSuggestion = $state(false);
 	let userInput = $state<string | undefined>(undefined);
-	let generationOptions: { instruction: string; showGenerateOptions: boolean } =
-		getContext('generationOptions');
 
 	const borderMap: { [key: string]: string } = {
 		ERROR: 'border-l-red-600',
@@ -38,8 +36,12 @@
 	async function accept() {
 		applyingSuggestion = true;
 		if (suggestion.type === 'DATA') {
-			generationOptions.instruction = suggestion.description.split(':').slice(1).join(':').trim();
-			generationOptions.showGenerateOptions = true;
+			dataGenerationOptions.instruction = suggestion.description
+				.split(':')
+				.slice(1)
+				.join(':')
+				.trim();
+			dataGenerationOptions.show = true;
 		} else {
 			const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
 			editPrompt(changedPrompt, suggestion.id);

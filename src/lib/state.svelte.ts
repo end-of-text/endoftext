@@ -1,25 +1,21 @@
-export function dataGenerationInstructionState(initialInstruction: string) {
-	let dataGenerationInstruction = $state(initialInstruction);
+function createDataGenerationOptions(initialInstruction: string, initialShow: boolean) {
+	let instruction = $state(initialInstruction);
+	let show = $state(initialShow);
 
 	return {
 		get instruction() {
-			return dataGenerationInstruction;
+			return instruction;
 		},
 		set instruction(value) {
-			dataGenerationInstruction = value;
-		}
-	};
-}
-
-export function showDataGenerationState(initialShowGenerateOptions: boolean) {
-	let showDataGeneration = $state(initialShowGenerateOptions);
-
-	return {
-		get showGenerateOptions() {
-			return showDataGeneration;
+			instruction = value;
 		},
-		set showGenerateOptions(value) {
-			showDataGeneration = value;
+		get show() {
+			return show;
+		},
+		set show(value) {
+			show = value;
 		}
 	};
 }
+
+export const dataGenerationOptions = createDataGenerationOptions('', false);
