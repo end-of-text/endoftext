@@ -17,7 +17,13 @@
 	aria-hidden="true"
 	transition:fade={{ duration: 200 }}
 >
-	{#if suggestionApplied !== -1}
+	{#if selectedSpan}
+		{editedPrompt.prompt.slice(0, selectedSpan.start)}
+		<span class="underline decoration-blue-600 decoration-wavy decoration-2">
+			{editedPrompt.prompt.slice(selectedSpan.start, selectedSpan.end)}
+		</span>
+		{editedPrompt.prompt.slice(selectedSpan.end)}
+	{:else if suggestionApplied !== -1}
 		{#each diff.diffWords(prompt.prompt, editedPrompt.prompt) as part}
 			{#if part.added}
 				<span class="bg-blue-600 opacity-30">{part.value}</span>
@@ -37,11 +43,5 @@
 				</span>
 			{/if}
 		{/each}
-	{:else if selectedSpan}
-		{editedPrompt.prompt.slice(0, selectedSpan.start)}
-		<span class="underline decoration-blue-600 decoration-wavy decoration-2">
-			{editedPrompt.prompt.slice(selectedSpan.start, selectedSpan.end)}
-		</span>
-		{editedPrompt.prompt.slice(selectedSpan.end)}
 	{/if}
 </div>
