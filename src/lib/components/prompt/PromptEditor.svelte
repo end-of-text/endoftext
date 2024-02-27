@@ -6,15 +6,21 @@
 	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
-	let { editedPrompt, hoveredSuggestion, prompt, promptMaximized, setPrompt, suggestionApplied } =
-		$props<{
-			editedPrompt: Tables<'prompts'>;
-			hoveredSuggestion: Tables<'suggestions'> | null;
-			prompt: Tables<'prompts'>;
-			promptMaximized: boolean;
-			setPrompt: () => void;
-			suggestionApplied: number;
-		}>();
+	let {
+		editedPrompt,
+		hoveredSuggestion,
+		prompt,
+		promptMaximized = false,
+		setPrompt,
+		suggestionApplied
+	} = $props<{
+		editedPrompt: Tables<'prompts'>;
+		hoveredSuggestion: Tables<'suggestions'> | null;
+		prompt: Tables<'prompts'>;
+		promptMaximized: boolean;
+		setPrompt: () => void;
+		suggestionApplied: number;
+	}>();
 
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
