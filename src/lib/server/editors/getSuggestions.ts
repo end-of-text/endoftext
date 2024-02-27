@@ -47,10 +47,12 @@ export async function getSuggestions(
 			instanceRes.data.map((instance) => instance.input),
 			llm
 		)
-	).slice(0, 3).map((editor) => ({
-		canBeApplied: [],
-		editor
-	}));
+	)
+		.slice(0, 3)
+		.map((editor) => ({
+			canBeApplied: [],
+			editor
+		}));
 
 	const suggestions: Tables<'suggestions'>[] = [];
 	for (const result of [...results, ...dataSuggestions]) {
