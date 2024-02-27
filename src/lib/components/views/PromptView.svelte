@@ -60,6 +60,7 @@
 				setPrompt();
 				onclose();
 			}}
+			{editPrompt}
 			bind:suggestionApplied
 			bind:editedPrompt
 		/>

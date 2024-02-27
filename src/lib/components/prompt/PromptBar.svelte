@@ -112,6 +112,7 @@
 			{prompt}
 			{hoveredSuggestion}
 			{setPrompt}
+			{editPrompt}
 			bind:promptMaximized
 			bind:suggestionApplied
 			bind:editedPrompt
