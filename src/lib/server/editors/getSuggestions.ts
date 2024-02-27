@@ -47,7 +47,7 @@ export async function getSuggestions(
 			instanceRes.data.map((instance) => instance.input),
 			llm
 		)
-	).map((editor) => ({
+	).slice(0, 3).map((editor) => ({
 		canBeApplied: [],
 		editor
 	}));

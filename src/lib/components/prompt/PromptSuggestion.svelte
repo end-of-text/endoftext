@@ -42,6 +42,7 @@
 				.join(':')
 				.trim();
 			dataGenerationOptions.show = true;
+			dismissSuggestion(suggestion);
 		} else {
 			const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
 			editPrompt(changedPrompt, suggestion.id);

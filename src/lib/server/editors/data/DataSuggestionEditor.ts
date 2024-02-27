@@ -6,7 +6,7 @@ export class DataSuggestionEditor extends PromptEditor {
 	constructor(suggestion: string) {
 		super(
 			'DataSuggestion',
-			'Generate Test Cases',
+			'Generate ' + suggestion,
 			'Generate new test cases for the following category: ' + suggestion,
 			EditorType.DATA
 		);
