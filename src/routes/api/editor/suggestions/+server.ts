@@ -1,4 +1,4 @@
-import { getRootNode } from '$lib/hypertune/hypertune.js';
+import { getHypertuneRoot } from '$lib/hypertune/hypertune.js';
 import { getSuggestions } from '$lib/server/editors/getSuggestions.js';
 import type { Tables } from '$lib/supabase.js';
 import { error, json } from '@sveltejs/kit';
@@ -15,6 +15,6 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 		error(500, 'Invalid prompt data');
 	}
 
-	const hypertuneRoot = await getRootNode(session.user);
+	const hypertuneRoot = await getHypertuneRoot(session.user);
 	return json(await getSuggestions(supabase, selectedPrompt, true, hypertuneRoot));
 }

@@ -1,4 +1,4 @@
-import { getRootNode } from '$lib/hypertune/hypertune.js';
+import { getHypertuneRoot } from '$lib/hypertune/hypertune.js';
 import { getSuggestions } from '$lib/server/editors/getSuggestions.js';
 import { getPredictions } from '$lib/server/predictions/getPredictions';
 import type { Tables } from '$lib/supabase.js';
@@ -61,7 +61,7 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		instancesReq.data || [],
 		promptsRes.data[0]
 	);
-	const hypertuneRoot = await getRootNode(session.user);
+	const hypertuneRoot = await getHypertuneRoot(session.user);
 	const suggestions = getSuggestions(supabase, promptsRes.data[0], false, hypertuneRoot);
 
 	return {

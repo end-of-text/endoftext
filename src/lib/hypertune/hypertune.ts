@@ -3,12 +3,12 @@ import { initializeHypertune } from './generated';
 
 const hypertune = initializeHypertune({}, { token: PUBLIC_HYPERTUNE_TOKEN });
 
-export async function getRootNode(user: { id: string; email?: string }) {
+export async function getHypertuneRoot(user: { id: string; email?: string }) {
 	await hypertune.initFromServerIfNeeded();
 
 	return hypertune.root({
 		context: {
-			environment: 'DEVELOPMENT',
+			environment: 'PRODUCTION',
 			user: {
 				id: user.id,
 				name: user.id,
