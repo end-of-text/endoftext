@@ -113,6 +113,26 @@ export async function acceptSuggestion(
 	return json.prompt as Tables<'prompts'>;
 }
 
+export async function applyRewrite(
+	selectedText: string,
+	prompt: Tables<'prompts'>,
+	rewriteCommand: string
+): Promise<string> {
+	const res = await fetch(`/api/rewrite/apply`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			selectedText,
+			prompt,
+			rewriteCommand
+		})
+	});
+	const json = await res.json();
+	return json.prompt as string;
+}
+
 export async function generateInstances(
 	prompt: Tables<'prompts'>,
 	instances: Tables<'instances'>[],

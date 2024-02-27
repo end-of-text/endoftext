@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
+	import autosize from '$lib/autosize';
+	import { clickOutside } from '$lib/clickOutside';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
-	import * as diff from 'diff';
 	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
+	import RewriteBox from './RewriteBox.svelte';
+	import SuggestionOverlay from './SuggestionOverlay.svelte';
 
 	let {
 		editedPrompt,
@@ -12,6 +15,7 @@
 		prompt,
 		promptMaximized = false,
 		setPrompt,
+		editPrompt,
 		suggestionApplied
 	} = $props<{
 		editedPrompt: Tables<'prompts'>;
@@ -19,23 +23,38 @@
 		prompt: Tables<'prompts'>;
 		promptMaximized: boolean;
 		setPrompt: () => void;
+		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		suggestionApplied: number;
 	}>();
-
-	let promptCopied = $state(false);
-	let promptHovered = $state(false);
-	let promptSubmitted = $state(false);
 
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
 
+	let promptEditor: HTMLTextAreaElement | undefined = $state(undefined);
+	let promptCopied = $state(false);
+	let promptHovered = $state(false);
+	let selectedSpan = $state<{ start: number; end: number } | undefined>(undefined);
+	let promptSubmitted = $state(false);
+
 	function copyPrompt() {
 		navigator.clipboard.writeText(prompt.prompt);
+		selectedSpan = undefined;
 		promptCopied = true;
 		setTimeout(() => {
 			promptCopied = false;
 		}, 3000);
+	}
+
+	function getSelection() {
+		if (promptEditor?.selectionEnd ?? 0 - (promptEditor?.selectionStart ?? 0) > 10) {
+			selectedSpan = {
+				start: promptEditor?.selectionStart ?? 0,
+				end: promptEditor?.selectionEnd ?? 0
+			};
+		} else {
+			selectedSpan = undefined;
+		}
 	}
 
 	afterNavigate(() => {
@@ -47,55 +66,37 @@
 	class="relative flex min-h-24 grow cursor-text flex-col text-left"
 	onmouseenter={() => (promptHovered = true)}
 	onmouseleave={() => (promptHovered = false)}
+	use:clickOutside={() => (selectedSpan = undefined)}
 	role="button"
 	tabindex="0"
 >
+	{#if selectedSpan}
+		<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
+	{/if}
 	<div class="relative min-h-24 grow overflow-y-auto rounded border shadow">
-		<div
-			contenteditable="plaintext-only"
-			class="relative h-full min-h-24 bg-white py-2 pl-2 pr-6 text-sm outline-none"
-			role="textbox"
-			aria-multiline="true"
-			tabindex="0"
-			bind:innerText={editedPrompt.prompt}
+		<textarea
+			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none"
+			bind:this={promptEditor}
+			bind:value={editedPrompt.prompt}
+			use:autosize
+			onselect={getSelection}
+			onmousedown={() => (selectedSpan = undefined)}
 			onkeydown={(e) => {
+				selectedSpan = undefined;
 				suggestionApplied = -1;
 				if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
 					setPrompt();
 				}
 			}}
 		/>
-		{#if suggestionApplied > -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans)}
-			<div
-				class="user-select-none absolute left-0 top-0 h-full min-h-24 w-full whitespace-pre-line py-2 pl-2 pr-6 text-sm text-transparent"
-				aria-hidden="true"
-				transition:fade={{ duration: 200 }}
-			>
-				{#if suggestionApplied > -1}
-					{#each diff.diffWords(prompt.prompt, editedPrompt.prompt) as part}
-						{#if part.added}
-							<span class="bg-blue-600 opacity-30">{part.value}</span>
-						{:else if !part.removed}
-							{part.value}
-						{/if}
-					{/each}
-				{:else if hoveredSuggestion && hoveredSuggestion.target_spans}
-					{#each hoveredSuggestion.target_spans as span, index}
-						{prompt.prompt.slice(
-							index === 0 ? 0 : hoveredSuggestion.target_spans[index - 1][1],
-							span[0]
-						)}
-						<span class="underline decoration-red-500 decoration-2">
-							{prompt.prompt.slice(span[0], span[1])}
-						</span>
-						{#if index === hoveredSuggestion.target_spans.length - 1}
-							<span>
-								{prompt.prompt.slice(span[1])}
-							</span>
-						{/if}
-					{/each}
-				{/if}
-			</div>
+		{#if suggestionApplied !== -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans) || selectedSpan}
+			<SuggestionOverlay
+				{prompt}
+				{hoveredSuggestion}
+				{suggestionApplied}
+				{editedPrompt}
+				{selectedSpan}
+			/>
 		{/if}
 	</div>
 	<div class="absolute right-1 top-1 flex flex-col gap-1">
@@ -117,7 +118,10 @@
 		</button>
 		{#if !promptMaximized}
 			<button
-				onclick={() => (promptMaximized = true)}
+				onclick={() => {
+					promptMaximized = true;
+					selectedSpan = undefined;
+				}}
 				class="rounded bg-white p-1 transition-all {promptHovered
 					? 'text-gray-active'
 					: 'text-gray-inactive'}"
