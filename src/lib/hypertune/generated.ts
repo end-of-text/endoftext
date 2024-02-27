@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import * as sdk from 'hypertune';
 
 const queryCode = `query FullQuery{root{personaEditor convertToJSONEditor compressionEditor outputDescriptionEditor jsonDescriptionEditor jsonInstructionEditor separateInstructionsEditor noNegationEditor shorterEditor longerEditor}}`;
