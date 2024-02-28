@@ -7,6 +7,7 @@
 
 	let { data } = $props();
 
+	let generatingInstances = $state(true);
 	let instances = $state<string[]>(data.instances || []);
 	let submitted = $state(false);
 
@@ -17,6 +18,7 @@
 		} catch (e) {
 			instances = ['Example input 1', 'Example input 2', 'Example input 3'];
 		}
+		generatingInstances = false;
 	});
 </script>
 
@@ -44,8 +46,13 @@
 			<p>Again, don't stress, you can add or edit test cases later!</p>
 		</div>
 		<div class="flex w-full flex-col gap-2">
-			{#if data.generatedInstances && instances.length === 0}
-				<p class="mb-2 italic text-gray-active">Generating instances...</p>
+			{#if generatingInstances}
+				<div class="flex items-center gap-2">
+					<Spinner />
+					<p class="italic text-gray-active">Generating instances...</p>
+				</div>
+			{:else if instances.length === 0}
+				<p class="mb-2 italic text-gray-active">Add test cases for your prompt.</p>
 			{/if}
 			{#each instances as instance, i}
 				<div class="flex items-center gap-2">

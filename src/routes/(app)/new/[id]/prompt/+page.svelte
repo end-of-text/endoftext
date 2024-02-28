@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import { ClipboardPaste } from 'lucide-svelte';
 
 	let { data } = $props();
 
@@ -42,8 +43,9 @@
 							name = 'Sentiment Analysis';
 							prompt = 'Classify the sentiment of this movie review.';
 						}}
+						title="Use"
 					>
-						Use example
+						<ClipboardPaste />
 					</Button>
 				</li>
 				<li class="flex list-inside list-disc items-center justify-between italic">
@@ -54,8 +56,9 @@
 							name = 'Insurance Claims Assistant';
 							prompt = 'You are a assistant for helping users with insurance claims.';
 						}}
+						title="Use"
 					>
-						Use example
+						<ClipboardPaste />
 					</Button>
 				</li>
 				<li class="flex list-inside list-disc items-center justify-between italic">
@@ -66,8 +69,9 @@
 							name = 'Translate to French';
 							prompt = 'Translate this text into French.';
 						}}
+						title="Use"
 					>
-						Use example
+						<ClipboardPaste />
 					</Button>
 				</li>
 			</ol>
