@@ -15,11 +15,11 @@ export async function load({ params, locals: { supabase } }) {
 		.from('prompts')
 		.select('prompt')
 		.eq('project_id', params.id)
-		.order('created_at', { ascending: false });	
+		.order('created_at', { ascending: false });
 
 	if (promptError) {
 		error(500, promptError.message);
-	} 
+	}
 
 	return {
 		prompt: promptData[0] as Tables<'prompts'>,
