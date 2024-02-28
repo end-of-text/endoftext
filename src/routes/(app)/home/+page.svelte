@@ -1,15 +1,20 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { deleteProject } from '$lib/api.js';
+	import HomeRow from '$lib/components/home/HomeRow.svelte';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
-	import { PlusCircle, Trash2 } from 'lucide-svelte';
+	import { PlusCircle } from 'lucide-svelte';
 
 	const { data } = $props();
 
 	let projects = $state(data.projects);
+	let deleteId = $state<string | null>(null);
+	let searchQuery = $state<string>('');
 
-	let deleteId = $state<string | undefined>(undefined);
+	$effect(() => {
+		projects = data.projects;
+	});
 </script>
 
 {#if deleteId}
@@ -20,16 +25,17 @@
 		confirm={() => {
 			deleteProject(deleteId ?? '');
 			projects = projects.filter((p) => p.id !== deleteId);
-			deleteId = undefined;
+			deleteId = null;
 		}}
-		cancel={() => (deleteId = undefined)}
+		cancel={() => (deleteId = null)}
 		confirmIsDelete
 	/>
 {/if}
 
 <div class="mb-4 flex items-center justify-between">
-	<div class="flex items-center gap-3">
+	<div class="flex items-center gap-5">
 		<h1>Your Prompts</h1>
+		<input bind:value={searchQuery} type="text" placeholder="Search" class="rounded border" />
 	</div>
 	<form class="flex" method="post" use:enhance action="?/create">
 		<Button title="New Prompt" classNames="text-green-600">
@@ -43,29 +49,11 @@
 		<p>You don't have any prompts, create one to get started.</p>
 	</div>
 {:else}
-	<div class="grid grid-cols-3 gap-4">
-		{#each projects as project (project.id)}
-			<a
-				class="flex min-h-24 gap-2 rounded border p-2 transition-all hover:shadow"
-				href="/project/{project.id}"
-			>
-				<p class="w-full px-4 py-2 transition">
-					{project.name}
-				</p>
-				<div
-					class="ml-auto p-2 transition-all hover:text-red-600"
-					onclick={(e) => {
-						deleteId = project.id;
-						e.preventDefault();
-						e.stopPropagation();
-					}}
-					tabindex="0"
-					role="button"
-					onkeydown={() => undefined}
-				>
-					<Trash2 class="h-5 w-5" />
-				</div>
-			</a>
+	<div class="grid grid-cols-2 gap-4 pb-10">
+		{#each searchQuery.length === 0 ? projects : projects.filter((p) => p.name
+						.toLowerCase()
+						.includes(searchQuery.toLowerCase())) as project (project.id)}
+			<HomeRow {project} deleteProject={(id) => (deleteId = id)} />
 		{/each}
 	</div>
 {/if}

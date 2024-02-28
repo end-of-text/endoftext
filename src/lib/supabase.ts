@@ -3,6 +3,39 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
 	public: {
 		Tables: {
+			api_keys: {
+				Row: {
+					id: number;
+					key: string;
+					user_id: string;
+				};
+				Insert: {
+					id?: number;
+					key?: string;
+					user_id: string;
+				};
+				Update: {
+					id?: number;
+					key?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'public_api_keys_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_subscription';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'public_api_keys_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			instances: {
 				Row: {
 					created_at: string;
@@ -26,6 +59,13 @@ export type Database = {
 					project_id?: string;
 				};
 				Relationships: [
+					{
+						foreignKeyName: 'instances_project_id_fkey';
+						columns: ['project_id'];
+						isOneToOne: false;
+						referencedRelation: 'home_entries';
+						referencedColumns: ['id'];
+					},
 					{
 						foreignKeyName: 'instances_project_id_fkey';
 						columns: ['project_id'];
@@ -184,6 +224,13 @@ export type Database = {
 						foreignKeyName: 'prompts_project_id_fkey';
 						columns: ['project_id'];
 						isOneToOne: false;
+						referencedRelation: 'home_entries';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'prompts_project_id_fkey';
+						columns: ['project_id'];
+						isOneToOne: false;
 						referencedRelation: 'projects';
 						referencedColumns: ['id'];
 					}
@@ -209,7 +256,7 @@ export type Database = {
 					name: string;
 					prompt_id: number;
 					required_input_type?: string | null;
-					target_spans?: number[][] | null;
+					target_spans?: number[] | null;
 					type: string;
 				};
 				Update: {
@@ -220,7 +267,7 @@ export type Database = {
 					name?: string;
 					prompt_id?: number;
 					required_input_type?: string | null;
-					target_spans?: number[][] | null;
+					target_spans?: number[] | null;
 					type?: string;
 				};
 				Relationships: [
@@ -253,6 +300,13 @@ export type Database = {
 					user_id?: string;
 				};
 				Relationships: [
+					{
+						foreignKeyName: 'user_project_project_id_fkey';
+						columns: ['project_id'];
+						isOneToOne: false;
+						referencedRelation: 'home_entries';
+						referencedColumns: ['id'];
+					},
 					{
 						foreignKeyName: 'user_project_project_id_fkey';
 						columns: ['project_id'];
@@ -304,6 +358,33 @@ export type Database = {
 			};
 		};
 		Views: {
+			home_entries: {
+				Row: {
+					created_at: string | null;
+					id: string | null;
+					metric_name: string | null;
+					name: string | null;
+					show_labels: boolean | null;
+					updated_at: string | null;
+					user_id: string | null;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'projects_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'projects_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_subscription';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			user_subscription: {
 				Row: {
 					id: string | null;
@@ -322,7 +403,12 @@ export type Database = {
 			};
 		};
 		Functions: {
-			[_ in never]: never;
+			user_for_api_key: {
+				Args: {
+					apikey: string;
+				};
+				Returns: string;
+			};
 		};
 		Enums: {
 			[_ in never]: never;
