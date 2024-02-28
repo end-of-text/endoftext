@@ -33,6 +33,12 @@
 			metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
 		});
 	});
+
+	$effect(() => {
+		if (localInstanceInput.length === 0) {
+			inputArea?.focus();
+		}
+	});
 </script>
 
 <tr
@@ -70,13 +76,15 @@
 		{#await prediction}
 			Loading...
 		{:then pred}
-			<textarea
-				bind:this={predictionArea}
-				use:autosize
-				class="box-border w-full border-none"
-				value={pred}
-				disabled
-			/>
+			{#if pred !== undefined}
+				<textarea
+					bind:this={predictionArea}
+					use:autosize
+					class="box-border w-full border-none"
+					value={pred}
+					disabled
+				/>
+			{/if}
 		{/await}
 	</td>
 	{#if project.show_labels}

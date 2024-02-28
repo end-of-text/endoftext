@@ -52,7 +52,7 @@
 </script>
 
 <div
-	class="flex w-full flex-col justify-between rounded-br rounded-tr border border-l-4 p-3 text-left {disabled
+	class="flex w-full flex-col justify-between rounded-br rounded-tr border border-l-4 px-3 py-2 text-left {disabled
 		? 'border-l-gray-active'
 		: borderMap[suggestion.type]}"
 >
@@ -67,11 +67,11 @@
 			{:else if suggestion.type === EditorType.DATA}
 				<FlaskConical class="h-5 w-5 {disabled ? 'text-gray-active' : 'text-blue-600'}" />
 			{/if}
-			<p class="font-semibold">
+			<h4>
 				{suggestion.name}
-			</p>
+			</h4>
 		</div>
-		<p class="mt-1 text-gray-active">
+		<p class="mt-1 text-sm text-gray-active">
 			{suggestion.description}
 		</p>
 		{#if suggestion.required_input_type}
@@ -80,10 +80,10 @@
 			{/if}
 		{/if}
 	</div>
-	<div class="mt-2 flex items-center justify-end gap-4">
+	<div class="mt-2 flex items-center justify-end gap-3">
 		{#if !applied && !applyingSuggestion}
 			<button
-				class="cursor-pointer text-gray-inactive transition {!disabled
+				class="cursor-pointer text-sm text-gray-active transition {!disabled
 					? 'hover:text-gray-hovered'
 					: ''}"
 				onclick={() => dismissSuggestion(suggestion)}
@@ -97,7 +97,7 @@
 		{:else if applyingSuggestion}
 			<Spinner />
 		{:else}
-			<Button {disabled} onclick={accept}>Apply</Button>
+			<Button classNames="h-8" {disabled} onclick={accept}>Apply</Button>
 		{/if}
 	</div>
 </div>
