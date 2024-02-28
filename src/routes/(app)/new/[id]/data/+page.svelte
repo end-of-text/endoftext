@@ -35,10 +35,13 @@
 			<p class="mb-2 text-gray-active">2 / 2</p>
 			<img src="/logo.svg" alt="logo" class="h-4" />
 		</div>
-		<h1>Example Inputs</h1>
-		<div class="mb-2 flex flex-col gap-2">
-			<p>To improve your prompt we'll need some example inputs</p>
-			<p>These are the questions or statements you want your model to respond to.</p>
+		<h1>Initial Test Cases</h1>
+		<div class="mb-2 flex max-w-xl flex-col gap-2">
+			<p>
+				Let's create some test cases for your prompt. We've generated a few examples for you, but
+				feel free to add your own.
+			</p>
+			<p>Again, don't stress, you can add or edit test cases later!</p>
 		</div>
 		<div class="flex w-full flex-col gap-2">
 			{#if data.generatedInstances && instances.length === 0}
@@ -69,15 +72,6 @@
 				}}
 			>
 				Add
-			</Button>
-			<Button
-				classNames="my-2"
-				onclick={(e) => {
-					e.preventDefault();
-					instances?.push('');
-				}}
-			>
-				Generate
 			</Button>
 		</div>
 		<div class="ml-auto flex items-center gap-2">
