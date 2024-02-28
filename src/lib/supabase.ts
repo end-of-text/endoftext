@@ -3,6 +3,39 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
 	public: {
 		Tables: {
+			api_keys: {
+				Row: {
+					id: number;
+					key: string;
+					user_id: string;
+				};
+				Insert: {
+					id?: number;
+					key?: string;
+					user_id: string;
+				};
+				Update: {
+					id?: number;
+					key?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'public_api_keys_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_subscription';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'public_api_keys_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			instances: {
 				Row: {
 					created_at: string;
@@ -322,7 +355,12 @@ export type Database = {
 			};
 		};
 		Functions: {
-			[_ in never]: never;
+			user_for_api_key: {
+				Args: {
+					apikey: string;
+				};
+				Returns: string;
+			};
 		};
 		Enums: {
 			[_ in never]: never;

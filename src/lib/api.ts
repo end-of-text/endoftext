@@ -207,3 +207,10 @@ export async function changeProjectMetric(projectId: string, metric: string | nu
 		body: JSON.stringify({ metric })
 	});
 }
+
+export async function regenerateAPIKey(): Promise<string> {
+	const keyResponse = await fetch(`/api/key/regenerate`, {
+		method: 'GET'
+	});
+	return keyResponse.text();
+}
