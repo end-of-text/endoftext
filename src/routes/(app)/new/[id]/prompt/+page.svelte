@@ -26,7 +26,9 @@
 		<div class="mb-4 flex max-w-xl flex-col gap-2">
 			<div class="flex items-center justify-between">
 				<p class="mb-2 text-gray-active">1 / 2</p>
-				<img src="/logo.svg" alt="logo" class="h-4" />
+				<a href="/">
+					<img src="/logo.svg" alt="logo" class="h-4" />
+				</a>
 			</div>
 			<h1>Initial Prompt</h1>
 			<p>

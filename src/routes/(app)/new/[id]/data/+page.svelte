@@ -35,7 +35,9 @@
 	>
 		<div class="flex w-full items-center justify-between">
 			<p class="mb-2 text-gray-active">2 / 2</p>
-			<img src="/logo.svg" alt="logo" class="h-4" />
+			<a href="/">
+				<img src="/logo.svg" alt="logo" class="h-4" />
+			</a>
 		</div>
 		<h1>Initial Test Cases</h1>
 		<div class="mb-2 flex max-w-xl flex-col gap-2">
