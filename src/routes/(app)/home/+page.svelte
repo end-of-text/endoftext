@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { deleteProject } from '$lib/api.js';
-	import HomeRow from '$lib/components/home/HomeRow.svelte';
+	import HomeElement from '$lib/components/home/HomeElement.svelte';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { PlusCircle } from 'lucide-svelte';
@@ -53,7 +53,7 @@
 		{#each searchQuery.length === 0 ? projects : projects.filter((p) => p.name
 						.toLowerCase()
 						.includes(searchQuery.toLowerCase())) as project (project.id)}
-			<HomeRow {project} deleteProject={(id) => (deleteId = id)} />
+			<HomeElement {project} deleteProject={(id) => (deleteId = id)} />
 		{/each}
 	</div>
 {/if}
