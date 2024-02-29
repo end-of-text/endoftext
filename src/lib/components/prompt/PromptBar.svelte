@@ -10,8 +10,9 @@
 	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
-	let { prompt, childPrompt, userStatus, projectId, suggestions } = $props<{
+	let { prompt, editedPrompt, childPrompt, userStatus, projectId, suggestions } = $props<{
 		prompt: Tables<'prompts'>;
+		editedPrompt: Tables<'prompts'>;
 		childPrompt: Tables<'prompts'> | undefined;
 		userStatus: string;
 		projectId: string | undefined;
@@ -21,7 +22,6 @@
 	let promptMaximized = $state(false);
 	let showPaywall = $state(false);
 	let showOptions = $state(false);
-	let editedPrompt = $state({ ...prompt });
 	let suggestionApplied = $state(-1);
 	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
 
