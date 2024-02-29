@@ -64,7 +64,7 @@ export class NoNegationEditor extends PromptEditor {
 	constructor() {
 		super(
 			'NoNegation',
-			'Tell the model what it should do',
+			"Don't Use Negative Instructions",
 			'Tell the model what it *should* do, not what it *should not* do.',
 			EditorType.ERROR
 		);
