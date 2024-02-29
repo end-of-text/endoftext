@@ -5,9 +5,10 @@ import { EditorType } from '$lib/types';
 import { filterSentences, rewriteSentences } from './util';
 
 const canBeSimplifiedPrompt = `
-You are a writing assistant. You decide whether a sentence is too complex and should be simplified.
+You are a writing assistant. You decide whether a sentence is too complex and can be simplified.
 The sentence is too complex if it can be simplified without losing meaning.
 The simplified sentence MUST be shorter (have less words) than the original sentence.
+If the sentence is in its simplest form, return false.
 
 ### Output
 You return JSON with the key "output" set to true if the sentence can be simplified, and false otherwise.
