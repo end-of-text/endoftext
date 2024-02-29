@@ -3,6 +3,7 @@
 	import { clickOutside } from '$lib/clickOutside';
 	import type { Tables } from '$lib/supabase';
 	import { Copy, MoreHorizontal, Trash2 } from 'lucide-svelte';
+	import { fade } from 'svelte/transition';
 
 	let { project, deleteProject } = $props<{
 		project: Tables<'home_entries'>;
@@ -10,6 +11,7 @@
 	}>();
 
 	let showOptions = $state(false);
+	let hovered = $state(false);
 
 	function copyProject() {
 		fetch(`/api/project/${project.id}/copy`, {
@@ -48,6 +50,11 @@
 <a
 	class="relative min-h-12 gap-2 rounded border p-4 transition-all hover:shadow"
 	href="/project/{project.id}"
+	onmouseenter={() => (hovered = true)}
+	onmouseleave={() => {
+		hovered = false;
+		showOptions = false;
+	}}
 >
 	<div class="flex justify-between">
 		<p class="w-full transition">
@@ -55,7 +62,9 @@
 		</p>
 		<div use:clickOutside={() => (showOptions = false)}>
 			<button
-				class="text-gray-active transition hover:text-gray-hovered"
+				class="{hovered
+					? 'text-gray-active'
+					: 'text-gray-inactive'} transition hover:text-gray-hovered"
 				onclick={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
@@ -65,7 +74,10 @@
 				<MoreHorizontal />
 			</button>
 			{#if showOptions}
-				<div class="absolute right-3 top-10 z-20 rounded border border-gray-inactive bg-white">
+				<div
+					class="absolute right-3 top-10 z-20 rounded border border-gray-inactive bg-white"
+					transition:fade={{ duration: 200 }}
+				>
 					<div class="flex flex-col gap-2 p-2">
 						<button
 							class="mx-2 flex cursor-pointer items-center gap-2 text-gray-active transition-all hover:text-gray-hovered"
