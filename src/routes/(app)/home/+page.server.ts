@@ -1,8 +1,13 @@
 import { trackEvent } from '$lib/server/amplitude.js';
 import { error, redirect } from '@sveltejs/kit';
 
-export async function load({ locals: { supabase } }) {
-	const res = await supabase.from('projects').select('*');
+export async function load({ depends, locals: { supabase } }) {
+	depends('home_entries');
+
+	const res = await supabase
+		.from('home_entries')
+		.select('*')
+		.order('updated_at', { ascending: false });
 
 	if (res.error) {
 		error(500, res.error.message);
