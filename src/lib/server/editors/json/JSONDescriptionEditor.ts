@@ -34,7 +34,7 @@ Add the additional information in the same place where the user says to output J
 ### Examples
 Prompt: You are a helpful assistant. Extract the numbers from the text in JSON.
 Format: Key output with array
-Output: You are a helpful assisant. Extract the numbers from the text in JSON with the format {"output": numbers[]}.
+Output: You are a helpful assistant. Extract the numbers from the text in JSON with the format {"output": numbers[]}.
 
 ### Instructions
 * You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the prompt should not be changed. 
