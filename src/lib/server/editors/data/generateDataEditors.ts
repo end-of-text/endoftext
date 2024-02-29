@@ -47,5 +47,5 @@ export async function generateDataEditors(
 
 	const jsonOutput: string[] = JSON.parse(res || "{'output': []}")['output'];
 
-	return jsonOutput.map((suggestion) => new DataSuggestionEditor(suggestion));
+	return jsonOutput.map((suggestion) => new DataSuggestionEditor(suggestion.toLowerCase()));
 }
