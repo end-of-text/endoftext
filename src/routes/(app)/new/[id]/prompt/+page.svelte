@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
+	import { ClipboardPaste } from 'lucide-svelte';
 
 	let { data } = $props();
 
@@ -25,21 +26,57 @@
 		<div class="mb-4 flex max-w-xl flex-col gap-2">
 			<div class="flex items-center justify-between">
 				<p class="mb-2 text-gray-active">1 / 2</p>
-				<img src="/logo.svg" alt="logo" class="h-4" />
+				<a href="/">
+					<img src="/logo.svg" alt="logo" class="h-4" />
+				</a>
 			</div>
 			<h1>Initial Prompt</h1>
 			<p>
 				Create your initial prompt and give it a name. This is the system prompt passed to the LLM.
-				Some examples include:
+				Don't stress, we'll help you refine it later.
 			</p>
-			<ol>
-				<li class="list-inside list-disc italic">Classify the sentiment of this movie review.</li>
-				<li class="list-inside list-disc italic">
-					You are a assistant for helping users with insurance claims.
+			<p>If you're stuck, try one of these examples!</p>
+			<ol class="flex flex-col gap-2 py-2">
+				<li class="flex list-inside list-disc items-center justify-between italic">
+					<p>Classify the sentiment of this movie review.</p>
+					<Button
+						onclick={(e) => {
+							e.preventDefault();
+							name = 'Sentiment Analysis';
+							prompt = 'Classify the sentiment of this movie review.';
+						}}
+						title="Use"
+					>
+						<ClipboardPaste />
+					</Button>
 				</li>
-				<li class="list-inside list-disc italic">Translate this text into French.</li>
+				<li class="flex list-inside list-disc items-center justify-between italic">
+					<p>You are a assistant for helping users with insurance claims.</p>
+					<Button
+						onclick={(e) => {
+							e.preventDefault();
+							name = 'Insurance Claims Assistant';
+							prompt = 'You are a assistant for helping users with insurance claims.';
+						}}
+						title="Use"
+					>
+						<ClipboardPaste />
+					</Button>
+				</li>
+				<li class="flex list-inside list-disc items-center justify-between italic">
+					<p>Translate this text into French.</p>
+					<Button
+						onclick={(e) => {
+							e.preventDefault();
+							name = 'Translate to French';
+							prompt = 'Translate this text into French.';
+						}}
+						title="Use"
+					>
+						<ClipboardPaste />
+					</Button>
+				</li>
 			</ol>
-			<p>Don't stress, we'll help you refine it later.</p>
 		</div>
 		<input
 			type="text"
