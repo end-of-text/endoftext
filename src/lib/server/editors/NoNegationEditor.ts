@@ -75,7 +75,10 @@ export class NoNegationEditor extends PromptEditor {
 			prompt.prompt,
 			llm,
 			[instructionClassifierPrompt, negationClassifierPrompt],
-			(sentence) => ['not', "n't", 'no', 'never'].some((negation) => sentence.includes(negation))
+			(sentence) =>
+				[' not ', "n't ", ' no ', ' never '].some((negation) =>
+					(' ' + sentence.toLowerCase()).includes(negation)
+				)
 		);
 	}
 
