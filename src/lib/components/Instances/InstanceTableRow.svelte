@@ -5,6 +5,7 @@
 	import type { Tables } from '$lib/supabase';
 	import { tooltip } from '$lib/tooltip.svelte';
 	import { ArrowRight, Trash2 } from 'lucide-svelte';
+	import { untrack } from 'svelte';
 
 	let { instance, prompt, project, metric, selected, removeInstance, prediction } = $props<{
 		instance: Tables<'instances'>;
@@ -34,10 +35,22 @@
 		});
 	});
 
+	// Focus input when adding empty instance
 	$effect(() => {
 		if (localInstanceInput.length === 0) {
 			inputArea?.focus();
 		}
+	});
+
+	// Update label if instance label changes from outside
+	$effect(() => {
+		localInstanceLabel = instance.label;
+		untrack(() => {
+			if (labelArea && predictionArea) labelArea.style.height = predictionArea.style.height;
+			prediction?.then((pred) => {
+				metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
+			});
+		});
 	});
 </script>
 

@@ -6,7 +6,8 @@
 		deleteInstances,
 		generateInstances,
 		getPrediction,
-		toggleProjectLabels
+		toggleProjectLabels,
+		updateInstance
 	} from '$lib/api';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
@@ -66,6 +67,29 @@
 		);
 		deleteInstance(id);
 	}
+
+	async function showLabels() {
+		// set project labels to true
+		project.show_labels = true;
+		const projectRes = await toggleProjectLabels(
+			project.id,
+			prompt,
+			project.show_labels,
+			project.metric_name
+		);
+		project.metric_name = projectRes.metric_name;
+		// update instances with labels = predictions
+		instances = await Promise.all(
+			instances.map(async (instance) => {
+				const prediction = await predictions[instance.id];
+				if (prediction === null || instance.label !== null) return instance;
+				const newInstance = { ...instance, label: prediction };
+				await updateInstance(newInstance);
+				console.log(newInstance);
+				return newInstance;
+			})
+		);
+	}
 </script>
 
 {#if showDelete}
@@ -97,20 +121,7 @@
 		<div class="flex gap-4">
 			<h1>Test Cases</h1>
 			{#if !project.show_labels}
-				<Button
-					classNames="text-blue-600"
-					onclick={async () => {
-						project.show_labels = true;
-						const projectRes = await toggleProjectLabels(
-							project.id,
-							prompt,
-							project.show_labels,
-							project.metric_name
-						);
-						project.metric_name = projectRes.metric_name;
-					}}
-					title="Add label column"
-				>
+				<Button classNames="text-blue-600" onclick={showLabels} title="Add label column">
 					<Tag class="h-5 w-5 transition-all" />
 				</Button>
 			{/if}
@@ -175,7 +186,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each instances as instance, i (instance.id)}
+				{#each instances as instance, i}
 					<InstanceTableRow
 						{instance}
 						{prompt}
