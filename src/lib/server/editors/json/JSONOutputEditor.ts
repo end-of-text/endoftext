@@ -19,7 +19,7 @@ export class JSONOutputEditor extends PromptEditor {
 			return null;
 		}
 
-		const filterPrompt = await fetch('https://app.endoftext.app/api/serve/project/94IomCIj/641', {
+		const filterPrompt = await fetch('https://app.endoftext.app/api/serve/project/94IomCIj/688', {
 			headers: {
 				'x-api-key': ENDOFTEXT_API_KEY
 			}
