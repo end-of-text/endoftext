@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { regenerateAPIKey } from '$lib/api.js';
 	import Button from '$lib/components/ui/Button.svelte';
 	import { tooltip } from '$lib/tooltip.svelte.js';
 	import * as amplitude from '@amplitude/analytics-browser';
@@ -26,7 +25,10 @@
 	};
 
 	async function regenerateKey() {
-		key = await regenerateAPIKey();
+		const keyResponse = await fetch(`/api/key/regenerate`, {
+			method: 'GET'
+		});
+		key = await keyResponse.text();
 	}
 
 	function copyKey() {

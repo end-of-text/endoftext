@@ -208,13 +208,6 @@ export async function changeProjectMetric(projectId: string, metric: string | nu
 	});
 }
 
-export async function regenerateAPIKey(): Promise<string> {
-	const keyResponse = await fetch(`/api/key/regenerate`, {
-		method: 'GET'
-	});
-	return keyResponse.text();
-}
-
 export async function updateInstances(instances: Tables<'instances'>[]) {
 	await fetch(`/api/instances`, {
 		method: 'POST',
