@@ -125,8 +125,6 @@
 		}
 		return instances;
 	}
-
-	$inspect(sort);
 </script>
 
 {#if showDelete}
