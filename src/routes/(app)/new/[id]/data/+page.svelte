@@ -7,6 +7,7 @@
 
 	let { data } = $props();
 
+	let generatingInstances = $state(true);
 	let instances = $state<string[]>(data.instances || []);
 	let submitted = $state(false);
 
@@ -17,6 +18,7 @@
 		} catch (e) {
 			instances = ['Example input 1', 'Example input 2', 'Example input 3'];
 		}
+		generatingInstances = false;
 	});
 </script>
 
@@ -33,16 +35,26 @@
 	>
 		<div class="flex w-full items-center justify-between">
 			<p class="mb-2 text-gray-active">2 / 2</p>
-			<img src="/logo.svg" alt="logo" class="h-4" />
+			<a href="/">
+				<img src="/logo.svg" alt="logo" class="h-4" />
+			</a>
 		</div>
-		<h1>Example Inputs</h1>
-		<div class="mb-2 flex flex-col gap-2">
-			<p>To improve your prompt we'll need some example inputs</p>
-			<p>These are the questions or statements you want your model to respond to.</p>
+		<h1>Initial Test Cases</h1>
+		<div class="mb-2 flex max-w-xl flex-col gap-2">
+			<p>
+				Let's create some test cases for your prompt. We've generated a few examples for you, but
+				feel free to add your own.
+			</p>
+			<p>Again, don't stress, you can add or edit test cases later!</p>
 		</div>
 		<div class="flex w-full flex-col gap-2">
-			{#if data.generatedInstances && instances.length === 0}
-				<p class="mb-2 italic text-gray-active">Generating instances...</p>
+			{#if generatingInstances}
+				<div class="flex items-center gap-2">
+					<Spinner />
+					<p class="italic text-gray-active">Generating instances...</p>
+				</div>
+			{:else if instances.length === 0}
+				<p class="mb-2 italic text-gray-active">Add test cases for your prompt.</p>
 			{/if}
 			{#each instances as instance, i}
 				<div class="flex items-center gap-2">
@@ -69,15 +81,6 @@
 				}}
 			>
 				Add
-			</Button>
-			<Button
-				classNames="my-2"
-				onclick={(e) => {
-					e.preventDefault();
-					instances?.push('');
-				}}
-			>
-				Generate
 			</Button>
 		</div>
 		<div class="ml-auto flex items-center gap-2">

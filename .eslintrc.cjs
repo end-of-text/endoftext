@@ -8,6 +8,7 @@ module.exports = {
 		'prettier'
 	],
 	rules: {
+		'no-console': 'error',
 		// blocked by https://github.com/sveltejs/eslint-plugin-svelte/issues/652
 		'svelte/valid-compile': 'off'
 	},

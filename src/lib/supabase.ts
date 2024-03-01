@@ -63,6 +63,13 @@ export type Database = {
 						foreignKeyName: 'instances_project_id_fkey';
 						columns: ['project_id'];
 						isOneToOne: false;
+						referencedRelation: 'home_entries';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'instances_project_id_fkey';
+						columns: ['project_id'];
+						isOneToOne: false;
 						referencedRelation: 'projects';
 						referencedColumns: ['id'];
 					}
@@ -217,6 +224,13 @@ export type Database = {
 						foreignKeyName: 'prompts_project_id_fkey';
 						columns: ['project_id'];
 						isOneToOne: false;
+						referencedRelation: 'home_entries';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'prompts_project_id_fkey';
+						columns: ['project_id'];
+						isOneToOne: false;
 						referencedRelation: 'projects';
 						referencedColumns: ['id'];
 					}
@@ -290,6 +304,13 @@ export type Database = {
 						foreignKeyName: 'user_project_project_id_fkey';
 						columns: ['project_id'];
 						isOneToOne: false;
+						referencedRelation: 'home_entries';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'user_project_project_id_fkey';
+						columns: ['project_id'];
+						isOneToOne: false;
 						referencedRelation: 'projects';
 						referencedColumns: ['id'];
 					},
@@ -337,6 +358,33 @@ export type Database = {
 			};
 		};
 		Views: {
+			home_entries: {
+				Row: {
+					created_at: string | null;
+					id: string | null;
+					metric_name: string | null;
+					name: string | null;
+					show_labels: boolean | null;
+					updated_at: string | null;
+					user_id: string | null;
+				};
+				Relationships: [
+					{
+						foreignKeyName: 'projects_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'users';
+						referencedColumns: ['id'];
+					},
+					{
+						foreignKeyName: 'projects_user_id_fkey';
+						columns: ['user_id'];
+						isOneToOne: false;
+						referencedRelation: 'user_subscription';
+						referencedColumns: ['id'];
+					}
+				];
+			};
 			user_subscription: {
 				Row: {
 					id: string | null;

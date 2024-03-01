@@ -140,7 +140,7 @@ export async function generateInstances(
 	instruction?: string
 ): Promise<Tables<'instances'>[]> {
 	const res = await fetch(`/api/instances`, {
-		method: 'POST',
+		method: 'PUT',
 		headers: {
 			'Content-Type': 'application/json'
 		},
@@ -213,4 +213,14 @@ export async function regenerateAPIKey(): Promise<string> {
 		method: 'GET'
 	});
 	return keyResponse.text();
+}
+
+export async function updateInstances(instances: Tables<'instances'>[]) {
+	await fetch(`/api/instances`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ instances })
+	});
 }

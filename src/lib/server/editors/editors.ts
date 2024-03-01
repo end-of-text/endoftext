@@ -7,9 +7,9 @@ import { PersonaEditor } from './PersonaEditor';
 import { SeparateInstructionEditor } from './SeparateInstructionEditor';
 import { ShorterEditor } from './ShorterEditor';
 import type { PromptEditor } from './editor';
-import { ConvertToJSONEditor } from './json/ConvertToJsonEditor';
 import { JSONDescriptionEditor } from './json/JSONDescriptionEditor';
 import { JSONInstructionEditor } from './json/JSONInstructionEditor';
+import { JSONOutputEditor } from './json/JSONOutputEditor';
 
 export function getEditors(hypertuneRoot?: RootNode): PromptEditor[] {
 	const editors = [
@@ -40,7 +40,7 @@ export function getEditors(hypertuneRoot?: RootNode): PromptEditor[] {
 			enabled: hypertuneRoot?.compressionEditor().get(false) ?? false
 		},
 		{
-			editor: new ConvertToJSONEditor(),
+			editor: new JSONOutputEditor(),
 			enabled: hypertuneRoot?.convertToJSONEditor().get(false) ?? false
 		},
 		{ editor: new PersonaEditor(), enabled: hypertuneRoot?.personaEditor().get(false) ?? false }
