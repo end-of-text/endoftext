@@ -12,7 +12,8 @@
 
 	let loading = $state(false);
 	let keyCopied = $state(false);
-	let key = $state<string | undefined>(data.user.key); // API keys implemented following https://github.com/orgs/supabase/discussions/4419
+	// API keys implemented following https://github.com/orgs/supabase/discussions/4419
+	let key = $state<string | undefined>(data.user.key);
 
 	const handleSignOut: SubmitFunction = () => {
 		loading = true;
@@ -44,9 +45,14 @@
 				{data.user.email}
 			</span>
 		</p>
+	</div>
+	<div>
+		<h2 class="mb-2">API Key</h2>
 		<div class="flex items-center gap-2">
-			<span>API key</span>
 			{#if key}
+				<p class="w-96 rounded bg-gray-100 px-3 py-1">
+					{key}
+				</p>
 				<button onclick={copyKey} class="text-gray-active">
 					{#if keyCopied}
 						<span class="flex items-center gap-2 text-emerald-600" in:fade>
@@ -58,18 +64,20 @@
 						</span>
 					{/if}
 				</button>
+				<button
+					onclick={regenerateKey}
+					class="text-gray-active"
+					use:tooltip={{
+						text: 'You can only have one API key at a time. Make sure to use your new one after refreshing.'
+					}}
+				>
+					<RefreshCw
+						class="h-5 w-5 transition-all duration-500 hover:rotate-180 hover:text-gray-hovered"
+					/>
+				</button>
+			{:else}
+				<Button onclick={regenerateKey}>Generate API Key</Button>
 			{/if}
-			<button
-				onclick={regenerateKey}
-				class="text-gray-active"
-				use:tooltip={{
-					text: 'You can only have one API key at a time. Make sure to use your new one after refreshing.'
-				}}
-			>
-				<RefreshCw
-					class="h-5 w-5 transition-all duration-500 hover:rotate-180 hover:text-gray-hovered"
-				/>
-			</button>
 		</div>
 	</div>
 	<div class="flex flex-col gap-2">
