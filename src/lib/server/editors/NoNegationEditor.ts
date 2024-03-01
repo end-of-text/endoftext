@@ -25,7 +25,7 @@ export class NoNegationEditor extends PromptEditor {
 			}
 		);
 		const negationClassifierPrompt = await fetch(
-			'https://app.endoftext.app/api/serve/project/MSl2Wa7x/652',
+			'https://app.endoftext.app/api/serve/project/MSl2Wa7x/696',
 			{
 				headers: {
 					'x-api-key': ENDOFTEXT_API_KEY
