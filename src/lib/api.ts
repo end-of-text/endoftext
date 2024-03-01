@@ -207,3 +207,13 @@ export async function changeProjectMetric(projectId: string, metric: string | nu
 		body: JSON.stringify({ metric })
 	});
 }
+
+export async function updateInstances(instances: Tables<'instances'>[]) {
+	await fetch(`/api/instances/labels/predictions`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ instances })
+	});
+}

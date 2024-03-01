@@ -7,7 +7,7 @@
 		generateInstances,
 		getPrediction,
 		toggleProjectLabels,
-		updateInstance
+		updateInstances
 	} from '$lib/api';
 	import Confirm from '$lib/components/popups/Confirm.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
@@ -23,7 +23,7 @@
 		instances: Tables<'instances'>[];
 		prompt: Tables<'prompts'>;
 		project: Tables<'projects'>;
-		predictions: { [key: string]: Promise<string | null> };
+		predictions: Record<string, Promise<string | null>>;
 	}>();
 
 	let selectedInstances = $state<boolean[]>([]);
@@ -84,11 +84,10 @@
 				const prediction = await predictions[instance.id];
 				if (prediction === null || instance.label !== null) return instance;
 				const newInstance = { ...instance, label: prediction };
-				await updateInstance(newInstance);
-				console.log(newInstance);
 				return newInstance;
 			})
 		);
+		updateInstances(instances);
 	}
 </script>
 
