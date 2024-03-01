@@ -1,3 +1,4 @@
+import { ENDOFTEXT_API_KEY } from '$env/static/private';
 import { PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
@@ -14,20 +15,16 @@ export class SeparateInstructionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		const systemPrompt = `You are an AI prompt writing critiquer. You decide if a prompt could be split into a task instruction and other information.
-
-### Guidelines
-1. Check whether it makes sense to separate the task instruction from the rest of the prompt. For example, if there is only a task instruction and no other information, return true.
-2. If the task instruction is already clearly separated, return false.
-3. If it makes sense to separate the task instruction from the rest of the prompt and the instruction is not already sparated, return true.
-
-### Output
-Return the output in JSON with the key "output" that is either true or false.`;
+		const systemPrompt = await fetch('https://app.endoftext.app/api/serve/project/gaakzVMP/607', {
+			headers: {
+				'x-api-key': ENDOFTEXT_API_KEY
+			}
+		});
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: systemPrompt
+					content: await systemPrompt.text()
 				},
 				{
 					role: 'user',
@@ -54,11 +51,15 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
+		const systemPrompt = await fetch('https://app.endoftext.app/api/serve/project/q8vKqE5b/669', {
+			headers: {
+				'x-api-key': ENDOFTEXT_API_KEY
+			}
+		});
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content:
-					'You are an AI assistant that rewrites prompts given the specified criteria. Only return the new prompt.'
+				content: await systemPrompt.text()
 			},
 			{
 				role: 'user',

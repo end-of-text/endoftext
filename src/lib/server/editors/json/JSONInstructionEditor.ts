@@ -1,3 +1,4 @@
+import { ENDOFTEXT_API_KEY } from '$env/static/private';
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
@@ -30,14 +31,15 @@ export class JSONInstructionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
+		const systemPrompt = await fetch('https://app.endoftext.app/api/serve/project/ln4JpF48/671', {
+			headers: {
+				'x-api-key': ENDOFTEXT_API_KEY
+			}
+		});
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: `You are an AI assistant that rewrites prompts. Your task it to change a user-specified prompt to a large language model so that the model knows the output should be in JSON format. For example, by appending "Answer in JSON format." to the prompt.
-
-				You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the propmt should not be changed.
-
-				You only return the new prompt in plain text.`
+				content: await systemPrompt.text()
 			},
 			{
 				role: 'user',

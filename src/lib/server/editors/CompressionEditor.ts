@@ -1,22 +1,9 @@
+import { ENDOFTEXT_API_KEY } from '$env/static/private';
 import { PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { filterSentences, rewriteSentences } from './util';
-
-const canBeSimplifiedPrompt = `
-You are a writing assistant. You decide whether a sentence is too complex and can be simplified.
-The sentence is too complex if it can be simplified without losing meaning.
-The simplified sentence MUST be shorter (have less words) than the original sentence.
-If the sentence is in its simplest form, return false.
-
-### Output
-You return JSON with the key "output" set to true if the sentence can be simplified, and false otherwise.
-`;
-
-const simplifyPrompt = `
-You are an AI writing assistant that rewrites sentences. Rewrite the sentence to simplify it.
-A sentence is simplified if it is shorter (has less words) than the original sentence and does not lose meaning.`;
 
 export class CompressionEditor extends PromptEditor {
 	constructor() {
@@ -29,10 +16,18 @@ export class CompressionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
+		const canBeSimplifiedPrompt = await fetch(
+			'https://app.endoftext.app/api/serve/project/fT58mFTo/635',
+			{
+				headers: {
+					'x-api-key': ENDOFTEXT_API_KEY
+				}
+			}
+		);
 		return await filterSentences(
 			prompt.prompt,
 			llm,
-			[canBeSimplifiedPrompt],
+			[await canBeSimplifiedPrompt.text()],
 			(sentence) => sentence.split(' ').length > 15
 		);
 	}
@@ -42,9 +37,14 @@ export class CompressionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
+		const simplifyPrompt = await fetch('https://app.endoftext.app/api/serve/project/k1-_anGH/623', {
+			headers: {
+				'x-api-key': ENDOFTEXT_API_KEY
+			}
+		});
 		return {
 			...prompt,
-			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, simplifyPrompt)
+			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, await simplifyPrompt.text())
 		};
 	}
 }
