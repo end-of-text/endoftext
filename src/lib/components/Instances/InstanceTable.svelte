@@ -13,7 +13,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { PlusCircle, Tag, Trash2 } from 'lucide-svelte';
+	import { ChevronDown, ChevronUp, PlusCircle, Tag, Trash2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PaywallPopup from '../popups/PaywallPopup.svelte';
 	import GenerateInstances from './GenerateInstances.svelte';
@@ -31,6 +31,7 @@
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 	let metrics = $state<Record<string, number | undefined>>({});
+	let sort = $state<{ column: string; ascending: boolean } | undefined>(undefined);
 
 	let metricValues = $derived(
 		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
@@ -89,6 +90,43 @@
 		);
 		updateInstances(instances);
 	}
+
+	function updateSort(headerName: string) {
+		if (sort?.column === headerName) {
+			if (!sort.ascending) {
+				sort = undefined;
+			} else {
+				sort = { ...sort, ascending: false };
+			}
+		} else {
+			sort = { column: headerName, ascending: true };
+		}
+	}
+
+	function sortedInstances(
+		instances: Tables<'instances'>[],
+		sort: { column: string; ascending: boolean } | undefined
+	) {
+		if (sort === undefined) return instances;
+		if (sort.column === 'metric') {
+			const extreme = sort.ascending ? -Infinity : Infinity;
+
+			const sorted = instances.toSorted((a, b) => {
+				const metricA = metrics[a.id];
+				const safeMetricA = metricA === undefined ? extreme : metricA;
+				const metricB = metrics[b.id];
+				const safeMetricB = metricB === undefined ? extreme : metricB;
+
+				if (safeMetricA === safeMetricB) return 0;
+				if (sort.ascending) return safeMetricA > safeMetricB ? 1 : -1;
+				return safeMetricA < safeMetricB ? 1 : -1;
+			});
+			return sorted;
+		}
+		return instances;
+	}
+
+	$inspect(sort);
 </script>
 
 {#if showDelete}
@@ -168,10 +206,22 @@
 						<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
 						{#if project.metric_name !== null}
-							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
+							<th
+								class="flex w-32 cursor-pointer items-center whitespace-nowrap px-2 py-2"
+								onclick={() => updateSort('metric')}
+							>
 								<span>{project.metric_name}</span>
 								{#if avgMetric !== undefined}
-									<span class="text-sm font-normal text-gray-active">({avgMetric.toFixed(2)})</span>
+									<span class="ml-2 text-sm font-normal text-gray-active"
+										>({avgMetric.toFixed(2)})</span
+									>
+								{/if}
+								{#if sort}
+									{#if sort.column === 'metric' && sort.ascending}
+										<ChevronUp class="h-4 w-4 shrink-0" />
+									{:else if sort.column === 'metric' && !sort.ascending}
+										<ChevronDown class="h-4 w-4 shrink-0" />
+									{/if}
 								{/if}
 							</th>
 						{/if}
@@ -185,7 +235,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each instances as instance, i (instance.id)}
+				{#each sortedInstances(instances, sort) as instance, i (instance.id)}
 					<InstanceTableRow
 						{instance}
 						{prompt}
