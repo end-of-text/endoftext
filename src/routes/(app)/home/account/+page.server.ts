@@ -1,19 +1,26 @@
 import { STRIPE_API_KEY } from '$env/static/private';
-import { fail, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import Stripe from 'stripe';
 
-export const load = async ({ parent, locals: { getSession } }) => {
+export const load = async ({ parent, locals: { supabase, getSession } }) => {
 	const session = await getSession();
 	if (!session) {
 		redirect(303, '/');
 	}
 
 	const parentData = await parent();
+
+	const keyRes = await supabase.from('api_keys').select('key');
+	if (keyRes.error) {
+		error(500, keyRes.error.message);
+	}
+
 	return {
 		user: {
 			email: session.user.email,
 			status: parentData.user.status,
-			stripeId: parentData.user.stripeId
+			stripeId: parentData.user.stripeId,
+			key: keyRes.data.length > 0 ? keyRes.data[0].key : undefined
 		}
 	};
 };
