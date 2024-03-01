@@ -31,6 +31,7 @@
 	let showPaywall = $state(false);
 	let showDelete = $state(false);
 	let metrics = $state<Record<string, number | undefined>>({});
+	let sort = $state<{ column: string; ascending: boolean } | undefined>(undefined);
 
 	let metricValues = $derived(
 		Object.values(metrics).filter((metric) => metric !== undefined) as number[]
@@ -88,6 +89,41 @@
 			})
 		);
 		updateInstances(instances);
+	}
+
+	function updateSort(headerName: string) {
+		if (sort?.column === headerName) {
+			if (!sort.ascending) {
+				sort = undefined;
+			} else {
+				sort = { ...sort, ascending: false };
+			}
+		} else {
+			sort = { column: headerName, ascending: true };
+		}
+	}
+
+	function sortedInstances(
+		instances: Tables<'instances'>[],
+		sort: { column: string; ascending: boolean } | undefined
+	) {
+		if (sort === undefined) return instances;
+		if (sort.column === 'metric') {
+			const extreme = sort.ascending ? -Infinity : Infinity;
+
+			const sorted = instances.toSorted((a, b) => {
+				const metricA = metrics[a.id];
+				const safeMetricA = metricA === undefined ? extreme : metricA;
+				const metricB = metrics[b.id];
+				const safeMetricB = metricB === undefined ? extreme : metricB;
+
+				if (safeMetricA === safeMetricB) return 0;
+				if (sort.ascending) return safeMetricA > safeMetricB ? 1 : -1;
+				return safeMetricA < safeMetricB ? 1 : -1;
+			});
+			return sorted;
+		}
+		return instances;
 	}
 </script>
 
@@ -168,7 +204,10 @@
 						<th class="w-1/3 px-2 py-2 font-semibold">Prediction</th>
 						<th class="w-1/3 px-2 py-2 font-semibold">Label</th>
 						{#if project.metric_name !== null}
-							<th class="flex w-32 items-center gap-2 whitespace-nowrap px-2 py-2">
+							<th
+								class="flex w-32 cursor-pointer items-center gap-2 whitespace-nowrap px-2 py-2"
+								onclick={() => updateSort('metric')}
+							>
 								<span>{project.metric_name}</span>
 								{#if avgMetric !== undefined}
 									<span class="text-sm font-normal text-gray-active">({avgMetric.toFixed(2)})</span>
@@ -185,7 +224,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each instances as instance, i (instance.id)}
+				{#each sortedInstances(instances, sort) as instance, i (instance.id)}
 					<InstanceTableRow
 						{instance}
 						{prompt}
