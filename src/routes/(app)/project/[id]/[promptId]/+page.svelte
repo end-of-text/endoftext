@@ -11,10 +11,12 @@
 	let predictions = $state(data.predictions);
 	let suggestions = $state(data.suggestions);
 	let prompt = $state(data.prompt);
+	let editedPrompt = $state({ ...data.prompt });
 	let childPrompt = $state(data.childPrompt);
 
 	afterNavigate(() => {
 		prompt = data.prompt;
+		editedPrompt = { ...data.prompt };
 		childPrompt = data.childPrompt;
 		instances = data.instances;
 		predictions = data.predictions;
@@ -28,6 +30,7 @@
 	<div class="flex min-h-0 grow">
 		<PromptBar
 			{prompt}
+			{editedPrompt}
 			{childPrompt}
 			{suggestions}
 			userStatus={data.user.status}
