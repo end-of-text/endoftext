@@ -20,7 +20,7 @@ export class JSONDescriptionEditor extends PromptEditor {
 			return null;
 		}
 
-		const filterPrompt = await fetch('https://app.endoftext.app/api/serve/project/vVtORHTd/675', {
+		const filterPrompt = await fetch('https://app.endoftext.app/api/serve/project/vVtORHTd/685', {
 			headers: {
 				'x-api-key': ENDOFTEXT_API_KEY
 			}
