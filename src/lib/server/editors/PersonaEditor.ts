@@ -20,7 +20,7 @@ export class PersonaEditor extends PromptEditor {
 			return null;
 		}
 
-		const systemPrompt = await fetch('https://app.endoftext.app/api/serve/project/UOqod93D/609', {
+		const systemPrompt = await fetch('https://app.endoftext.app/api/serve/project/UOqod93D/699', {
 			headers: {
 				'x-api-key': ENDOFTEXT_API_KEY
 			}
