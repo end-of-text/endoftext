@@ -185,7 +185,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each instances as instance, i}
+				{#each instances as instance, i (instance.id)}
 					<InstanceTableRow
 						{instance}
 						{prompt}

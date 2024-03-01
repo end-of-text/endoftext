@@ -24,7 +24,7 @@ export async function DELETE({ locals: { getSession, supabase }, request }) {
 	return new Response(null, { status: 200 });
 }
 
-export async function POST({ locals: { getSession, supabase }, request }) {
+export async function PUT({ locals: { getSession, supabase }, request }) {
 	const session = await getSession();
 	const requestData = await request.json();
 	const prompt = requestData.prompt as Tables<'prompts'> | undefined;
@@ -56,4 +56,17 @@ export async function POST({ locals: { getSession, supabase }, request }) {
 	}
 	trackEvent('Instances Generated', { user_id: session?.user.id ?? '' }, { number: count });
 	return json({ instances: res.data });
+}
+
+export async function POST({ locals: { supabase }, request }) {
+	const requestData = await request.json();
+	const instances = requestData.instances as Tables<'instances'>[] | undefined;
+	if (!instances) {
+		error(500, 'Invalid data');
+	}
+	const res = await supabase.from('instances').upsert(instances);
+	if (res.error) {
+		error(500, res.error.message);
+	}
+	return new Response(null, { status: 200 });
 }
