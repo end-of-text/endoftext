@@ -38,9 +38,9 @@ export function getPredictions(
 	existingPredictions: Tables<'predictions'>[],
 	instances: Tables<'instances'>[],
 	prompt: Tables<'prompts'>
-): { [key: string]: Promise<string | null> } {
+): Record<string, Promise<string | null>> {
 	const openai = new OpenAILLM(OPENAI_API_KEY || '');
-	const returnPreds: { [key: string]: Promise<string | null> } = {};
+	const returnPreds: Record<string, Promise<string | null>> = {};
 	instances.forEach((instance) => {
 		const existingReturn = existingPredictions.find((pred) => pred.instance_id === instance.id);
 		if (existingReturn) {
