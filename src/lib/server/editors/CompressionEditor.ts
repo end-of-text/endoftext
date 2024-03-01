@@ -37,7 +37,7 @@ export class CompressionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const simplifyPrompt = await fetch('https://app.endoftext.app/api/serve/project/k1-_anGH/623', {
+		const simplifyPrompt = await fetch('https://app.endoftext.app/api/serve/project/k1-_anGH/697', {
 			headers: {
 				'x-api-key': ENDOFTEXT_API_KEY
 			}
