@@ -15,7 +15,7 @@
 		try {
 			const parsedJSON = JSON.parse(res || '');
 			// In case the inputs are JSON, flatten them.
-			instances = parsedJSON.instances.map((i: any) => {
+			instances = parsedJSON.instances.map((i: unknown) => {
 				const instanceStr = JSON.stringify(i);
 				return instanceStr.startsWith('"') && instanceStr.endsWith('"')
 					? instanceStr.slice(1, -1)
