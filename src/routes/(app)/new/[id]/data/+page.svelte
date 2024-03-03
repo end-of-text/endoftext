@@ -14,7 +14,13 @@
 	data.generatedInstances?.then((res) => {
 		try {
 			const parsedJSON = JSON.parse(res || '');
-			instances = parsedJSON.instances;
+			// In case the inputs are JSON, flatten them.
+			instances = parsedJSON.instances.map((i: any) => {
+				const instanceStr = JSON.stringify(i);
+				return instanceStr.startsWith('"') && instanceStr.endsWith('"')
+					? instanceStr.slice(1, -1)
+					: instanceStr;
+			});
 		} catch (e) {
 			instances = ['Example input 1', 'Example input 2', 'Example input 3'];
 		}
