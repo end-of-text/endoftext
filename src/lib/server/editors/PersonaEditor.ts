@@ -1,7 +1,11 @@
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from './editor';
+
+const filterPrompt = await fetchPrompt('UOqod93D', '699');
+const applyPrompt = await fetchPrompt('11FacQYr', '612');
 
 export class PersonaEditor extends PromptEditor {
 	constructor() {
@@ -18,22 +22,11 @@ export class PersonaEditor extends PromptEditor {
 		if (prompt.responseFormat === 'json') {
 			return null;
 		}
-
-		const systemPrompt = `### Role
-You are an AI prompting expert. For a prompt that the user provides you, you evaluate whether that prompt could be improved by adding a persona.
-		
-### Instruction
-Does the prompt ask the model to act as a specific persona? If so, return true.
-A persona description could be something like "You are a friendly AI assistant that helps people with their homework.", or "You are a grumpy old person that hates technology.", or "act as a python interpreter".
-		
-### Output Format
-Return the output in JSON with the key "output" that is either true or false.`;
-
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: systemPrompt
+					content: filterPrompt
 				},
 				{
 					role: 'user',
@@ -66,18 +59,10 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		}[],
 		input: string | unknown
 	): Promise<Tables<'prompts'>> {
-		const systemPrompt = `You are an AI assistant that rewrites prompts to include a description of the persona of the AI model. Users provide a prompt and a persona description. Your task is to add a description of the persona to the prompt.
-
-### Instructions
-* You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the propmt should not be changed. 
-* Make sure the desired persona is added somewhere at the start of the prompt.
-* Only return the new prompt in plain text without any other information or formatting.
-
-A persona description could be something like "You are a friendly AI assistant that helps people with their homework.", or "You are a grumpy old person that hates technology.".`;
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: systemPrompt
+				content: applyPrompt
 			},
 			{
 				role: 'user',

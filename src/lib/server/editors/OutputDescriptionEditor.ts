@@ -1,7 +1,11 @@
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from './editor';
+
+const filterPrompt = await fetchPrompt('sxG3k46e', '614');
+const applyPrompt = await fetchPrompt('sU9ifhBZ', '615');
 
 export class OutputDescriptionEditor extends PromptEditor {
 	constructor() {
@@ -18,19 +22,11 @@ export class OutputDescriptionEditor extends PromptEditor {
 		if (prompt.responseFormat !== 'text') {
 			return null;
 		}
-		const systemPrompt = `### Task
-You are an AI prompt writing critiquer. Your task is to determine if a prompt clearly specifies the desired output information. 
-
-### Instructions
-Check whether the prompt includes a detailed description of the desired information. This can be an example or a description of the desired output but it needs to clearly outline the information contained in the answer. If it does, return true.
-   
-### Output
-Return the output in JSON with the key "output" that is either true or false.`;
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: systemPrompt
+					content: filterPrompt
 				},
 				{
 					role: 'user',
@@ -64,16 +60,10 @@ Return the output in JSON with the key "output" that is either true or false.`;
 		}[],
 		input: string | unknown
 	): Promise<Tables<'prompts'>> {
-		const systemPrompt = `You are an AI assistant that rewrites prompts to include a description of the desired output. Users provide a prompt and a description of the desired output. Your task is to append the desired output description to the prompt.
-
-### Instructions
-* You do not modify the prompt in any other way. Specifically the general instruction AND formatting of the propmt should not be changed. 
-* Make sure the description is added somewhere towards the end of the prompt.
-* Only return the new prompt in plain text without any other information or formatting.`;
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: systemPrompt
+				content: applyPrompt
 			},
 			{
 				role: 'user',

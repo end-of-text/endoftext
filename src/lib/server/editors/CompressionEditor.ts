@@ -1,22 +1,12 @@
 import { PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { filterSentences, rewriteSentences } from './util';
 
-const canBeSimplifiedPrompt = `
-You are a writing assistant. You decide whether a sentence is too complex and can be simplified.
-The sentence is too complex if it can be simplified without losing meaning.
-The simplified sentence MUST be shorter (have less words) than the original sentence.
-If the sentence is in its simplest form, return false.
-
-### Output
-You return JSON with the key "output" set to true if the sentence can be simplified, and false otherwise.
-`;
-
-const simplifyPrompt = `
-You are an AI writing assistant that rewrites sentences. Rewrite the sentence to simplify it.
-A sentence is simplified if it is shorter (has less words) than the original sentence and does not lose meaning.`;
+const canBeSimplifiedPrompt = await fetchPrompt('fT58mFTo', '635');
+const simplifyPrompt = await fetchPrompt('k1-_anGH', '697');
 
 export class CompressionEditor extends PromptEditor {
 	constructor() {
