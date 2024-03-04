@@ -14,7 +14,7 @@ export async function generateDataEditors(
 		[
 			{
 				role: 'system',
-				content: await systemPrompt.text()
+				content: systemPrompt
 			},
 			{
 				role: 'user',

@@ -22,7 +22,7 @@ export class SeparateInstructionEditor extends PromptEditor {
 			[
 				{
 					role: 'system',
-					content: await filterPrompt.text()
+					content: filterPrompt
 				},
 				{
 					role: 'user',
@@ -52,7 +52,7 @@ export class SeparateInstructionEditor extends PromptEditor {
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: await applyPrompt.text()
+				content: applyPrompt
 			},
 			{
 				role: 'user',

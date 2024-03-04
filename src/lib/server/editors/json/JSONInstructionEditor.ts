@@ -36,7 +36,7 @@ export class JSONInstructionEditor extends PromptEditor {
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: await systemPrompt.text()
+				content: systemPrompt
 			},
 			{
 				role: 'user',

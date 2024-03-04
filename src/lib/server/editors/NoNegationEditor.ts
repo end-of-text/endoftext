@@ -23,7 +23,7 @@ export class NoNegationEditor extends PromptEditor {
 		return await filterSentences(
 			prompt.prompt,
 			llm,
-			[await instructionClassifierPrompt.text(), await negationClassifierPrompt.text()],
+			[instructionClassifierPrompt, negationClassifierPrompt],
 			(sentence) =>
 				[' not ', "n't ", ' no ', ' never '].some((negation) =>
 					(' ' + sentence.toLowerCase()).includes(negation)
@@ -38,12 +38,7 @@ export class NoNegationEditor extends PromptEditor {
 	): Promise<Tables<'prompts'>> {
 		return {
 			...prompt,
-			prompt: await rewriteSentences(
-				prompt.prompt,
-				targetSpans,
-				llm,
-				await removeNegationPrompt.text()
-			)
+			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, removeNegationPrompt)
 		};
 	}
 }

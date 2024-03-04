@@ -26,7 +26,7 @@ export class JSONDescriptionEditor extends PromptEditor {
 			[
 				{
 					role: 'system',
-					content: await filterPrompt.text()
+					content: filterPrompt
 				},
 				{
 					role: 'user',
@@ -62,7 +62,7 @@ export class JSONDescriptionEditor extends PromptEditor {
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: await rewritePrompt.text()
+				content: rewritePrompt
 			},
 			{
 				role: 'user',

@@ -15,7 +15,7 @@ export async function predictMetric(prompt: Tables<'prompts'> | undefined): Prom
 	const openai = new OpenAILLM(OPENAI_API_KEY || '');
 	const predictedMetric = await openai.generate(
 		[
-			{ role: 'system', content: await systemPrompt.text() },
+			{ role: 'system', content: systemPrompt },
 			{ role: 'user', content: prompt.prompt }
 		],
 		{ json: true }

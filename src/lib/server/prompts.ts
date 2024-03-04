@@ -1,7 +1,7 @@
 import { ENDOFTEXT_API_KEY } from '$env/static/private';
 
 export async function fetchPrompt(projectId: string, promptId: string) {
-	return await fetch(
+	const promptRes = await fetch(
 		`https://app.endoftext.app/api/serve/project/${projectId}/prompt/${promptId}`,
 		{
 			headers: {
@@ -9,4 +9,5 @@ export async function fetchPrompt(projectId: string, promptId: string) {
 			}
 		}
 	);
+	return await promptRes.text();
 }

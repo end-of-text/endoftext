@@ -22,7 +22,7 @@ export class CompressionEditor extends PromptEditor {
 		return await filterSentences(
 			prompt.prompt,
 			llm,
-			[await canBeSimplifiedPrompt.text()],
+			[canBeSimplifiedPrompt],
 			(sentence) => sentence.split(' ').length > 15
 		);
 	}
@@ -34,7 +34,7 @@ export class CompressionEditor extends PromptEditor {
 	): Promise<Tables<'prompts'>> {
 		return {
 			...prompt,
-			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, await simplifyPrompt.text())
+			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, simplifyPrompt)
 		};
 	}
 }
