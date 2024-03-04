@@ -1,5 +1,6 @@
-import { ENDOFTEXT_API_KEY, OPENAI_API_KEY } from '$env/static/private';
+import { OPENAI_API_KEY } from '$env/static/private';
 import type { Tables } from '$lib/supabase';
+import { fetchPrompt } from '../editors/editors';
 import { OpenAILLM } from '../llms/openai';
 
 export async function predictMetric(prompt: Tables<'prompts'> | undefined): Promise<string> {
@@ -10,11 +11,7 @@ export async function predictMetric(prompt: Tables<'prompts'> | undefined): Prom
 	}
 
 	const openai = new OpenAILLM(OPENAI_API_KEY || '');
-	const systemPrompt = await fetch('https://app.endoftext.app/api/serve/project/TEAku3-I/634', {
-		headers: {
-			'x-api-key': ENDOFTEXT_API_KEY
-		}
-	});
+	const systemPrompt = await fetchPrompt('TEAku3-I', '634');
 	const predictedMetric = await openai.generate(
 		[
 			{ role: 'system', content: await systemPrompt.text() },

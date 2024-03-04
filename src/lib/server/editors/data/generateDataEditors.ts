@@ -1,6 +1,6 @@
-import { ENDOFTEXT_API_KEY } from '$env/static/private';
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
+import { fetchPrompt } from '../editors';
 import { DataSuggestionEditor } from './DataSuggestionEditor';
 
 export async function generateDataEditors(
@@ -8,11 +8,7 @@ export async function generateDataEditors(
 	instances: string[],
 	llm: LLM
 ): Promise<DataSuggestionEditor[]> {
-	const systemPrompt = await fetch('https://app.endoftext.app/api/serve/project/IJlkTz-r/639', {
-		headers: {
-			'x-api-key': ENDOFTEXT_API_KEY
-		}
-	});
+	const systemPrompt = await fetchPrompt('IJlkTz-r', '639');
 	const res = await llm.generate([
 		{
 			role: 'system',

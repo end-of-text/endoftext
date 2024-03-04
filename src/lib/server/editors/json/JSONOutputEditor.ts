@@ -1,8 +1,8 @@
-import { ENDOFTEXT_API_KEY } from '$env/static/private';
 import type { LLM } from '$lib/server/llms/llm';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { PromptEditor } from '../editor';
+import { fetchPrompt } from '../editors';
 
 export class JSONOutputEditor extends PromptEditor {
 	constructor() {
@@ -19,11 +19,7 @@ export class JSONOutputEditor extends PromptEditor {
 			return null;
 		}
 
-		const filterPrompt = await fetch('https://app.endoftext.app/api/serve/project/94IomCIj/688', {
-			headers: {
-				'x-api-key': ENDOFTEXT_API_KEY
-			}
-		});
+		const filterPrompt = await fetchPrompt('94IomCIj', '688');
 		const res = await llm.generate(
 			[
 				{
@@ -54,11 +50,7 @@ export class JSONOutputEditor extends PromptEditor {
 		target_spans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const rewritePrompt = await fetch('https://app.endoftext.app/api/serve/project/w-l_rMSk/640', {
-			headers: {
-				'x-api-key': ENDOFTEXT_API_KEY
-			}
-		});
+		const rewritePrompt = await fetchPrompt('w-l_rMSk', '640');
 		const res = await llm.generate([
 			{
 				role: 'system',

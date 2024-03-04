@@ -1,6 +1,6 @@
-import { ENDOFTEXT_API_KEY } from '$env/static/private';
 import { PromptEditor } from '$lib/server/editors/editor';
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { filterSentences, rewriteSentences } from './util';
@@ -16,14 +16,7 @@ export class CompressionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		const canBeSimplifiedPrompt = await fetch(
-			'https://app.endoftext.app/api/serve/project/fT58mFTo/635',
-			{
-				headers: {
-					'x-api-key': ENDOFTEXT_API_KEY
-				}
-			}
-		);
+		const canBeSimplifiedPrompt = await fetchPrompt('fT58mFTo', '635');
 		return await filterSentences(
 			prompt.prompt,
 			llm,
@@ -37,11 +30,7 @@ export class CompressionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const simplifyPrompt = await fetch('https://app.endoftext.app/api/serve/project/k1-_anGH/697', {
-			headers: {
-				'x-api-key': ENDOFTEXT_API_KEY
-			}
-		});
+		const simplifyPrompt = await fetchPrompt('k1-_anGH', '697');
 		return {
 			...prompt,
 			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, await simplifyPrompt.text())
