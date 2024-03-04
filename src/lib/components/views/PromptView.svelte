@@ -56,6 +56,7 @@
 		<PromptEditor
 			{prompt}
 			{hoveredSuggestion}
+			{suggestions}
 			promptMaximized={true}
 			setPrompt={() => {
 				setPrompt();

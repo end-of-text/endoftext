@@ -13,6 +13,7 @@
 		prompt,
 		editPrompt,
 		dismissSuggestion,
+		selectedSpan,
 		applied = false,
 		disabled = false
 	} = $props<{
@@ -20,6 +21,7 @@
 		prompt: Tables<'prompts'>;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		dismissSuggestion: (suggestion: Tables<'suggestions'>) => void;
+		selectedSpan: { start: number; end: number } | undefined;
 		applied?: boolean;
 		disabled?: boolean;
 	}>();
@@ -45,7 +47,21 @@
 			dataGenerationOptions.show = true;
 			dismissSuggestion(suggestion);
 		} else {
-			const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
+			// Get only the spans that are within the selected span
+			const targetSpans =
+				suggestion.target_spans && selectedSpan
+					? suggestion.target_spans.filter(
+							(s) => s[0] >= selectedSpan!.start && s[1] <= selectedSpan!.end
+						)
+					: suggestion.target_spans;
+			const changedPrompt = await acceptSuggestion(
+				{
+					...suggestion,
+					target_spans: targetSpans
+				},
+				prompt,
+				userInput
+			);
 			editPrompt(changedPrompt, suggestion.id);
 		}
 		applyingSuggestion = false;

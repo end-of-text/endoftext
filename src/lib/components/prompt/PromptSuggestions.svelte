@@ -3,6 +3,7 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { tooltip } from '$lib/tooltip.svelte';
+	import { filterSuggestions } from '$lib/util';
 	import { RefreshCw } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PromptSuggestion from './PromptSuggestion.svelte';
@@ -45,19 +46,6 @@
 			})
 		});
 	}
-
-	function filterSuggestions(
-		suggestions: Tables<'suggestions'>[] | undefined,
-		selectedSpan: { start: number; end: number } | undefined
-	): Tables<'suggestions'>[] | undefined {
-		if (suggestions === undefined) return undefined;
-		if (selectedSpan) {
-			return suggestions.filter((s) =>
-				s.target_spans?.some((s) => s[0] >= selectedSpan.start && s[1] <= selectedSpan.end)
-			);
-		}
-		return suggestions;
-	}
 </script>
 
 <div
@@ -93,7 +81,14 @@
 			{:else if suggestionApplied > -1}
 				{@const suggestion = filteredSuggestions.find((s) => s.id === suggestionApplied)}
 				{#if suggestion !== undefined}
-					<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} applied />
+					<PromptSuggestion
+						{selectedSpan}
+						{prompt}
+						{suggestion}
+						{dismissSuggestion}
+						{editPrompt}
+						applied
+					/>
 				{/if}
 				{#each filteredSuggestions.filter((s) => s.id !== suggestionApplied) as suggestion (suggestion.id)}
 					<div
@@ -101,7 +96,14 @@
 							text: 'To apply another suggestion, either save or revert the current changes.'
 						}}
 					>
-						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
+						<PromptSuggestion
+							{selectedSpan}
+							{prompt}
+							{suggestion}
+							{dismissSuggestion}
+							{editPrompt}
+							disabled
+						/>
 					</div>
 				{/each}
 			{:else if promptWasEdited}
@@ -111,7 +113,14 @@
 							text: 'To apply a suggestion, either save or revert the current changes.'
 						}}
 					>
-						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
+						<PromptSuggestion
+							{selectedSpan}
+							{prompt}
+							{suggestion}
+							{dismissSuggestion}
+							{editPrompt}
+							disabled
+						/>
 					</div>
 				{/each}
 			{:else}
@@ -125,7 +134,13 @@
 						tabindex="0"
 						class="flex"
 					>
-						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} />
+						<PromptSuggestion
+							{selectedSpan}
+							{prompt}
+							{suggestion}
+							{dismissSuggestion}
+							{editPrompt}
+						/>
 					</div>
 				{/each}
 			{/if}

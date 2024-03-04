@@ -98,6 +98,7 @@ export async function acceptSuggestion(
 	prompt: Tables<'prompts'>,
 	userInput: string | undefined
 ): Promise<Tables<'prompts'>> {
+	console.log(suggestion);
 	const res = await fetch(`/api/editor/suggestions/accept`, {
 		method: 'POST',
 		headers: {

@@ -113,6 +113,7 @@
 			{prompt}
 			{hoveredSuggestion}
 			{setPrompt}
+			{suggestions}
 			bind:selectedSpan
 			bind:promptMaximized
 			bind:suggestionApplied

@@ -14,7 +14,8 @@
 		promptMaximized = false,
 		setPrompt,
 		suggestionApplied,
-		selectedSpan
+		selectedSpan,
+		suggestions
 	} = $props<{
 		editedPrompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
@@ -23,6 +24,7 @@
 		setPrompt: () => void;
 		suggestionApplied: number;
 		selectedSpan: { start: number; end: number } | undefined;
+		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 	}>();
 
 	let promptWasEdited = $derived(
@@ -68,7 +70,7 @@
 >
 	<div class="relative min-h-24 grow overflow-y-auto rounded border shadow">
 		<textarea
-			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none"
+			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none selection:bg-transparent"
 			bind:this={promptEditor}
 			bind:value={editedPrompt.prompt}
 			use:autosize
@@ -82,15 +84,14 @@
 				}
 			}}
 		/>
-		{#if suggestionApplied !== -1 || (!promptWasEdited && hoveredSuggestion && hoveredSuggestion.target_spans) || selectedSpan}
-			<SuggestionOverlay
-				{prompt}
-				{hoveredSuggestion}
-				{suggestionApplied}
-				{editedPrompt}
-				{selectedSpan}
-			/>
-		{/if}
+		<SuggestionOverlay
+			{prompt}
+			{hoveredSuggestion}
+			{suggestionApplied}
+			{editedPrompt}
+			bind:selectedSpan
+			{suggestions}
+		/>
 	</div>
 	<div class="absolute right-1 top-1 flex flex-col gap-1">
 		<button
