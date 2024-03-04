@@ -6,6 +6,7 @@
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
 	import { Check, Coins, FlaskConical, Lightbulb, ShieldX } from 'lucide-svelte';
+	import { fade } from 'svelte/transition';
 
 	let {
 		suggestion,
@@ -55,6 +56,7 @@
 	class="flex w-full flex-col justify-between rounded-br rounded-tr border border-l-4 px-3 py-2 text-left {disabled
 		? 'border-l-gray-active'
 		: borderMap[suggestion.type]}"
+	transition:fade={{ duration: 200 }}
 >
 	<div class="flex flex-col">
 		<div class="flex items-center gap-2">

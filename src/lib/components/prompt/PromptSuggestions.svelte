@@ -6,6 +6,7 @@
 	import { RefreshCw } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PromptSuggestion from './PromptSuggestion.svelte';
+	import RewriteBox from './RewriteBox.svelte';
 
 	let {
 		prompt,
@@ -14,6 +15,7 @@
 		editPrompt,
 		suggestions,
 		suggestionApplied,
+		selectedSpan,
 		toplevel = false
 	} = $props<{
 		prompt: Tables<'prompts'>;
@@ -22,6 +24,7 @@
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 		suggestionApplied: number;
+		selectedSpan: { start: number; end: number } | undefined;
 		toplevel?: boolean;
 	}>();
 
@@ -65,6 +68,9 @@
 		</button>
 	</div>
 	<div class="flex flex-col gap-4 overflow-auto">
+		{#if selectedSpan}
+			<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
+		{/if}
 		{#await suggestions then suggestions}
 			{#if suggestions === undefined || suggestions.length === 0}
 				No suggestions

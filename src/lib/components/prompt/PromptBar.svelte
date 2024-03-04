@@ -24,6 +24,7 @@
 	let showOptions = $state(false);
 	let suggestionApplied = $state(-1);
 	let hoveredSuggestion: Tables<'suggestions'> | null = $state(null);
+	let selectedSpan = $state<{ start: number; end: number } | undefined>(undefined);
 
 	function loadPrompt(id: number | null) {
 		if (id === null) goto(`/project/${projectId}`);
@@ -112,7 +113,7 @@
 			{prompt}
 			{hoveredSuggestion}
 			{setPrompt}
-			{editPrompt}
+			bind:selectedSpan
 			bind:promptMaximized
 			bind:suggestionApplied
 			bind:editedPrompt
@@ -124,6 +125,7 @@
 		{editPrompt}
 		{suggestions}
 		{suggestionApplied}
+		bind:selectedSpan
 		setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
 	/>
 </div>

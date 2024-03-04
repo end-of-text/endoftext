@@ -31,6 +31,7 @@
 	}>();
 
 	let showOptions = $state(false);
+	let selectedSpan = $state<{ start: number; end: number } | undefined>(undefined);
 </script>
 
 <ViewParent {onclose}>
@@ -60,9 +61,9 @@
 				setPrompt();
 				onclose();
 			}}
-			{editPrompt}
 			bind:suggestionApplied
 			bind:editedPrompt
+			bind:selectedSpan
 		/>
 	</div>
 	<div class="flex h-full w-[450px] shrink-0 flex-col border-l px-6 py-4">
@@ -72,6 +73,7 @@
 				{editedPrompt}
 				{suggestionApplied}
 				bind:suggestions
+				bind:selectedSpan
 				{editPrompt}
 				setHoveredSuggestion={(suggestion) => (hoveredSuggestion = suggestion)}
 				toplevel={true}

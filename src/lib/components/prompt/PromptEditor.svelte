@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { afterNavigate } from '$app/navigation';
 	import autosize from '$lib/autosize';
-	import { clickOutside } from '$lib/clickOutside';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
-	import RewriteBox from './RewriteBox.svelte';
 	import SuggestionOverlay from './SuggestionOverlay.svelte';
 
 	let {
@@ -15,16 +13,16 @@
 		prompt,
 		promptMaximized = false,
 		setPrompt,
-		editPrompt,
-		suggestionApplied
+		suggestionApplied,
+		selectedSpan
 	} = $props<{
 		editedPrompt: Tables<'prompts'>;
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		prompt: Tables<'prompts'>;
 		promptMaximized: boolean;
 		setPrompt: () => void;
-		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		suggestionApplied: number;
+		selectedSpan: { start: number; end: number } | undefined;
 	}>();
 
 	let promptWasEdited = $derived(
@@ -34,7 +32,6 @@
 	let promptEditor: HTMLTextAreaElement | undefined = $state(undefined);
 	let promptCopied = $state(false);
 	let promptHovered = $state(false);
-	let selectedSpan = $state<{ start: number; end: number } | undefined>(undefined);
 	let promptSubmitted = $state(false);
 
 	function copyPrompt() {
@@ -66,13 +63,9 @@
 	class="relative flex min-h-24 grow cursor-text flex-col text-left"
 	onmouseenter={() => (promptHovered = true)}
 	onmouseleave={() => (promptHovered = false)}
-	use:clickOutside={() => (selectedSpan = undefined)}
 	role="button"
 	tabindex="0"
 >
-	{#if selectedSpan}
-		<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
-	{/if}
 	<div class="relative min-h-24 grow overflow-y-auto rounded border shadow">
 		<textarea
 			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none"

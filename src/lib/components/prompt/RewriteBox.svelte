@@ -3,6 +3,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
+	import { Edit3 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 
 	let { selectedSpan, prompt, editPrompt } = $props<{
@@ -33,25 +34,31 @@
 </script>
 
 <button
-	class="absolute left-full top-0 z-50 w-[400px] cursor-default"
+	class="cursor-default"
 	transition:fade={{ duration: 200 }}
 	onmouseup={(e) => e.stopPropagation()}
 >
 	<div
-		class="ml-2 flex flex-col items-start rounded-br rounded-tr border border-l-4 border-l-blue-500 bg-white p-4 shadow"
+		class="flex w-full flex-col justify-between rounded-br rounded-tr border border-l-4 border-l-blue-500 px-3 py-2 text-left"
 	>
-		<h3>Rewrite the selected text</h3>
-		<textarea
-			class="mt-2 w-full resize-none"
-			placeholder="describe how to rewrite the selected text"
-			bind:value={userInput}
-			onkeydown={(e) => {
-				if (e.key === 'Enter' && e.metaKey) {
-					e.preventDefault();
-					accept();
-				}
-			}}
-		/>
+		<div class="flex flex-col">
+			<div class="flex items-center gap-2">
+				<Edit3 class="h-5 w-5 text-blue-500" />
+				<h4>Rewrite the selected text</h4>
+			</div>
+			<p class="mt-1 text-sm text-gray-active">Let AI help you rewrite part of your prompt.</p>
+			<textarea
+				class="mt-2 w-full"
+				placeholder="describe how to rewrite the selected text"
+				bind:value={userInput}
+				onkeydown={(e) => {
+					if (e.key === 'Enter' && e.metaKey) {
+						e.preventDefault();
+						accept();
+					}
+				}}
+			/>
+		</div>
 		<div class="flex w-full items-center justify-end pt-2">
 			{#if applyingSuggestion}
 				<Spinner />
