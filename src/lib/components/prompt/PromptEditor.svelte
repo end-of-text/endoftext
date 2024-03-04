@@ -70,7 +70,9 @@
 >
 	<div class="relative min-h-24 grow overflow-y-auto rounded border shadow">
 		<textarea
-			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none selection:bg-transparent"
+			class="relative h-full min-h-24 w-full border-none bg-white py-2 pl-2 pr-6 text-sm outline-none {selectedSpan
+				? 'selection:bg-transparent'
+				: ''}"
 			bind:this={promptEditor}
 			bind:value={editedPrompt.prompt}
 			use:autosize
@@ -89,6 +91,7 @@
 			{hoveredSuggestion}
 			{suggestionApplied}
 			{editedPrompt}
+			{promptWasEdited}
 			bind:selectedSpan
 			{suggestions}
 		/>

@@ -38,6 +38,7 @@
 
 	async function accept() {
 		applyingSuggestion = true;
+		selectedSpan = undefined;
 		if (suggestion.type === 'DATA') {
 			dataGenerationOptions.instruction = suggestion.description
 				.split(':')

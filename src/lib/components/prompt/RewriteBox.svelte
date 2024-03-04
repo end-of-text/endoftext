@@ -44,7 +44,7 @@
 		<div class="flex flex-col">
 			<div class="flex items-center gap-2">
 				<Edit3 class="h-5 w-5 text-blue-500" />
-				<h4>Rewrite the selected text</h4>
+				<h4>Rewrite part of your prompt with AI</h4>
 			</div>
 			<p class="mt-1 text-sm text-gray-active">Let AI help you rewrite part of your prompt.</p>
 			<textarea

@@ -69,11 +69,11 @@
 		</button>
 	</div>
 	<div class="flex flex-col gap-4 overflow-auto">
-		{#if selectedSpan}
-			<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
-		{/if}
 		{#await suggestions then suggestions}
-			{@const filteredSuggestions = filterSuggestions(suggestions, selectedSpan)}
+			{@const filteredSuggestions =
+				promptWasEdited && selectedSpan !== undefined
+					? []
+					: filterSuggestions(suggestions, selectedSpan)}
 			{#if filteredSuggestions === undefined || filteredSuggestions.length === 0}
 				{#if selectedSpan === undefined}
 					No suggestions
@@ -82,7 +82,7 @@
 				{@const suggestion = filteredSuggestions.find((s) => s.id === suggestionApplied)}
 				{#if suggestion !== undefined}
 					<PromptSuggestion
-						{selectedSpan}
+						bind:selectedSpan
 						{prompt}
 						{suggestion}
 						{dismissSuggestion}
@@ -97,7 +97,7 @@
 						}}
 					>
 						<PromptSuggestion
-							{selectedSpan}
+							bind:selectedSpan
 							{prompt}
 							{suggestion}
 							{dismissSuggestion}
@@ -114,7 +114,7 @@
 						}}
 					>
 						<PromptSuggestion
-							{selectedSpan}
+							bind:selectedSpan
 							{prompt}
 							{suggestion}
 							{dismissSuggestion}
@@ -135,7 +135,7 @@
 						class="flex"
 					>
 						<PromptSuggestion
-							{selectedSpan}
+							bind:selectedSpan
 							{prompt}
 							{suggestion}
 							{dismissSuggestion}
@@ -145,5 +145,8 @@
 				{/each}
 			{/if}
 		{/await}
+		{#if selectedSpan}
+			<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
+		{/if}
 	</div>
 </div>
