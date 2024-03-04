@@ -38,7 +38,6 @@
 
 	async function accept() {
 		applyingSuggestion = true;
-		selectedSpan = undefined;
 		if (suggestion.type === 'DATA') {
 			dataGenerationOptions.instruction = suggestion.description
 				.split(':')
@@ -65,6 +64,7 @@
 			);
 			editPrompt(changedPrompt, suggestion.id);
 		}
+		selectedSpan = undefined;
 		applyingSuggestion = false;
 	}
 </script>
