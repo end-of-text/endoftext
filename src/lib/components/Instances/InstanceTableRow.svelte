@@ -31,6 +31,8 @@
 
 	$effect(() => {
 		prediction?.then((pred) => {
+			if (labelArea && predictionArea && labelArea.clientHeight < predictionArea.clientHeight)
+				labelArea.style.height = predictionArea.style.height;
 			metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
 		});
 	});
@@ -46,7 +48,8 @@
 	$effect(() => {
 		localInstanceLabel = instance.label;
 		untrack(() => {
-			if (labelArea && predictionArea) labelArea.style.height = predictionArea.style.height;
+			if (labelArea && predictionArea && labelArea.clientHeight < predictionArea.clientHeight)
+				labelArea.style.height = predictionArea.style.height;
 			prediction?.then((pred) => {
 				metric = getMetric(prompt, localInstanceLabel || '', pred || '', project.metric_name);
 			});
@@ -123,7 +126,8 @@
 				onclick={() => {
 					prediction?.then((pred) => {
 						localInstanceLabel = pred || '';
-						if (labelArea && predictionArea) labelArea.style.height = predictionArea.style.height;
+						if (labelArea && predictionArea && labelArea.clientHeight < predictionArea.clientHeight)
+							labelArea.style.height = predictionArea.style.height;
 						updateLabel(pred);
 					});
 				}}
