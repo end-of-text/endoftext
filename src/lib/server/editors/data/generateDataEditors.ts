@@ -10,14 +10,15 @@ export async function generateDataEditors(
 	instances: string[],
 	llm: LLM
 ): Promise<DataSuggestionEditor[]> {
-	const res = await llm.generate([
-		{
-			role: 'system',
-			content: await systemPrompt.text()
-		},
-		{
-			role: 'user',
-			content: `
+	const res = await llm.generate(
+		[
+			{
+				role: 'system',
+				content: await systemPrompt.text()
+			},
+			{
+				role: 'user',
+				content: `
             Prompt: ${prompt.prompt}
             Test Cases:
             ${instances
@@ -25,8 +26,10 @@ export async function generateDataEditors(
 							.slice(0, 20)
 							.join('\n')}
             `
-		}
-	]);
+			}
+		],
+		{ json: true }
+	);
 	const jsonOutput: string[] = JSON.parse(res || "{'output': []}")['output'];
 
 	return jsonOutput.map((suggestion) => new DataSuggestionEditor(suggestion.toLowerCase()));
