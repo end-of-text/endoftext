@@ -26,7 +26,7 @@ export class JSONOutputEditor extends PromptEditor {
 			[
 				{
 					role: 'system',
-					content: await filterPrompt.text()
+					content: filterPrompt
 				},
 				{
 					role: 'user',
@@ -55,7 +55,7 @@ export class JSONOutputEditor extends PromptEditor {
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: await rewritePrompt.text()
+				content: rewritePrompt
 			},
 			{
 				role: 'user',
