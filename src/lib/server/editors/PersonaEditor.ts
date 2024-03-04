@@ -4,6 +4,9 @@ import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from './editor';
 
+const filterPrompt = await fetchPrompt('UOqod93D', '699');
+const applyPrompt = await fetchPrompt('11FacQYr', '612');
+
 export class PersonaEditor extends PromptEditor {
 	constructor() {
 		super(
@@ -19,13 +22,11 @@ export class PersonaEditor extends PromptEditor {
 		if (prompt.responseFormat === 'json') {
 			return null;
 		}
-
-		const systemPrompt = await fetchPrompt('UOqod93D', '699');
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: await systemPrompt.text()
+					content: await filterPrompt.text()
 				},
 				{
 					role: 'user',
@@ -58,11 +59,10 @@ export class PersonaEditor extends PromptEditor {
 		}[],
 		input: string | unknown
 	): Promise<Tables<'prompts'>> {
-		const systemPrompt = await fetchPrompt('11FacQYr', '612');
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: await systemPrompt.text()
+				content: await applyPrompt.text()
 			},
 			{
 				role: 'user',

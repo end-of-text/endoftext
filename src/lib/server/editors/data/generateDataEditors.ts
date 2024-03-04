@@ -1,14 +1,15 @@
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
-import { fetchPrompt } from '../editors';
 import { DataSuggestionEditor } from './DataSuggestionEditor';
+
+const systemPrompt = await fetchPrompt('IJlkTz-r', '639');
 
 export async function generateDataEditors(
 	prompt: Tables<'prompts'>,
 	instances: string[],
 	llm: LLM
 ): Promise<DataSuggestionEditor[]> {
-	const systemPrompt = await fetchPrompt('IJlkTz-r', '639');
 	const res = await llm.generate([
 		{
 			role: 'system',

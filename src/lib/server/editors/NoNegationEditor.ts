@@ -5,6 +5,10 @@ import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { filterSentences, rewriteSentences } from './util';
 
+const instructionClassifierPrompt = await fetchPrompt('k8IVEdHy', '636');
+const negationClassifierPrompt = await fetchPrompt('MSl2Wa7x', '696');
+const removeNegationPrompt = await fetchPrompt('UDibruqq', '638');
+
 export class NoNegationEditor extends PromptEditor {
 	constructor() {
 		super(
@@ -16,8 +20,6 @@ export class NoNegationEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		const instructionClassifierPrompt = await fetchPrompt('k8IVEdHy', '636');
-		const negationClassifierPrompt = await fetchPrompt('MSl2Wa7x', '696');
 		return await filterSentences(
 			prompt.prompt,
 			llm,
@@ -34,7 +36,6 @@ export class NoNegationEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const removeNegationPrompt = await fetchPrompt('UDibruqq', '638');
 		return {
 			...prompt,
 			prompt: await rewriteSentences(

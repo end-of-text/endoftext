@@ -5,6 +5,9 @@ import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { filterSentences, rewriteSentences } from './util';
 
+const canBeSimplifiedPrompt = await fetchPrompt('fT58mFTo', '635');
+const simplifyPrompt = await fetchPrompt('k1-_anGH', '697');
+
 export class CompressionEditor extends PromptEditor {
 	constructor() {
 		super(
@@ -16,7 +19,6 @@ export class CompressionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		const canBeSimplifiedPrompt = await fetchPrompt('fT58mFTo', '635');
 		return await filterSentences(
 			prompt.prompt,
 			llm,
@@ -30,7 +32,6 @@ export class CompressionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const simplifyPrompt = await fetchPrompt('k1-_anGH', '697');
 		return {
 			...prompt,
 			prompt: await rewriteSentences(prompt.prompt, targetSpans, llm, await simplifyPrompt.text())

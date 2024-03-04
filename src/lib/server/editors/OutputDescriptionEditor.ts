@@ -4,6 +4,9 @@ import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from './editor';
 
+const filterPrompt = await fetchPrompt('sxG3k46e', '614');
+const applyPrompt = await fetchPrompt('sU9ifhBZ', '615');
+
 export class OutputDescriptionEditor extends PromptEditor {
 	constructor() {
 		super(
@@ -19,12 +22,11 @@ export class OutputDescriptionEditor extends PromptEditor {
 		if (prompt.responseFormat !== 'text') {
 			return null;
 		}
-		const systemPrompt = await fetchPrompt('sxG3k46e', '614');
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: await systemPrompt.text()
+					content: await filterPrompt.text()
 				},
 				{
 					role: 'user',
@@ -58,11 +60,10 @@ export class OutputDescriptionEditor extends PromptEditor {
 		}[],
 		input: string | unknown
 	): Promise<Tables<'prompts'>> {
-		const systemPrompt = await fetchPrompt('sU9ifhBZ', '615');
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: await systemPrompt.text()
+				content: await applyPrompt.text()
 			},
 			{
 				role: 'user',

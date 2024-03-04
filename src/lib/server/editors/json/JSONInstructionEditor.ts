@@ -1,8 +1,10 @@
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { PromptEditor } from '../editor';
-import { fetchPrompt } from '../editors';
+
+const systemPrompt = await fetchPrompt('ln4JpF48', '671');
 
 export class JSONInstructionEditor extends PromptEditor {
 	constructor() {
@@ -31,7 +33,6 @@ export class JSONInstructionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const systemPrompt = await fetchPrompt('ln4JpF48', '671');
 		const res = await llm.generate([
 			{
 				role: 'system',

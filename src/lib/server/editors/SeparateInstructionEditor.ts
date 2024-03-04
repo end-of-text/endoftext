@@ -4,6 +4,9 @@ import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 
+const filterPrompt = await fetchPrompt('gaakzVMP', '607');
+const applyPrompt = await fetchPrompt('q8vKqE5b', '669');
+
 export class SeparateInstructionEditor extends PromptEditor {
 	constructor() {
 		super(
@@ -15,12 +18,11 @@ export class SeparateInstructionEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		const systemPrompt = await fetchPrompt('gaakzVMP', '607');
 		const res = await llm.generate(
 			[
 				{
 					role: 'system',
-					content: await systemPrompt.text()
+					content: await filterPrompt.text()
 				},
 				{
 					role: 'user',
@@ -47,11 +49,10 @@ export class SeparateInstructionEditor extends PromptEditor {
 		targetSpans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const systemPrompt = await fetchPrompt('q8vKqE5b', '669');
 		const res = await llm.generate([
 			{
 				role: 'system',
-				content: await systemPrompt.text()
+				content: await applyPrompt.text()
 			},
 			{
 				role: 'user',

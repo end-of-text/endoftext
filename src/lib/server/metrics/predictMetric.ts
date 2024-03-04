@@ -1,7 +1,9 @@
 import { OPENAI_API_KEY } from '$env/static/private';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
-import { fetchPrompt } from '../editors/editors';
 import { OpenAILLM } from '../llms/openai';
+
+const systemPrompt = await fetchPrompt('TEAku3-I', '634');
 
 export async function predictMetric(prompt: Tables<'prompts'> | undefined): Promise<string> {
 	if (prompt === undefined) {
@@ -11,7 +13,6 @@ export async function predictMetric(prompt: Tables<'prompts'> | undefined): Prom
 	}
 
 	const openai = new OpenAILLM(OPENAI_API_KEY || '');
-	const systemPrompt = await fetchPrompt('TEAku3-I', '634');
 	const predictedMetric = await openai.generate(
 		[
 			{ role: 'system', content: await systemPrompt.text() },

@@ -1,8 +1,11 @@
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from '../editor';
-import { fetchPrompt } from '../editors';
+
+const filterPrompt = await fetchPrompt('vVtORHTd', '685');
+const rewritePrompt = await fetchPrompt('nx_a9UrH', '643');
 
 export class JSONDescriptionEditor extends PromptEditor {
 	constructor() {
@@ -19,8 +22,6 @@ export class JSONDescriptionEditor extends PromptEditor {
 		if (!prompt.prompt.toLowerCase().includes('json')) {
 			return null;
 		}
-
-		const filterPrompt = await fetchPrompt('vVtORHTd', '685');
 		const res = await llm.generate(
 			[
 				{
@@ -58,7 +59,6 @@ export class JSONDescriptionEditor extends PromptEditor {
 		}[],
 		input: string | unknown
 	): Promise<Tables<'prompts'>> {
-		const rewritePrompt = await fetchPrompt('nx_a9UrH', '643');
 		const res = await llm.generate([
 			{
 				role: 'system',

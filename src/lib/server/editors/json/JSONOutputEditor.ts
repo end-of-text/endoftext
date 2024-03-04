@@ -1,8 +1,11 @@
 import type { LLM } from '$lib/server/llms/llm';
+import { fetchPrompt } from '$lib/server/prompts.js';
 import type { Tables } from '$lib/supabase';
 import { EditorType } from '$lib/types';
 import { PromptEditor } from '../editor';
-import { fetchPrompt } from '../editors';
+
+const filterPrompt = await fetchPrompt('94IomCIj', '688');
+const rewritePrompt = await fetchPrompt('w-l_rMSk', '640');
 
 export class JSONOutputEditor extends PromptEditor {
 	constructor() {
@@ -19,7 +22,6 @@ export class JSONOutputEditor extends PromptEditor {
 			return null;
 		}
 
-		const filterPrompt = await fetchPrompt('94IomCIj', '688');
 		const res = await llm.generate(
 			[
 				{
@@ -50,7 +52,6 @@ export class JSONOutputEditor extends PromptEditor {
 		target_spans: number[][],
 		llm: LLM
 	): Promise<Tables<'prompts'>> {
-		const rewritePrompt = await fetchPrompt('w-l_rMSk', '640');
 		const res = await llm.generate([
 			{
 				role: 'system',
