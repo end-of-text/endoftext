@@ -45,6 +45,19 @@
 			})
 		});
 	}
+
+	function filterSuggestions(
+		suggestions: Tables<'suggestions'>[] | undefined,
+		selectedSpan: { start: number; end: number } | undefined
+	): Tables<'suggestions'>[] | undefined {
+		if (suggestions === undefined) return undefined;
+		if (selectedSpan) {
+			return suggestions.filter((s) =>
+				s.target_spans?.some((s) => s[0] >= selectedSpan.start && s[1] <= selectedSpan.end)
+			);
+		}
+		return suggestions;
+	}
 </script>
 
 <div
@@ -72,14 +85,17 @@
 			<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
 		{/if}
 		{#await suggestions then suggestions}
-			{#if suggestions === undefined || suggestions.length === 0}
-				No suggestions
+			{@const filteredSuggestions = filterSuggestions(suggestions, selectedSpan)}
+			{#if filteredSuggestions === undefined || filteredSuggestions.length === 0}
+				{#if selectedSpan === undefined}
+					No suggestions
+				{/if}
 			{:else if suggestionApplied > -1}
-				{@const suggestion = suggestions.find((s) => s.id === suggestionApplied)}
+				{@const suggestion = filteredSuggestions.find((s) => s.id === suggestionApplied)}
 				{#if suggestion !== undefined}
 					<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} applied />
 				{/if}
-				{#each suggestions.filter((s) => s.id !== suggestionApplied) as suggestion (suggestion.id)}
+				{#each filteredSuggestions.filter((s) => s.id !== suggestionApplied) as suggestion (suggestion.id)}
 					<div
 						use:tooltip={{
 							text: 'To apply another suggestion, either save or revert the current changes.'
@@ -89,7 +105,7 @@
 					</div>
 				{/each}
 			{:else if promptWasEdited}
-				{#each suggestions as suggestion (suggestion.id)}
+				{#each filteredSuggestions as suggestion (suggestion.id)}
 					<div
 						use:tooltip={{
 							text: 'To apply a suggestion, either save or revert the current changes.'
@@ -99,7 +115,7 @@
 					</div>
 				{/each}
 			{:else}
-				{#each suggestions as suggestion (suggestion.id)}
+				{#each filteredSuggestions as suggestion (suggestion.id)}
 					<div
 						onmouseover={() => setHoveredSuggestion(suggestion)}
 						onmouseleave={() => setHoveredSuggestion(null)}
