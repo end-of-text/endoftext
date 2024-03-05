@@ -30,10 +30,6 @@
 	let promptWasEdited = $derived(
 		JSON.stringify(prompt) === JSON.stringify(editedPrompt) ? false : true
 	);
-	$inspect('prompt: ', JSON.stringify(prompt));
-	$inspect('edited: ', JSON.stringify(editedPrompt));
-	$inspect('edited prompt: ', JSON.stringify(editedPrompt.prompt));
-	$inspect('was edited: ', promptWasEdited);
 
 	let promptEditor: HTMLTextAreaElement | undefined = $state(undefined);
 	let promptCopied = $state(false);
@@ -83,7 +79,6 @@
 			onselect={getSelection}
 			onmousedown={() => (selectedSpan = undefined)}
 			onkeydown={(e) => {
-				console.log(e);
 				selectedSpan = undefined;
 				suggestionApplied = -1;
 				if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
