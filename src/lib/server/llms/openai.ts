@@ -5,7 +5,7 @@ import { LLM, type LLMOptions } from './llm';
 
 export class OpenAILLM extends LLM {
 	openai: OpenAI;
-	model: string = 'gpt-3.5-turbo-0125';
+	model: string = 'gpt-4-turbo-preview';
 	temperature: number = 1;
 	json: boolean = false;
 
