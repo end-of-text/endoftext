@@ -89,11 +89,11 @@ export async function rewriteSentences(
 	let lastEnd = 0;
 	let returnPrompt = '';
 	targetSpans.forEach((span, i) => {
-		returnPrompt += prompt.substring(lastEnd, span[0]).trim() + ' ';
-		returnPrompt += rewrittenPhrases[i] + ' ';
-		lastEnd = span[1] + 1;
+		returnPrompt += prompt.substring(lastEnd, span[0]);
+		returnPrompt += rewrittenPhrases[i];
+		lastEnd = span[1];
 	});
-	returnPrompt += prompt.substring(lastEnd).trim();
+	returnPrompt += prompt.substring(lastEnd);
 
 	return returnPrompt;
 }
