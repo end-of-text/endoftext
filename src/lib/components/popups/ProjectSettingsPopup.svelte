@@ -67,7 +67,7 @@
 <svelte:window onkeydown={submit} />
 
 <Popup {onclose} classNames="w-1/2">
-	<div class="flex w-full flex-col justify-center p-2">
+	<div class="flex w-full flex-col justify-center p-2 text-left">
 		<div class="flex flex-col items-start gap-2">
 			<h1>Project Settings</h1>
 			<h2 class="mt-4">Project Name</h2>
@@ -139,10 +139,7 @@
 				</div>
 			</div>
 			<h2 class="mt-4">Endpoint</h2>
-			<p>
-				Fetch your prompt to use it programmatically. Use the header <code>x-api-key</code> with your
-				API key.
-			</p>
+			<p>Fetch your prompt to use it programmatically.</p>
 			<div class="flex gap-2 rounded-full bg-gray-100 px-3 py-1">
 				{`https://app.endoftext.app/api/serve/project/${project.id}/prompt/${prompt.id}`}
 				{#if !copied}
@@ -160,6 +157,13 @@
 				{/if}
 			</div>
 		</div>
+		<p class="pt-2 text-sm">
+			Use the header <code>x-api-key</code> with your API key. You can find your API key in your
+			<a
+				href="/home/account"
+				class="underline transition hover:text-primary hover:decoration-primary">account settings</a
+			>.
+		</p>
 		<Button classNames="self-end" onclick={onclose}>Done</Button>
 	</div>
 </Popup>
