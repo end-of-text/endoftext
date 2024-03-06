@@ -3,9 +3,11 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { tooltip } from '$lib/tooltip.svelte';
+	import { filterSuggestions } from '$lib/util';
 	import { RefreshCw } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import PromptSuggestion from './PromptSuggestion.svelte';
+	import RewriteBox from './RewriteBox.svelte';
 
 	let {
 		prompt,
@@ -14,6 +16,7 @@
 		editPrompt,
 		suggestions,
 		suggestionApplied,
+		selectedSpan,
 		toplevel = false
 	} = $props<{
 		prompt: Tables<'prompts'>;
@@ -22,6 +25,7 @@
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
 		suggestionApplied: number;
+		selectedSpan: { start: number; end: number } | undefined;
 		toplevel?: boolean;
 	}>();
 
@@ -66,34 +70,61 @@
 	</div>
 	<div class="flex flex-col gap-4 overflow-auto">
 		{#await suggestions then suggestions}
-			{#if suggestions === undefined || suggestions.length === 0}
-				No suggestions
-			{:else if suggestionApplied > -1}
-				{@const suggestion = suggestions.find((s) => s.id === suggestionApplied)}
-				{#if suggestion !== undefined}
-					<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} applied />
+			{@const filteredSuggestions =
+				promptWasEdited && selectedSpan !== undefined
+					? []
+					: filterSuggestions(suggestions, selectedSpan)}
+			{#if filteredSuggestions === undefined || filteredSuggestions.length === 0}
+				{#if selectedSpan === undefined}
+					No suggestions
 				{/if}
-				{#each suggestions.filter((s) => s.id !== suggestionApplied) as suggestion (suggestion.id)}
+			{:else if suggestionApplied > -1}
+				{@const suggestion = filteredSuggestions.find((s) => s.id === suggestionApplied)}
+				{#if suggestion !== undefined}
+					<PromptSuggestion
+						bind:selectedSpan
+						{prompt}
+						{suggestion}
+						{dismissSuggestion}
+						{editPrompt}
+						applied
+					/>
+				{/if}
+				{#each filteredSuggestions.filter((s) => s.id !== suggestionApplied) as suggestion (suggestion.id)}
 					<div
 						use:tooltip={{
 							text: 'To apply another suggestion, either save or revert the current changes.'
 						}}
 					>
-						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
+						<PromptSuggestion
+							bind:selectedSpan
+							{prompt}
+							{suggestion}
+							{dismissSuggestion}
+							{editPrompt}
+							disabled
+						/>
 					</div>
 				{/each}
 			{:else if promptWasEdited}
-				{#each suggestions as suggestion (suggestion.id)}
+				{#each filteredSuggestions as suggestion (suggestion.id)}
 					<div
 						use:tooltip={{
 							text: 'To apply a suggestion, either save or revert the current changes.'
 						}}
 					>
-						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} disabled />
+						<PromptSuggestion
+							bind:selectedSpan
+							{prompt}
+							{suggestion}
+							{dismissSuggestion}
+							{editPrompt}
+							disabled
+						/>
 					</div>
 				{/each}
 			{:else}
-				{#each suggestions as suggestion (suggestion.id)}
+				{#each filteredSuggestions as suggestion (suggestion.id)}
 					<div
 						onmouseover={() => setHoveredSuggestion(suggestion)}
 						onmouseleave={() => setHoveredSuggestion(null)}
@@ -103,10 +134,19 @@
 						tabindex="0"
 						class="flex"
 					>
-						<PromptSuggestion {prompt} {suggestion} {dismissSuggestion} {editPrompt} />
+						<PromptSuggestion
+							bind:selectedSpan
+							{prompt}
+							{suggestion}
+							{dismissSuggestion}
+							{editPrompt}
+						/>
 					</div>
 				{/each}
 			{/if}
 		{/await}
+		{#if selectedSpan}
+			<RewriteBox bind:selectedSpan {prompt} {editPrompt} />
+		{/if}
 	</div>
 </div>
