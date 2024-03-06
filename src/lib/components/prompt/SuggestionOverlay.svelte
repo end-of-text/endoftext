@@ -29,6 +29,7 @@
 			.sort((a, b) => a[0] - b[0]);
 
 		const combinedSpans: number[][] = [];
+		if (allSpans.length === 0) return combinedSpans;
 		let currentSpan = allSpans[0];
 
 		for (let i = 1; i < allSpans.length; i++) {
