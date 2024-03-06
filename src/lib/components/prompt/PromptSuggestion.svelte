@@ -6,12 +6,14 @@
 	import type { Tables } from '$lib/supabase';
 	import { EditorType, RequiredInputType } from '$lib/types';
 	import { Check, Coins, FlaskConical, Lightbulb, ShieldX } from 'lucide-svelte';
+	import { fade } from 'svelte/transition';
 
 	let {
 		suggestion,
 		prompt,
 		editPrompt,
 		dismissSuggestion,
+		selectedSpan,
 		applied = false,
 		disabled = false
 	} = $props<{
@@ -19,6 +21,7 @@
 		prompt: Tables<'prompts'>;
 		editPrompt: (newPrompt: Tables<'prompts'>, suggestionId: number) => void;
 		dismissSuggestion: (suggestion: Tables<'suggestions'>) => void;
+		selectedSpan: { start: number; end: number } | undefined;
 		applied?: boolean;
 		disabled?: boolean;
 	}>();
@@ -44,9 +47,24 @@
 			dataGenerationOptions.show = true;
 			dismissSuggestion(suggestion);
 		} else {
-			const changedPrompt = await acceptSuggestion(suggestion, prompt, userInput);
+			// Get only the spans that are within the selected span
+			const targetSpans =
+				suggestion.target_spans && selectedSpan
+					? suggestion.target_spans.filter(
+							(s) => s[0] >= selectedSpan!.start && s[1] <= selectedSpan!.end
+						)
+					: suggestion.target_spans;
+			const changedPrompt = await acceptSuggestion(
+				{
+					...suggestion,
+					target_spans: targetSpans
+				},
+				prompt,
+				userInput
+			);
 			editPrompt(changedPrompt, suggestion.id);
 		}
+		selectedSpan = undefined;
 		applyingSuggestion = false;
 	}
 </script>
@@ -55,6 +73,7 @@
 	class="flex w-full flex-col justify-between rounded-br rounded-tr border border-l-4 px-3 py-2 text-left {disabled
 		? 'border-l-gray-active'
 		: borderMap[suggestion.type]}"
+	transition:fade={{ duration: 200 }}
 >
 	<div class="flex flex-col">
 		<div class="flex items-center gap-2">
