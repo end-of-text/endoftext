@@ -11,7 +11,8 @@
 	import Spinner from '$lib/components/ui/Spinner.svelte';
 	import type { Tables } from '$lib/supabase';
 	import { metrics } from '$lib/types';
-	import { X } from 'lucide-svelte';
+	import { Check, Copy, X } from 'lucide-svelte';
+	import { fade } from 'svelte/transition';
 	import Popup from './Popup.svelte';
 
 	let { project, onclose, prompt } = $props<{
@@ -24,6 +25,7 @@
 	let localProjectName = $state(project.name);
 	let addingUser = $state(false);
 	let userRequest = $state(getProjectUsers(project.id || ''));
+	let copied = $state(false);
 
 	function submit(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
@@ -49,12 +51,23 @@
 		await removeProjectUser(project.id, userId);
 		userRequest = getProjectUsers(project.id || '');
 	}
+
+	function copyToClipboard() {
+		// debounce set copied to false
+		copied = true;
+		setTimeout(() => {
+			copied = false;
+		}, 2000);
+		navigator.clipboard.writeText(
+			`https://app.endoftext.app/api/serve/project/${project.id}/prompt/${prompt.id}`
+		);
+	}
 </script>
 
 <svelte:window onkeydown={submit} />
 
 <Popup {onclose} classNames="w-1/2">
-	<div class="flex w-full flex-col justify-center p-2">
+	<div class="flex w-full flex-col justify-center p-2 text-left">
 		<div class="flex flex-col items-start gap-2">
 			<h1>Project Settings</h1>
 			<h2 class="mt-4">Project Name</h2>
@@ -94,7 +107,7 @@
 					</Button>
 				{/if}
 			</div>
-			<h2 class="mt-4">Settings</h2>
+			<h2 class="mt-4">Labels and Metrics</h2>
 			<div class="flex flex-col gap-2">
 				<label
 					class="flex flex-row items-center"
@@ -125,7 +138,32 @@
 					/>
 				</div>
 			</div>
+			<h2 class="mt-4">Endpoint</h2>
+			<p>Fetch your prompt to use it programmatically.</p>
+			<div class="flex gap-2 rounded-full bg-gray-100 px-3 py-1">
+				{`https://app.endoftext.app/api/serve/project/${project.id}/prompt/${prompt.id}`}
+				{#if !copied}
+					<button
+						class="cursor-pointer text-gray-active hover:text-gray-hovered"
+						onclick={() => copyToClipboard()}
+						in:fade
+					>
+						<Copy />
+					</button>
+				{:else}
+					<div in:fade>
+						<Check class="text-emerald-600" />
+					</div>
+				{/if}
+			</div>
 		</div>
+		<p class="pt-2 text-sm">
+			Use the header <code>x-api-key</code> with your API key. You can find your API key in your
+			<a
+				href="/home/account"
+				class="underline transition hover:text-primary hover:decoration-primary">account settings</a
+			>.
+		</p>
 		<Button classNames="self-end" onclick={onclose}>Done</Button>
 	</div>
 </Popup>
