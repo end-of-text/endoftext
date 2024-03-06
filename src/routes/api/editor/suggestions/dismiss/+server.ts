@@ -26,7 +26,7 @@ export async function DELETE({ request, locals: { supabase, getSession } }) {
 	}
 
 	trackEvent(
-		'Suggestion Accepted',
+		'Suggestion Dismissed',
 		{ user_id: session?.user.id ?? '' },
 		{ editor_name: editor.name }
 	);
