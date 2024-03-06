@@ -62,7 +62,7 @@ export async function load({ locals: { supabase, getSession }, params }) {
 		promptsRes.data[0]
 	);
 	const hypertuneRoot = await getHypertuneRoot(session.user);
-	const suggestions = getSuggestions(supabase, promptsRes.data[0], false, hypertuneRoot);
+	const suggestions = getSuggestions(supabase, session, promptsRes.data[0], false, hypertuneRoot);
 
 	return {
 		project: projectRes.data[0] as Tables<'projects'>,

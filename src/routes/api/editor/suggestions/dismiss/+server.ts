@@ -15,9 +15,6 @@ export async function DELETE({ request, locals: { supabase, getSession } }) {
 	}
 
 	const editor = getEditors().find((o) => o.id === suggestion.identifier);
-	if (!editor) {
-		error(500, 'Could not find editor');
-	}
 
 	const { error: err } = await supabase.from('suggestions').delete().eq('id', suggestion.id);
 
@@ -26,9 +23,9 @@ export async function DELETE({ request, locals: { supabase, getSession } }) {
 	}
 
 	trackEvent(
-		'Suggestion Accepted',
+		suggestion.type === 'DATA' ? 'Data Suggestion Dismissed' : 'Suggestion Dismissed',
 		{ user_id: session?.user.id ?? '' },
-		{ editor_name: editor.name }
+		{ editor_name: editor?.name ?? suggestion.identifier }
 	);
 
 	return new Response(null, { status: 204 });

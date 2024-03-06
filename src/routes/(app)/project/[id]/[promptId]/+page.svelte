@@ -29,13 +29,13 @@
 	<ProjectHeader bind:project {prompt} />
 	<div class="flex min-h-0 grow">
 		<PromptBar
-			{prompt}
-			{editedPrompt}
-			{childPrompt}
-			{suggestions}
+			bind:prompt
+			bind:editedPrompt
+			bind:childPrompt
+			bind:suggestions
 			userStatus={data.user.status}
 			projectId={data.project.id}
 		/>
-		<InstanceTable bind:instances bind:project bind:predictions {prompt} />
+		<InstanceTable bind:instances bind:project bind:predictions bind:prompt />
 	</div>
 </div>

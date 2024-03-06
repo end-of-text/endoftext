@@ -1,7 +1,8 @@
 import { OPENAI_API_KEY } from '$env/static/private';
 import type { RootNode } from '$lib/hypertune/generated';
 import type { Tables } from '$lib/supabase';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Session, SupabaseClient } from '@supabase/supabase-js';
+import { trackEvent } from '../amplitude';
 import { OpenAILLM } from '../llms/openai';
 import { generateDataEditors } from './data/generateDataEditors';
 import type { PromptEditor } from './editor';
@@ -9,6 +10,7 @@ import { getEditors } from './editors';
 
 export async function getSuggestions(
 	supabase: SupabaseClient,
+	session: Session,
 	prompt: Tables<'prompts'>,
 	clear: boolean,
 	hypertuneRoot: RootNode
@@ -38,6 +40,11 @@ export async function getSuggestions(
 	const llm = new OpenAILLM(OPENAI_API_KEY || '');
 	const results = await Promise.all(
 		getEditors(hypertuneRoot).map(async (editor) => {
+			trackEvent(
+				'Suggestion Created',
+				{ user_id: session?.user.id ?? '' },
+				{ editor_name: editor.name }
+			);
 			const canBeApplied = await editor.canBeApplied(prompt, llm, instanceRes.data);
 			return { canBeApplied, editor: editor as PromptEditor };
 		})
@@ -51,10 +58,17 @@ export async function getSuggestions(
 		)
 	)
 		.slice(0, 3)
-		.map((editor) => ({
-			canBeApplied: [],
-			editor
-		}));
+		.map((editor) => {
+			trackEvent(
+				'Data Suggestion Created',
+				{ user_id: session?.user.id ?? '' },
+				{ editor_name: editor.name }
+			);
+			return {
+				canBeApplied: [],
+				editor
+			};
+		});
 
 	const suggestions: Tables<'suggestions'>[] = [];
 	for (const result of [...results, ...dataSuggestions]) {

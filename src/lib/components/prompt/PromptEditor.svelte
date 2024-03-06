@@ -134,10 +134,7 @@
 	{#if promptWasEdited && !promptSubmitted}
 		<Button
 			onclick={() => {
-				editedPrompt.prompt = prompt.prompt;
-				editedPrompt.model = prompt.model;
-				editedPrompt.responseFormat = prompt.responseFormat;
-				editedPrompt.temperature = prompt.temperature;
+				editedPrompt = { ...prompt };
 				suggestionApplied = -1;
 			}}
 			classNames="text-gray-active"

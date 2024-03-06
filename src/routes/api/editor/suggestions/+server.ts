@@ -16,5 +16,5 @@ export async function POST({ locals: { supabase, getSession }, request }) {
 	}
 
 	const hypertuneRoot = await getHypertuneRoot(session.user);
-	return json(await getSuggestions(supabase, selectedPrompt, true, hypertuneRoot));
+	return json(await getSuggestions(supabase, session, selectedPrompt, true, hypertuneRoot));
 }
