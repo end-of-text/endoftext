@@ -19,9 +19,6 @@ export class MarkdownEditor extends PromptEditor {
 	}
 
 	async canBeApplied(prompt: Tables<'prompts'>, llm: LLM) {
-		if (prompt.responseFormat === 'json') {
-			return null;
-		}
 		const res = await llm.generate(
 			[
 				{
