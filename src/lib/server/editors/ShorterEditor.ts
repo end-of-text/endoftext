@@ -18,7 +18,7 @@ export class ShorterEditor extends PromptEditor {
 			predictions: { prediction: string }[];
 		}[]
 	) {
-		if (instancePredictions.length === 0) {
+		if (instancePredictions.length === 0 || prompt.responseFormat !== 'text') {
 			return null;
 		}
 
