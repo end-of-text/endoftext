@@ -49,7 +49,7 @@
 		<p>You don't have any prompts, create one to get started.</p>
 	</div>
 {:else}
-	<div class="grid grid-cols-2 gap-4 pb-10">
+	<div class="grid min-h-0 grid-cols-2 gap-4 overflow-y-auto pb-10">
 		{#each searchQuery.length === 0 ? projects : projects.filter((p) => p.name
 						.toLowerCase()
 						.includes(searchQuery.toLowerCase())) as project (project.id)}
