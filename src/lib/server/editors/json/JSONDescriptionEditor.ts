@@ -4,7 +4,7 @@ import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from '../editor';
 
-const filterPrompt = await fetchPrompt('vVtORHTd', '685');
+const filterPrompt = await fetchPrompt('vVtORHTd', '825');
 const rewritePrompt = await fetchPrompt('nx_a9UrH', '643');
 
 export class JSONDescriptionEditor extends PromptEditor {

@@ -4,7 +4,7 @@ import type { Tables } from '$lib/supabase';
 import { EditorType, RequiredInputType } from '$lib/types';
 import { PromptEditor } from './editor';
 
-const filterPrompt = await fetchPrompt('UOqod93D', '699');
+const filterPrompt = await fetchPrompt('UOqod93D', '815');
 const applyPrompt = await fetchPrompt('11FacQYr', '612');
 
 export class PersonaEditor extends PromptEditor {
