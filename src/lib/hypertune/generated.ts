@@ -2,7 +2,7 @@
 
 import * as sdk from 'hypertune';
 
-const queryCode = `query FullQuery{root{personaEditor convertToJSONEditor compressionEditor outputDescriptionEditor jsonDescriptionEditor jsonInstructionEditor separateInstructionsEditor noNegationEditor shorterEditor longerEditor}}`;
+const queryCode = `query FullQuery{root{markdownEditor personaEditor convertToJSONEditor compressionEditor outputDescriptionEditor jsonDescriptionEditor jsonInstructionEditor separateInstructionsEditor noNegationEditor shorterEditor longerEditor}}`;
 
 const query = {
 	Query: {
@@ -14,6 +14,7 @@ const query = {
 					Root: {
 						objectTypeName: 'Root',
 						selection: {
+							markdownEditor: { fieldArguments: {}, fieldQuery: null },
 							personaEditor: { fieldArguments: {}, fieldQuery: null },
 							convertToJSONEditor: { fieldArguments: {}, fieldQuery: null },
 							compressionEditor: { fieldArguments: {}, fieldQuery: null },
@@ -76,6 +77,11 @@ function mergeQueryAndArgs(
 }
 
 export const vercelFlagDefinitions = {
+	markdownEditor: {
+		options: [{ value: true }, { value: false }],
+		origin:
+			'https://app.hypertune.com/projects/3170/draft?view=logic&selected_field_path=root%3EmarkdownEditor'
+	},
 	personaEditor: {
 		options: [{ value: true }, { value: false }],
 		origin:
@@ -149,6 +155,7 @@ export type Rec2 = {
 };
 
 export type Root = {
+	markdownEditor: boolean;
 	personaEditor: boolean;
 	convertToJSONEditor: boolean;
 	compressionEditor: boolean;
@@ -162,6 +169,7 @@ export type Root = {
 };
 
 const rootFallback = {
+	markdownEditor: false,
 	personaEditor: false,
 	convertToJSONEditor: false,
 	compressionEditor: false,
@@ -180,6 +188,22 @@ export class RootNode extends sdk.Node {
 	get(fallback: Root = rootFallback as Root): Root {
 		const getQuery = null;
 		return this.evaluate(getQuery, fallback) as Root;
+	}
+
+	/**
+	 * [Open in UI]({@link https://app.hypertune.com/projects/3170/draft?view=logic&selected_field_path=root%3EmarkdownEditor})
+	 */
+	markdownEditor(args: Rec = {}): sdk.BooleanNode {
+		const props0 = this.getField('markdownEditor', args);
+		const expression0 = props0.expression;
+
+		if (expression0 && expression0.type === 'BooleanExpression') {
+			return new sdk.BooleanNode(props0);
+		}
+
+		const node = new sdk.BooleanNode(props0);
+		node._logUnexpectedTypeError();
+		return node;
 	}
 
 	/**
@@ -367,6 +391,7 @@ export type Query = {
 
 const queryFallback = {
 	root: {
+		markdownEditor: false,
 		personaEditor: false,
 		convertToJSONEditor: false,
 		compressionEditor: false,
