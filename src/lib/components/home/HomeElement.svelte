@@ -48,7 +48,7 @@
 </script>
 
 <a
-	class="relative min-h-12 gap-2 rounded border p-4 transition-all hover:shadow"
+	class="relative shrink-0 gap-2 rounded border p-4 transition-all hover:shadow"
 	href="/project/{project.id}"
 	onmouseenter={() => (hovered = true)}
 	onmouseleave={() => {
@@ -57,7 +57,7 @@
 	}}
 >
 	<div class="flex justify-between">
-		<p class="w-full transition">
+		<p class="w-full truncate transition">
 			{project.name}
 		</p>
 		<div use:clickOutside={() => (showOptions = false)}>

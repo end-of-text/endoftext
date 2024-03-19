@@ -40,7 +40,7 @@
 			<HelpButton />
 		</div>
 	</div>
-	<div class="w-5/6 border-l pl-6">
+	<div class="flex w-5/6 flex-col border-l pl-6">
 		{@render children()}
 	</div>
 </div>
