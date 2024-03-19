@@ -217,3 +217,27 @@ export async function updateInstances(instances: Tables<'instances'>[]) {
 		body: JSON.stringify({ instances })
 	});
 }
+
+export async function getPrompt(projectId: string, promptId: number): Promise<Tables<'prompts'>> {
+	const res = await fetch(`/api/project/${projectId}/prompts/${promptId}`);
+	return await res.json();
+}
+
+export async function getProjectPromptIds(projectId: string): Promise<number[]> {
+	const res = await fetch(`/api/project/${projectId}/prompts/ids`);
+	return await res.json();
+}
+
+export async function getPredictionsForInstancesAndPrompts(
+	prompts: Promise<Tables<'prompts'>>[],
+	instances: Tables<'instances'>[]
+): Promise<Record<number, Record<number, string>>> {
+	const res = await fetch('/api/prediction/prompts_instances', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({ prompts: await Promise.all(prompts), instances })
+	});
+	return await res.json();
+}
