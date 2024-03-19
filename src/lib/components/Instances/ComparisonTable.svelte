@@ -82,7 +82,7 @@
 					</td>
 				</tr>
 			{:then preds}
-				{#each instances as instance, i (instance.id)}
+				{#each instances as instance (instance.id)}
 					<ComparisonTableRow {instance} {promptIds} predictions={preds[instance.id]} />
 				{/each}
 			{/await}

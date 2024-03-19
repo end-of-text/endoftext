@@ -10,7 +10,7 @@
 		prompt,
 		editedPrompt,
 		userStatus,
-		comparePrompt,
+		oncompare,
 		hoveredSuggestion,
 		suggestionApplied,
 		projectId,
@@ -22,7 +22,7 @@
 		prompt: Tables<'prompts'>;
 		editedPrompt: Tables<'prompts'>;
 		userStatus: string;
-		comparePrompt: boolean;
+		oncompare: () => void;
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		suggestionApplied: number;
 		projectId: string | undefined;
@@ -67,7 +67,7 @@
 			bind:suggestionApplied
 			bind:editedPrompt
 			bind:selectedSpan
-			bind:comparePrompt
+			{oncompare}
 		/>
 	</div>
 	<div class="flex h-full w-[450px] shrink-0 flex-col border-l px-6 py-4">

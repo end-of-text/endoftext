@@ -12,8 +12,8 @@
 		hoveredSuggestion,
 		prompt,
 		promptMaximized = false,
-		comparePrompt,
 		setPrompt,
+		oncompare,
 		suggestionApplied,
 		selectedSpan,
 		suggestions
@@ -22,8 +22,8 @@
 		hoveredSuggestion: Tables<'suggestions'> | null;
 		prompt: Tables<'prompts'>;
 		promptMaximized: boolean;
-		comparePrompt: boolean;
 		setPrompt: () => void;
+		oncompare: () => void;
 		suggestionApplied: number;
 		selectedSpan: { start: number; end: number } | undefined;
 		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
@@ -132,7 +132,7 @@
 		{/if}
 		{#if editedPrompt.parent_prompt_id !== null}
 			<button
-				onclick={() => (comparePrompt = true)}
+				onclick={oncompare}
 				class="rounded bg-white p-1 transition-all {promptHovered
 					? 'text-gray-active'
 					: 'text-gray-inactive'}"

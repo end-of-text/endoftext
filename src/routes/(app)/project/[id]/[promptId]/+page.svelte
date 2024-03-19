@@ -39,7 +39,7 @@
 			bind:editedPrompt
 			bind:childPrompt
 			bind:suggestions
-			bind:comparePrompt
+			oncompare={() => (comparePrompt = true)}
 			userStatus={data.user.status}
 			projectId={data.project.id}
 		/>
