@@ -1,6 +1,6 @@
 <script lang="ts">
+	import autosize from '$lib/autosize';
 	import type { Tables } from '$lib/supabase';
-	import autosize from 'autosize';
 
 	let { instance, promptIds, predictions } = $props<{
 		instance: Tables<'instances'>;
