@@ -1,6 +1,7 @@
 import type { RootNode } from '$lib/hypertune/generated';
 import { CompressionEditor } from './CompressionEditor';
 import { LongerEditor } from './LongerEditor';
+import { MarkdownEditor } from './MarkdownEditor';
 import { NoNegationEditor } from './NoNegationEditor';
 import { OutputDescriptionEditor } from './OutputDescriptionEditor';
 import { PersonaEditor } from './PersonaEditor';
@@ -43,7 +44,8 @@ export function getEditors(hypertuneRoot?: RootNode): PromptEditor[] {
 			editor: new JSONOutputEditor(),
 			enabled: hypertuneRoot?.convertToJSONEditor().get(false) ?? false
 		},
-		{ editor: new PersonaEditor(), enabled: hypertuneRoot?.personaEditor().get(false) ?? false }
+		{ editor: new PersonaEditor(), enabled: hypertuneRoot?.personaEditor().get(false) ?? false },
+		{ editor: new MarkdownEditor(), enabled: hypertuneRoot?.markdownEditor().get(false) ?? false }
 	];
 	return hypertuneRoot
 		? editors.filter((editor) => editor.enabled).map((editor) => editor.editor)
