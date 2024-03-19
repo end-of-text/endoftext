@@ -4,7 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { error } from '@sveltejs/kit';
 import { OpenAILLM } from '../llms/openai';
 
-async function generateAndSave(
+export async function generateAndSave(
 	supabase: SupabaseClient,
 	openai: OpenAILLM,
 	prompt: Tables<'prompts'>,

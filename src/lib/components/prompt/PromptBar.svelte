@@ -10,14 +10,16 @@
 	import PromptEditor from './PromptEditor.svelte';
 	import PromptSuggestions from './PromptSuggestions.svelte';
 
-	let { prompt, editedPrompt, childPrompt, userStatus, projectId, suggestions } = $props<{
-		prompt: Tables<'prompts'>;
-		editedPrompt: Tables<'prompts'>;
-		childPrompt: Tables<'prompts'> | undefined;
-		userStatus: string;
-		projectId: string | undefined;
-		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
-	}>();
+	let { prompt, editedPrompt, childPrompt, userStatus, oncompare, projectId, suggestions } =
+		$props<{
+			prompt: Tables<'prompts'>;
+			editedPrompt: Tables<'prompts'>;
+			childPrompt: Tables<'prompts'> | undefined;
+			userStatus: string;
+			oncompare: () => void;
+			projectId: string | undefined;
+			suggestions: Promise<Tables<'suggestions'>[] | undefined>;
+		}>();
 
 	let promptMaximized = $state(false);
 	let showPaywall = $state(false);
@@ -60,6 +62,7 @@
 		bind:hoveredSuggestion
 		bind:suggestionApplied
 		bind:editedPrompt
+		{oncompare}
 		{editPrompt}
 		{setPrompt}
 	/>
@@ -118,6 +121,7 @@
 			bind:promptMaximized
 			bind:suggestionApplied
 			bind:editedPrompt
+			{oncompare}
 		/>
 	</div>
 	<PromptSuggestions

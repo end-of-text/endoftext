@@ -3,7 +3,7 @@
 	import autosize from '$lib/autosize';
 	import Button from '$lib/components/ui/Button.svelte';
 	import type { Tables } from '$lib/supabase';
-	import { Check, Copy, Expand, Save, Undo2 } from 'lucide-svelte';
+	import { Check, Copy, Expand, GitCompareArrows, Save, Undo2 } from 'lucide-svelte';
 	import { fade } from 'svelte/transition';
 	import SuggestionOverlay from './SuggestionOverlay.svelte';
 
@@ -13,6 +13,7 @@
 		prompt,
 		promptMaximized = false,
 		setPrompt,
+		oncompare,
 		suggestionApplied,
 		selectedSpan,
 		suggestions
@@ -22,6 +23,7 @@
 		prompt: Tables<'prompts'>;
 		promptMaximized: boolean;
 		setPrompt: () => void;
+		oncompare: () => void;
 		suggestionApplied: number;
 		selectedSpan: { start: number; end: number } | undefined;
 		suggestions: Promise<Tables<'suggestions'>[] | undefined>;
@@ -126,6 +128,16 @@
 				<span class="group flex items-center gap-2 hover:text-gray-hovered" in:fade>
 					<Expand class="h-5 w-5" />
 				</span>
+			</button>
+		{/if}
+		{#if editedPrompt.parent_prompt_id !== null}
+			<button
+				onclick={oncompare}
+				class="rounded bg-white p-1 transition-all {promptHovered
+					? 'text-gray-active'
+					: 'text-gray-inactive'}"
+			>
+				<GitCompareArrows class="h-5 w-5" />
 			</button>
 		{/if}
 	</div>
